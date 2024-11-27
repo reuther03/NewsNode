@@ -13,7 +13,7 @@ public static class MediatrExtensions
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblies(assemblies.ToArray());
-            // cfg.AddOpenBehavior(typeof(LoggingPipelineBehavior<,>));
+            cfg.AddOpenBehavior(typeof(LoggingPipelineBehavior<,>));
         });
 
         // Scan assemblies for handlers
