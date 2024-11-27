@@ -12,7 +12,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{139025
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsNode.Shared.Infrastructure", "src\Shared\NewsNode.Shared.Infrastructure\NewsNode.Shared.Infrastructure.csproj", "{FAC1DC08-1A79-4AC6-9DA6-F4B857E9A50F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsNode.Shared.Application", "src\Shared\NewsNode.Shared.Application\NewsNode.Shared.Application.csproj", "{B98465FD-B76E-4AA0-BC5D-431CDCB0C6F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsNode.Shared.Abstractions", "src\Shared\NewsNode.Shared.Abstractions\NewsNode.Shared.Abstractions.csproj", "{B98465FD-B76E-4AA0-BC5D-431CDCB0C6F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Users", "Users", "{B6C8CF73-2BD0-4DCC-9B92-C12C61DD88F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsNode.Modules.Users.Api", "src\Modules\Users\NewsNode.Modules.Users.Api\NewsNode.Modules.Users.Api.csproj", "{EB8F6D6C-3D8B-4EA3-90E8-0C0CA0951415}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsNode.Modules.Users.Application", "src\Modules\Users\NewsNode.Modules.Users.Application\NewsNode.Modules.Users.Application.csproj", "{2F458F7A-4B5C-41C6-BA86-D4D86C6061E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsNode.Modules.Users.Infrastructure", "src\Modules\Users\NewsNode.Modules.Users.Infrastructure\NewsNode.Modules.Users.Infrastructure.csproj", "{DF84E5F5-F46B-4D26-87AB-276682C70561}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsNode.Modules.Users.Domain", "src\Modules\Users\NewsNode.Modules.Users.Domain\NewsNode.Modules.Users.Domain.csproj", "{99BA547C-CE8A-4DE8-B9F9-A248EA326DE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +42,22 @@ Global
 		{B98465FD-B76E-4AA0-BC5D-431CDCB0C6F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B98465FD-B76E-4AA0-BC5D-431CDCB0C6F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B98465FD-B76E-4AA0-BC5D-431CDCB0C6F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB8F6D6C-3D8B-4EA3-90E8-0C0CA0951415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB8F6D6C-3D8B-4EA3-90E8-0C0CA0951415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB8F6D6C-3D8B-4EA3-90E8-0C0CA0951415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB8F6D6C-3D8B-4EA3-90E8-0C0CA0951415}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F458F7A-4B5C-41C6-BA86-D4D86C6061E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F458F7A-4B5C-41C6-BA86-D4D86C6061E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F458F7A-4B5C-41C6-BA86-D4D86C6061E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F458F7A-4B5C-41C6-BA86-D4D86C6061E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF84E5F5-F46B-4D26-87AB-276682C70561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF84E5F5-F46B-4D26-87AB-276682C70561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF84E5F5-F46B-4D26-87AB-276682C70561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF84E5F5-F46B-4D26-87AB-276682C70561}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99BA547C-CE8A-4DE8-B9F9-A248EA326DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99BA547C-CE8A-4DE8-B9F9-A248EA326DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99BA547C-CE8A-4DE8-B9F9-A248EA326DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99BA547C-CE8A-4DE8-B9F9-A248EA326DE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4EE34D7F-4AD5-41B7-BC4B-B68DE0FBA71C} = {706E81DE-D7D5-42B7-96DD-8974223D1F3C}
@@ -40,5 +66,10 @@ Global
 		{139025B4-D5ED-43CA-8BE2-E15BFF842FAC} = {706E81DE-D7D5-42B7-96DD-8974223D1F3C}
 		{FAC1DC08-1A79-4AC6-9DA6-F4B857E9A50F} = {139025B4-D5ED-43CA-8BE2-E15BFF842FAC}
 		{B98465FD-B76E-4AA0-BC5D-431CDCB0C6F5} = {139025B4-D5ED-43CA-8BE2-E15BFF842FAC}
+		{B6C8CF73-2BD0-4DCC-9B92-C12C61DD88F0} = {695E28EB-A497-42F7-A621-0A205021D500}
+		{EB8F6D6C-3D8B-4EA3-90E8-0C0CA0951415} = {B6C8CF73-2BD0-4DCC-9B92-C12C61DD88F0}
+		{2F458F7A-4B5C-41C6-BA86-D4D86C6061E1} = {B6C8CF73-2BD0-4DCC-9B92-C12C61DD88F0}
+		{DF84E5F5-F46B-4D26-87AB-276682C70561} = {B6C8CF73-2BD0-4DCC-9B92-C12C61DD88F0}
+		{99BA547C-CE8A-4DE8-B9F9-A248EA326DE4} = {B6C8CF73-2BD0-4DCC-9B92-C12C61DD88F0}
 	EndGlobalSection
 EndGlobal

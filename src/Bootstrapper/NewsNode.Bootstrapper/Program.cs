@@ -1,18 +1,32 @@
-var builder = WebApplication.CreateBuilder(args);
+using NewsNode.Bootstrapper;
+using NewsNode.Shared.Infrastructure;
+using NewsNode.Shared.Infrastructure.Modules;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddUserSecrets<Program>();
+var services = builder.Services;
+var configuration = builder.Configuration;
+
+builder.ConfigureModules();
+
+services.AddEndpointsApiExplorer();
+
+var assemblies = ModuleLoader.LoadAssemblies(services, configuration);
+var modules = ModuleLoader.LoadModules(assemblies);
+
+services.AddInfrastructure(assemblies, modules, configuration);
+
+foreach (var module in modules)
+{
+    module.Register(services);
+}
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseInfrastructure();
+foreach (var module in modules)
 {
-    app.MapOpenApi();
+    module.Use(app);
 }
-
-app.UseHttpsRedirection();
-
 
 await app.RunAsync();
