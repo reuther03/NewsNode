@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Shared.Application.Modules;
 using NewsNode.Shared.Infrastructure.Api;
+using NewsNode.Shared.Infrastructure.Postgres;
 using NewsNode.Shared.Infrastructure.Services;
 using NewsNode.Shared.Infrastructure.Swagger;
 
@@ -50,6 +51,9 @@ internal static class Extensions
         });
 
         services.AddSwagger();
+        services.AddDecorators();
+        services.AddHostedService<AppInitializer>();
+        services.AddPostgres();
         services.AddServices();
         services.AddMediatrWithFilters(assemblies);
 
