@@ -1,6 +1,6 @@
-﻿using NewsNode.Shared.Application.Kernel.Primitives;
+﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
 
-namespace NewsNode.Shared.Application.Kernel.Database;
+namespace NewsNode.Shared.Abstractions.Kernel.Database;
 
 public interface IRepository<in TEntity> where TEntity : class, IEntity
 {

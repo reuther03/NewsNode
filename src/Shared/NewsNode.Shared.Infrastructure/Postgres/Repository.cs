@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NewsNode.Shared.Application.Kernel.Database;
-using NewsNode.Shared.Application.Kernel.Primitives;
+using NewsNode.Shared.Abstractions.Kernel.Database;
+using NewsNode.Shared.Abstractions.Kernel.Primitives;
 
 namespace NewsNode.Shared.Infrastructure.Postgres;
 
