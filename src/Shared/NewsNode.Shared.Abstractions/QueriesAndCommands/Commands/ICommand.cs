@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using NewsNode.Shared.Application.Kernel.Primitives.Result;
+using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 
-namespace NewsNode.Shared.Application.QueriesAndCommands.Commands;
+namespace NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 
 /// <summary>
 /// Marker interface for <see cref="ICommand"/> and <see cref="ICommand{TResponse}"/>

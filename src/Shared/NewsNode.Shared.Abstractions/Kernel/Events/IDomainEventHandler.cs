@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace NewsNode.Shared.Application.Kernel.Events;
+namespace NewsNode.Shared.Abstractions.Kernel.Events;
 
 public interface IDomainEventHandler<in TDomainEvent> : INotificationHandler<TDomainEvent>
     where TDomainEvent : IDomainEvent;

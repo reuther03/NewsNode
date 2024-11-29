@@ -1,5 +1,5 @@
 ﻿
-using NewsNode.Shared.Application.Kernel.Primitives;
+using NewsNode.Shared.Abstractions.Kernel.Primitives;
 
 namespace NewsNode.Shared.Abstractions.Kernel.Database;
 

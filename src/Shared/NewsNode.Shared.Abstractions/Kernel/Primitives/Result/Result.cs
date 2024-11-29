@@ -1,4 +1,4 @@
-﻿namespace NewsNode.Shared.Application.Kernel.Primitives.Result;
+﻿namespace NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 
 public class Result
 {

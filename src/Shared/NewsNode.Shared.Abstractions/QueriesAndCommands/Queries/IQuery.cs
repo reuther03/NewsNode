@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using NewsNode.Shared.Application.Kernel.Primitives.Result;
+using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 
-namespace NewsNode.Shared.Application.QueriesAndCommands.Queries;
+namespace NewsNode.Shared.Abstractions.QueriesAndCommands.Queries;
 
 public interface IQuery<TResponse> : IRequest<Result<TResponse>>;

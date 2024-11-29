@@ -1,6 +1,6 @@
-﻿using NewsNode.Shared.Application.Kernel.Primitives.Result;
+﻿using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 
-namespace NewsNode.Shared.Application.Kernel.Pagination;
+namespace NewsNode.Shared.Abstractions.Kernel.Pagination;
 
 public class PaginatedList<T>
 {

@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NewsNode.Shared.Abstractions.Kernel.Database;
-using NewsNode.Shared.Application.Kernel.Primitives;
-using NewsNode.Shared.Application.Kernel.Primitives.Result;
+using NewsNode.Shared.Abstractions.Kernel.Primitives;
+using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 
 namespace NewsNode.Shared.Infrastructure.Postgres;
 

@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using NewsNode.Shared.Application.Exception;
-using NewsNode.Shared.Application.Kernel.Primitives;
+using NewsNode.Shared.Abstractions.Exception;
+using NewsNode.Shared.Abstractions.Kernel.Primitives;
 
 namespace NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 

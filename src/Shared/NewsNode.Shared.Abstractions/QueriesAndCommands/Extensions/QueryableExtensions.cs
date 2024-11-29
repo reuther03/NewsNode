@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace NewsNode.Shared.Application.QueriesAndCommands.Extensions;
+namespace NewsNode.Shared.Abstractions.QueriesAndCommands.Extensions;
 
 public static class QueryableExtensions
 {

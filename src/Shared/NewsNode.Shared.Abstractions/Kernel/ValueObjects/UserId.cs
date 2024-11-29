@@ -1,6 +1,6 @@
-﻿using NewsNode.Shared.Application.Kernel.Primitives;
+﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
 
-namespace NewsNode.Shared.Application.Kernel.ValueObjects;
+namespace NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 
 public record UserId : EntityId
 {

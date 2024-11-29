@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NewsNode.Shared.Application.Kernel.Primitives;
+namespace NewsNode.Shared.Abstractions.Kernel.Primitives;
 
 public class EmailMessage
 {

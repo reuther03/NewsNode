@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Shared.Abstractions.Kernel.Database;
-using NewsNode.Shared.Application.QueriesAndCommands.Commands;
+using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 using NewsNode.Shared.Infrastructure.Postgres.Decorators;
 
 namespace NewsNode.Shared.Infrastructure.Postgres;

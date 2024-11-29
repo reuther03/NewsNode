@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Shared.Abstractions.Kernel.Database;
-using NewsNode.Shared.Application.Kernel.Primitives.Result;
-using NewsNode.Shared.Application.QueriesAndCommands.Commands;
+using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
+using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 
 namespace NewsNode.Shared.Infrastructure.Postgres.Decorators;
 

@@ -1,6 +1,6 @@
-using NewsNode.Shared.Application.Kernel.Events;
+using NewsNode.Shared.Abstractions.Kernel.Events;
 
-namespace NewsNode.Shared.Application.Kernel.Primitives;
+namespace NewsNode.Shared.Abstractions.Kernel.Primitives;
 
 public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
 {

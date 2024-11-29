@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace NewsNode.Shared.Application.Services;
+namespace NewsNode.Shared.Abstractions.Services;
 
 public static class Extensions
 {

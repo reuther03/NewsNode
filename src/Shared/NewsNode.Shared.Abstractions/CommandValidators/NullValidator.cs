@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NewsNode.Shared.Abstractions.Kernel.CommandValidators;
+namespace EduSchedu.Shared.Abstractions.Kernel.CommandValidators;
 
 public static class NullValidator
 {

@@ -1,4 +1,4 @@
-﻿namespace NewsNode.Shared.Application.Kernel.Primitives;
+﻿namespace NewsNode.Shared.Abstractions.Kernel.Primitives;
 
 /// <summary>
 /// Base class for <see cref="AggregateRoot{TId}" /> identifiers.

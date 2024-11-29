@@ -1,4 +1,4 @@
-﻿namespace NewsNode.Shared.Application.Exception;
+﻿namespace NewsNode.Shared.Abstractions.Exception;
 
 public class DomainException : System.Exception
 {

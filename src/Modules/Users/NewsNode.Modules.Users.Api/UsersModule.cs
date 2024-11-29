@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Modules.Users.Application;
 using NewsNode.Modules.Users.Domain;
 using NewsNode.Modules.Users.Infrastructure;
-using NewsNode.Shared.Application.Modules;
+using NewsNode.Shared.Abstractions.Modules;
 
 // ReSharper disable ClassNeverInstantiated.Global
 

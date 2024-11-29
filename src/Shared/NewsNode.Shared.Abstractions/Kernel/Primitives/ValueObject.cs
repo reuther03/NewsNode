@@ -1,4 +1,4 @@
-﻿namespace NewsNode.Shared.Application.Kernel.Primitives;
+﻿namespace NewsNode.Shared.Abstractions.Kernel.Primitives;
 
 public abstract record ValueObject
 {

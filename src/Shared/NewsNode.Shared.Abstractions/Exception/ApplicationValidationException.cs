@@ -1,4 +1,4 @@
-﻿namespace NewsNode.Shared.Application.Exception;
+﻿namespace NewsNode.Shared.Abstractions.Exception;
 
 public sealed class ApplicationValidationException : System.Exception
 {

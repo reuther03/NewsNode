@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using NewsNode.Shared.Application.Modules;
+using NewsNode.Shared.Abstractions.Modules;
 
 namespace NewsNode.Bootstrapper;
 

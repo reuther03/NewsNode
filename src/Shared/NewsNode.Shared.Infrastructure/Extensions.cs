@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NewsNode.Shared.Application.Modules;
+using NewsNode.Shared.Abstractions.Modules;
 using NewsNode.Shared.Infrastructure.Api;
+using NewsNode.Shared.Infrastructure.Auth;
 using NewsNode.Shared.Infrastructure.Postgres;
 using NewsNode.Shared.Infrastructure.Services;
 using NewsNode.Shared.Infrastructure.Swagger;
@@ -51,6 +52,7 @@ internal static class Extensions
         });
 
         services.AddSwagger();
+        services.AddAuth(configuration);
         services.AddDecorators();
         services.AddHostedService<AppInitializer>();
         services.AddPostgres();
@@ -82,6 +84,8 @@ internal static class Extensions
     {
         app.UseRouting();
         app.UseCors(CorsPolicy);
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         app.UseSwagger();
         app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "NewsNode API"); });

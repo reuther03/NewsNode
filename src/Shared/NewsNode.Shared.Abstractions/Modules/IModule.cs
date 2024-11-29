@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace NewsNode.Shared.Application.Modules;
+namespace NewsNode.Shared.Abstractions.Modules;
 
 public interface IModule
 {

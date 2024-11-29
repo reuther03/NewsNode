@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using NewsNode.Shared.Application.QueriesAndCommands.Commands;
+using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 using NewsNode.Shared.Infrastructure.Behaviors;
 
 namespace NewsNode.Shared.Infrastructure.Services;
