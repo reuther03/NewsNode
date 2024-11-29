@@ -1,6 +1,6 @@
-﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
-using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
+﻿using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
+using NewsNode.Shared.Application.Kernel.Primitives;
 
 namespace NewsNode.Modules.Users.Domain.Users;
 

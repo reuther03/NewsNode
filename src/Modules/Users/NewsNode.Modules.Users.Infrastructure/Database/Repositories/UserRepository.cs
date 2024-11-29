@@ -9,7 +9,7 @@ internal class UserRepository : Repository<User, UsersDbContext>, IUserRepositor
 {
     private readonly UsersDbContext _context;
 
-    protected UserRepository(UsersDbContext dbContext) : base(dbContext)
+    public UserRepository(UsersDbContext dbContext) : base(dbContext)
     {
         _context = dbContext;
     }

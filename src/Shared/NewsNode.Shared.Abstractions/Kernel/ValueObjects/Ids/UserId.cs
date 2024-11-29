@@ -1,6 +1,6 @@
 ﻿using NewsNode.Shared.Application.Kernel.Primitives;
 
-namespace NewsNode.Shared.Application.Kernel.ValueObjects;
+namespace NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 public record UserId : EntityId
 {
@@ -9,7 +9,7 @@ public record UserId : EntityId
     }
 
     public static UserId New() => new(Guid.NewGuid());
-    public static Abstractions.Kernel.ValueObjects.Ids.UserId From(Guid value) => new(value);
+    public static UserId From(Guid value) => new(value);
     public static UserId From(string value) => new(Guid.Parse(value));
 
     public static implicit operator Guid(UserId userId) => userId.Value;

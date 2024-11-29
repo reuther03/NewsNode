@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewsNode.Shared.Abstractions.Kernel.Database;
-using NewsNode.Shared.Abstractions.Kernel.Primitives;
+using NewsNode.Shared.Application.Kernel.Primitives;
 
 namespace NewsNode.Shared.Infrastructure.Postgres;
 
@@ -10,6 +10,7 @@ public class Repository<TEntity, TDbContext> : IRepository<TEntity>
 {
     private readonly TDbContext _dbContext;
 
+    //in derived class constructor should be public
     protected Repository(TDbContext dbContext)
     {
         _dbContext = dbContext;

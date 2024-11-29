@@ -81,7 +81,8 @@ internal static class Extensions
     public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
     {
         app.UseRouting();
-        // app.UseCors(CorsPolicy);
+        app.UseCors(CorsPolicy);
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         app.UseSwagger();
         app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "NewsNode API"); });
         return app;

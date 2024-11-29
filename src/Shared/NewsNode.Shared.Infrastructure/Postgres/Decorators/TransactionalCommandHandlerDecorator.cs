@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NewsNode.Shared.Application.Kernel.Database;
+using NewsNode.Shared.Abstractions.Kernel.Database;
 using NewsNode.Shared.Application.Kernel.Primitives.Result;
 using NewsNode.Shared.Application.QueriesAndCommands.Commands;
 

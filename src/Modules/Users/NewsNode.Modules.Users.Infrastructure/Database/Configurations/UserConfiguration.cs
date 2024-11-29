@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NewsNode.Modules.Users.Domain.Users;
+using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 using NewsNode.Shared.Application.Kernel.ValueObjects;
 
 namespace NewsNode.Modules.Users.Infrastructure.Database.Configurations;
@@ -16,11 +17,17 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasConversion(x => x.Value, x => UserId.From(x))
             .ValueGeneratedNever();
 
-        builder.Property(x => x.Name)
+        builder.Property(x => x.Username)
+            .HasConversion(x => x.Value, x => new Name(x))
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(x => x.Password)
+            .HasConversion(x => x.Value, x => new Password(x))
+            .IsRequired();
+
         builder.Property(x => x.Email)
+            .HasConversion(x => x.Value, x => new Email(x))
             .IsRequired();
 
         builder.HasIndex(x => x.Email).IsUnique();

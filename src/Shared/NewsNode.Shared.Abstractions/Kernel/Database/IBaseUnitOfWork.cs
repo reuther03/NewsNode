@@ -1,4 +1,4 @@
-﻿using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
+﻿using NewsNode.Shared.Application.Kernel.Primitives.Result;
 
 namespace NewsNode.Shared.Abstractions.Kernel.Database;
 
