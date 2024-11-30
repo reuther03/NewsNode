@@ -5,3 +5,13 @@
     background-color: #222831;
     color: #EEEEEE;
 }
+
+a {
+    text-decoration: none;
+    color: #EEEEEE;
+}
+
+.pbold {
+    font-size: 2em;
+    font-weight: bold;
+}
