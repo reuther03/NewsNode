@@ -33,9 +33,10 @@ public record LoginCommand : ICommand<AccessToken>
                 return Result<AccessToken>.Unauthorized("Invalid email or password");
 
             var accessToken = AccessToken.Create(
-                _jwtProvider.GenerateToken(user.Id.ToString(), user.Email),
+                _jwtProvider.GenerateToken(user.Id.ToString(), user.Email, user.Username),
                 user.Id,
-                user.Email
+                user.Email,
+                user.Username
             );
 
             return Result<AccessToken>.Ok(accessToken);

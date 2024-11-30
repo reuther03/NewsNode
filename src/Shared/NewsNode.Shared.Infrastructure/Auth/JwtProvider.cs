@@ -16,13 +16,14 @@ public class JwtProvider : IJwtProvider
         _jwtOptions = jwtOptions.Value;
     }
 
-    public string GenerateToken(string userId, string email)
+    public string GenerateToken(string userId, string email, string username)
     {
         var claims = new Claim[]
         {
             new(JwtRegisteredClaimNames.Sub, userId),
             new(JwtRegisteredClaimNames.UniqueName, userId),
             new(JwtRegisteredClaimNames.Email, email),
+            new(JwtRegisteredClaimNames.Name, username)
         };
 
         var now = DateTime.UtcNow;
