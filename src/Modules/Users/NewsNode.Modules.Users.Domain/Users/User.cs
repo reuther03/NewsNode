@@ -1,6 +1,5 @@
 ﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
-using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using UserId = NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids.UserId;
 
 namespace NewsNode.Modules.Users.Domain.Users;

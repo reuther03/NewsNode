@@ -1,6 +1,4 @@
-﻿using FluentValidation.Validators;
-using NewsNode.Modules.Users.Application.Abstractions.Database;
-using NewsNode.Modules.Users.Domain.Users;
+﻿using NewsNode.Modules.Users.Application.Abstractions.Database;
 using NewsNode.Shared.Abstractions.Auth;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
