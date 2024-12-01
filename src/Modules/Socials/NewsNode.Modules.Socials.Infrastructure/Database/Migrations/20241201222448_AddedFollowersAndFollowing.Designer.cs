@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsNode.Modules.Socials.Infrastructure.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(SocialsDbContext))]
-    partial class SocialsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241201222448_AddedFollowersAndFollowing")]
+    partial class AddedFollowersAndFollowing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +58,7 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 
                             NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
-                            b1.Property<Guid>("UserProfileId")
+                            b1.Property<Guid>("FollowerId")
                                 .HasColumnType("uuid");
 
                             b1.Property<Guid>("Value")
@@ -64,15 +67,50 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 
                             b1.HasKey("Id");
 
+                            b1.HasIndex("FollowerId");
+
+                            b1.ToTable("user_followers", "socials", t =>
+                                {
+                                    t.Property("FollowerId")
+                                        .HasColumnName("FollowerId1");
+                                });
+
+                            b1.WithOwner()
+                                .HasForeignKey("FollowerId");
+                        });
+
+                    b.OwnsMany("NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids.UserId", "Following", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("UserProfileId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uuid")
+                                .HasColumnName("UserProfileId");
+
+                            b1.HasKey("Id");
+
                             b1.HasIndex("UserProfileId");
 
-                            b1.ToTable("user_followers", "socials");
+                            b1.ToTable("user_following", "socials", t =>
+                                {
+                                    t.Property("UserProfileId")
+                                        .HasColumnName("UserProfileId1");
+                                });
 
                             b1.WithOwner()
                                 .HasForeignKey("UserProfileId");
                         });
 
                     b.Navigation("Followers");
+
+                    b.Navigation("Following");
                 });
 #pragma warning restore 612, 618
         }

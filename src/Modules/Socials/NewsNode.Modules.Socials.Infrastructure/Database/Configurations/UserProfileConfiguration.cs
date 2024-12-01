@@ -26,5 +26,20 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             .IsRequired();
 
         builder.HasIndex(x => x.Email).IsUnique();
+
+        builder.OwnsMany(x => x.Followers, ownedBuilder =>
+        {
+            ownedBuilder.WithOwner().HasForeignKey("UserProfileId");
+            ownedBuilder.ToTable("user_followers");
+            ownedBuilder.HasKey("Id");
+
+            ownedBuilder.Property(x => x.Value)
+                .ValueGeneratedNever()
+                .HasColumnName("FollowerId");
+
+            builder.Metadata
+                .FindNavigation(nameof(UserProfile.Followers))
+                ?.SetPropertyAccessMode(PropertyAccessMode.Field);
+        });
     }
 }

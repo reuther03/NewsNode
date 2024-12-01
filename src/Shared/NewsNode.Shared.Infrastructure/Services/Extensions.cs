@@ -1,13 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Shared.Infrastructure.Services;
 
 internal static class Extensions
 {
-    private const string CorsPolicy = "cors";
-
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
+        services.AddSingleton<IUserService, UserService>();
+
         return services;
     }
 }

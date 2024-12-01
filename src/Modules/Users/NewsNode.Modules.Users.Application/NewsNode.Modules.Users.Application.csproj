@@ -10,8 +10,6 @@
       <ProjectReference Include="..\NewsNode.Modules.Users.Domain\NewsNode.Modules.Users.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.11.0" />
-    </ItemGroup>
+
 
 </Project>

@@ -5,4 +5,5 @@ namespace NewsNode.Modules.Socials.Application.Abstractions.Database;
 
 public interface IUserProfileRepository : IRepository<UserProfile>
 {
+    Task<UserProfile?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 }
