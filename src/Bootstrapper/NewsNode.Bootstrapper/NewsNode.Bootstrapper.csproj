@@ -19,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Modules\Socials\NewsNode.Modules.Socials.Api\NewsNode.Modules.Socials.Api.csproj" />
         <ProjectReference Include="..\..\Modules\Social\NewsNode.Modules.Social.Api\NewsNode.Modules.Social.Api.csproj" />
         <ProjectReference Include="..\..\Modules\Users\NewsNode.Modules.Users.Api\NewsNode.Modules.Users.Api.csproj"/>
         <ProjectReference Include="..\..\Shared\NewsNode.Shared.Infrastructure\NewsNode.Shared.Infrastructure.csproj"/>

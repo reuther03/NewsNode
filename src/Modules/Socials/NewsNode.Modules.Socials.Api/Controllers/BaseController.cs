@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace NewsNode.Modules.Social.Api.Controllers;
+namespace NewsNode.Modules.Socials.Api.Controllers;
 
 [ApiController]
 [Route(SocialsModule.BasePath + "/[controller]")]

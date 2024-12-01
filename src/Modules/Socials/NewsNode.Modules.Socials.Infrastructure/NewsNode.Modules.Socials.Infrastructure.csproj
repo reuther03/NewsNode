@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\NewsNode.Shared.Infrastructure\NewsNode.Shared.Infrastructure.csproj" />
-      <ProjectReference Include="..\NewsNode.Modules.Social.Application\NewsNode.Modules.Social.Application.csproj" />
+      <ProjectReference Include="..\NewsNode.Modules.Socials.Application\NewsNode.Modules.Socials.Application.csproj" />
     </ItemGroup>
 
 </Project>

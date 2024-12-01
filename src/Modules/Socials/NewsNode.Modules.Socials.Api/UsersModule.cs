@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿// ReSharper disable ClassNeverInstantiated.Global
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using NewsNode.Modules.Social.Application;
-using NewsNode.Modules.Social.Domain;
-using NewsNode.Modules.Social.Infrastructure;
+using NewsNode.Modules.Socials.Application;
+using NewsNode.Modules.Socials.Domain;
+using NewsNode.Modules.Socials.Infrastructure;
 using NewsNode.Shared.Abstractions.Modules;
 
-// ReSharper disable ClassNeverInstantiated.Global
-
-namespace NewsNode.Modules.Social.Api;
+namespace NewsNode.Modules.Socials.Api;
 
 public class SocialsModule : IModule
 {
