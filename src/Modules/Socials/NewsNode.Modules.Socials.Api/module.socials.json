@@ -1,7 +1,7 @@
 {
-  "users": {
+  "socials": {
     "module": {
-      "name": "Users",
+      "name": "Socials",
       "enabled": true
     }
   }

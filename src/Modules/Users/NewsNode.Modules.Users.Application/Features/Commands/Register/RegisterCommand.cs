@@ -1,6 +1,8 @@
-﻿using NewsNode.Modules.Users.Application.Abstractions;
+﻿using MediatR;
+using NewsNode.Modules.Users.Application.Abstractions;
 using NewsNode.Modules.Users.Application.Abstractions.Database;
 using NewsNode.Modules.Users.Domain.Users;
+using NewsNode.Shared.Abstractions.Integration.Events.Users;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 
@@ -16,11 +18,13 @@ public record RegisterCommand : ICommand<Guid>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPublisher _publisher;
 
-        public Handler(IUserRepository userRepository, IUnitOfWork unitOfWork)
+        public Handler(IUserRepository userRepository, IUnitOfWork unitOfWork, IPublisher publisher)
         {
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
+            _publisher = publisher;
         }
 
         public async Task<Result<Guid>> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -32,6 +36,8 @@ public record RegisterCommand : ICommand<Guid>
 
             await _userRepository.AddAsync(user, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
+
+            await _publisher.Publish(new UserCreatedEvent(user.Id.Value, user.Email, user.Username), cancellationToken);
 
             return Result.Ok(user.Id.Value);
         }
