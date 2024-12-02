@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsNode.Modules.Socials.Infrastructure.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(SocialsDbContext))]
-    partial class SocialsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241202004523_ChangedFollowers")]
+    partial class ChangedFollowers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +50,7 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.UserProfile.UserProfile", b =>
                 {
-                    b.OwnsMany("NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids.UserId", "FollowIds", b1 =>
+                    b.OwnsMany("NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids.UserId", "FollowerIds", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -72,7 +75,7 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
                                 .HasForeignKey("UserProfileId");
                         });
 
-                    b.Navigation("FollowIds");
+                    b.Navigation("FollowerIds");
                 });
 #pragma warning restore 612, 618
         }

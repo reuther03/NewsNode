@@ -10,16 +10,9 @@ public class UserProfile : AggregateRoot<UserId>
     public Name UserName { get; private set; }
     public Email Email { get; private set; }
 
-    public int Followers
-    {
-        get => _followerIds.Count;
-        private set { } //for EF Core
-    }
-
-
     //moze zmienic to nazwe
-    private readonly List<UserId> _followerIds = [];
-    public IReadOnlyList<UserId> FollowerIds => _followerIds.AsReadOnly();
+    private readonly List<UserId> _followIds = [];
+    public IReadOnlyList<UserId> FollowIds => _followIds.AsReadOnly();
 
     private UserProfile()
     {
@@ -39,9 +32,9 @@ public class UserProfile : AggregateRoot<UserId>
         if (userId == Id)
             throw new DomainException("You can't follow yourself");
 
-        if (_followerIds.Contains(userId))
+        if (_followIds.Contains(userId))
             throw new DomainException("User is already followed");
 
-        _followerIds.Add(userId);
+        _followIds.Add(userId);
     }
 }

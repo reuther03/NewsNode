@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsNode.Modules.Socials.Application.Features.Commands.FollowUserProfile;
+using NewsNode.Modules.Socials.Application.Features.Queries.UserProfile;
 
 namespace NewsNode.Modules.Socials.Api.Controllers;
 
@@ -14,18 +15,19 @@ internal class SocialController : BaseController
         _sender = sender;
     }
 
+    [HttpGet("{userProfileId:guid}")]
+    [Authorize]
+    public async Task<IActionResult> GetUserProfile([FromRoute] Guid userProfileId)
+    {
+        var result = await _sender.Send(new GetUserProfile(userProfileId));
+        return Ok(result);
+    }
+
     [HttpPost("{userProfileId:guid}/follow")]
     [Authorize]
     public async Task<IActionResult> FollowUserProfile([FromRoute] Guid userProfileId)
     {
         var result = await _sender.Send(new FollowUserProfileCommand(userProfileId));
         return Ok(result);
-    }
-
-    [HttpGet]
-    [Authorize]
-    public async Task<IActionResult> Test()
-    {
-        return Ok("Test");
     }
 }
