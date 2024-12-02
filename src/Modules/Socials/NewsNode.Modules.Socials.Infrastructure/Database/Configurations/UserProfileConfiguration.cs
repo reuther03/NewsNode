@@ -25,9 +25,12 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             .HasConversion(x => x.Value, x => new Name(x))
             .IsRequired();
 
+        builder.Property(x => x.Followers)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+
         builder.HasIndex(x => x.Email).IsUnique();
 
-        builder.OwnsMany(x => x.Followers, ownedBuilder =>
+        builder.OwnsMany(x => x.FollowerIds, ownedBuilder =>
         {
             ownedBuilder.WithOwner().HasForeignKey("UserProfileId");
             ownedBuilder.ToTable("user_followers");

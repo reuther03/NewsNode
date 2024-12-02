@@ -7,11 +7,19 @@ namespace NewsNode.Modules.Socials.Domain.UserProfile;
 
 public class UserProfile : AggregateRoot<UserId>
 {
-    private readonly List<UserId> _followers = [];
-
     public Name UserName { get; private set; }
     public Email Email { get; private set; }
-    public IReadOnlyList<UserId> Followers => _followers;
+
+    public int Followers
+    {
+        get => _followerIds.Count;
+        private set { } //for EF Core
+    }
+
+
+    //moze zmienic to nazwe
+    private readonly List<UserId> _followerIds = [];
+    public IReadOnlyList<UserId> FollowerIds => _followerIds.AsReadOnly();
 
     private UserProfile()
     {
@@ -31,10 +39,9 @@ public class UserProfile : AggregateRoot<UserId>
         if (userId == Id)
             throw new DomainException("You can't follow yourself");
 
-        if (_followers.Contains(userId))
+        if (_followerIds.Contains(userId))
             throw new DomainException("User is already followed");
 
-
-        _followers.Add(userId);
+        _followerIds.Add(userId);
     }
 }
