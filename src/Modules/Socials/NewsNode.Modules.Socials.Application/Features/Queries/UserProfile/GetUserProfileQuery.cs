@@ -10,11 +10,11 @@ using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Modules.Socials.Application.Features.Queries.UserProfile;
 
-public record GetUserProfile(
+public record GetUserProfileQuery(
     [property: JsonIgnore]
     Guid UserProfilId) : IQuery<UserProfileDto>
 {
-    internal sealed class Handler : IQueryHandler<GetUserProfile, UserProfileDto>
+    internal sealed class Handler : IQueryHandler<GetUserProfileQuery, UserProfileDto>
     {
         private readonly ISocialsDbContext _dbContext;
         private readonly IUserService _userService;
@@ -25,8 +25,9 @@ public record GetUserProfile(
             _userService = userService;
         }
 
-        public async Task<Result<UserProfileDto>> Handle(GetUserProfile request, CancellationToken cancellationToken)
+        public async Task<Result<UserProfileDto>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
         {
+            //chyba tego nie musi byc
             if (!_userService.IsAuthenticated)
                 return Result.Unauthorized<UserProfileDto>("User is not authenticated");
 

@@ -19,7 +19,7 @@ internal class SocialController : BaseController
     [Authorize]
     public async Task<IActionResult> GetUserProfile([FromRoute] Guid userProfileId)
     {
-        var result = await _sender.Send(new GetUserProfile(userProfileId));
+        var result = await _sender.Send(new GetUserProfileQuery(userProfileId));
         return Ok(result);
     }
 
