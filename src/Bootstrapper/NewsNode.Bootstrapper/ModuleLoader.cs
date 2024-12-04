@@ -8,6 +8,7 @@ public static class ModuleLoader
     public static IList<Assembly> LoadAssemblies(IServiceCollection services, IConfiguration configuration)
     {
         const string modulesPath = "TaskManager.Modules.";
+        const string servicesPath = "TaskManager.Services.";
 
         var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
         var location = assemblies.Where(x => !x.IsDynamic).Select(x => x.Location).ToArray();
@@ -18,14 +19,16 @@ public static class ModuleLoader
         var disabledModules = new List<string>();
         foreach (var file in files)
         {
-            if (!file.Contains(modulesPath))
+            if (!file.Contains(modulesPath) && !file.Contains(servicesPath))
             {
                 continue;
             }
 
             var moduleName = file.Split(modulesPath)[1].Split('.')[0];
+            var servicesName = file.Split(servicesPath)[1].Split('.')[0];
             var enabled = configuration.GetValue<bool>($"{moduleName}:module:enabled");
-            if (!enabled)
+            var servicesEnabled = configuration.GetValue<bool>($"{servicesName}:services:enabled");
+            if (!enabled || !servicesEnabled)
             {
                 disabledModules.Add(file);
             }
