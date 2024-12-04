@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Shared\NewsNode.Shared.Abstractions\NewsNode.Shared.Abstractions.csproj"/>
+        <ProjectReference Include="..\..\Shared\NewsNode.Shared.Infrastructure\NewsNode.Shared.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

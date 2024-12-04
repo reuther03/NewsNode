@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using NewsNode.Services.Notifications.Database;
 using NewsNode.Shared.Abstractions.Services;
+using NewsNode.Shared.Infrastructure.Postgres;
 
 namespace NewsNode.Services.Notifications.Hubs;
 
@@ -9,6 +11,7 @@ public static class Extensions
 {
     public static IServiceCollection AddNotifications(this IServiceCollection services)
     {
+        services.AddPostgres<NotificationsDbContext>();
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSignalR();
         return services;
