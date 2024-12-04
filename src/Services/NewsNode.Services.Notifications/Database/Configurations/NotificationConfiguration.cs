@@ -21,6 +21,10 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
         builder.Property(x => x.Title)
             .HasMaxLength(200);
 
+        builder.Property(x => x.Message)
+            .HasMaxLength(200)
+            .IsRequired();
+
         builder.Property(x => x.Status)
             .HasConversion<string>()
             .IsRequired();
@@ -29,6 +33,5 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
             .IsRequired();
 
         builder.Property(x => x.SentAt);
-        builder.Property(x => x.ReceivedAt);
     }
 }

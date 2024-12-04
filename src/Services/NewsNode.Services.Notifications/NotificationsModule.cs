@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using NewsNode.Services.Notifications.Hubs;
 using NewsNode.Shared.Abstractions.Modules;
 
 // ReSharper disable ClassNeverInstantiated.Global

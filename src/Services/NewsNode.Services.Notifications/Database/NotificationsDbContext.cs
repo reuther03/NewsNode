@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NewsNode.Services.Notifications.Notifications;
 
 namespace NewsNode.Services.Notifications.Database;
 
-internal class NotificationsDbContext : DbContext
+public class NotificationsDbContext : DbContext
 {
-
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     public NotificationsDbContext(DbContextOptions<NotificationsDbContext> options) : base(options)
     {
