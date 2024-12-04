@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using NewsNode.Shared.Abstractions.Services;
 
-namespace NewsNode.Services.Notifications;
+namespace NewsNode.Services.Notifications.Hubs;
 
 public static class Extensions
 {
     public static IServiceCollection AddNotifications(this IServiceCollection services)
     {
+        services.AddSingleton<INotificationService, NotificationService>();
         services.AddSignalR();
-        // services.AddHostedService<ServerTimeNotifier>();
         return services;
     }
 
