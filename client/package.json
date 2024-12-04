@@ -13,6 +13,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@aspnet/signalr": "^1.0.27",
+    "@microsoft/signalr": "^8.0.7",
     "axios": "^1.7.8",
     "pinia": "^2.2.6",
     "vue": "^3.5.13",
