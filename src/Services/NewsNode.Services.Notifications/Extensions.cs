@@ -14,6 +14,7 @@ public static class Extensions
     {
         services.AddPostgres<NotificationsDbContext>();
         services.AddScoped<NotificationsDbContext>();
+        services.AddSingleton<NotificationsConnectionManager>();
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSignalR();
         return services;
