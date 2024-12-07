@@ -10,7 +10,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
 {
     public void Configure(EntityTypeBuilder<UserProfile> builder)
     {
-        builder.ToTable("user_profiles", "socials");
+        builder.ToTable("User_profiles");
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
@@ -30,7 +30,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
         builder.OwnsMany(x => x.FollowIds, ownedBuilder =>
         {
             ownedBuilder.WithOwner().HasForeignKey("UserProfileId");
-            ownedBuilder.ToTable("user_followers");
+            ownedBuilder.ToTable("User_followers");
             ownedBuilder.HasKey("Id");
 
             ownedBuilder.Property(x => x.Value)

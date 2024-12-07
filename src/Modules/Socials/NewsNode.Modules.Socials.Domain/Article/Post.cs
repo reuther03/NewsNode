@@ -13,11 +13,11 @@ public class Post : AggregateRoot<ArticleId>
     public int Reposts { get; private set; }
     // moze dislikes
 
-    private readonly List<Guid> _commentIds = [];
-    public IReadOnlyList<Guid> CommentIds => _commentIds.AsReadOnly();
+    private readonly List<Comment> _comments = [];
+    public IReadOnlyList<Comment> Comments => _comments.AsReadOnly();
 
-    private readonly List<ArticleFileUrl> _fileUrls = [];
-    public IReadOnlyList<ArticleFileUrl> FileUrls => _fileUrls.AsReadOnly();
+    // private readonly List<ArticleFileUrl> _fileUrls = [];
+    // public IReadOnlyList<ArticleFileUrl> FileUrls => _fileUrls.AsReadOnly();
 
     public Post()
     {
@@ -32,4 +32,7 @@ public class Post : AggregateRoot<ArticleId>
         Bookmarks = 0;
         Reposts = 0;
     }
+
+    public void AddComment(Comment comment)
+        => _comments.Add(comment);
 }
