@@ -10,6 +10,8 @@ namespace NewsNode.Services.Notifications.Notifications;
 
 public class SendNotificationsJob : BackgroundService
 {
+    private const string ReceiveNotification = nameof(ReceiveNotification);
+
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly NotificationsConnectionManager _notificationsConnectionManager;
     private readonly IHubContext<NotificationHub> _hubContext;
@@ -56,7 +58,7 @@ public class SendNotificationsJob : BackgroundService
             {
                 _logger.LogInformation("Sending notification {Id} to {ReceiverId}", notification.Id, notification.ReceiverId);
                 await _hubContext.Clients.User(notification.ReceiverId.ToString())
-                    .SendAsync("FollowedNotification", notification.Message, cancellationToken);
+                    .SendAsync(ReceiveNotification, notification.Message, cancellationToken);
             }
             catch (Exception ex)
             {

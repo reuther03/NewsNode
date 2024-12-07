@@ -15,6 +15,7 @@ public static class Extensions
             .AddPostgres<SocialsDbContext>()
             .AddScoped<ISocialsDbContext, SocialsDbContext>()
             .AddScoped<IUserProfileRepository, UserProfileRepository>()
+            .AddScoped<IPostRepository, PostRepository>()
             .AddUnitOfWork<IUnitOfWork, UnitOfWork>();
 
         return services;

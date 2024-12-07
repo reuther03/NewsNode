@@ -41,5 +41,20 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
                 .FindNavigation(nameof(UserProfile.FollowIds))
                 ?.SetPropertyAccessMode(PropertyAccessMode.Field);
         });
+
+        builder.OwnsMany(x => x.MutedUserProfileIds, ownedBuilder =>
+        {
+            ownedBuilder.WithOwner().HasForeignKey("UserProfileId");
+            ownedBuilder.ToTable("User_muted_profiles");
+            ownedBuilder.HasKey("Id");
+
+            ownedBuilder.Property(x => x.Value)
+                .ValueGeneratedNever()
+                .HasColumnName("MutedUserProfileId");
+
+            builder.Metadata
+                .FindNavigation(nameof(UserProfile.MutedUserProfileIds))
+                ?.SetPropertyAccessMode(PropertyAccessMode.Field);
+        });
     }
 }

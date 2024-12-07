@@ -1,6 +1,9 @@
-﻿namespace NewsNode.Modules.Socials.Application.Abstractions.Database;
+﻿using NewsNode.Modules.Socials.Domain.Article;
+using NewsNode.Shared.Abstractions.Kernel.Database;
 
-public class IPostRepository
+namespace NewsNode.Modules.Socials.Application.Abstractions.Database;
+
+public interface IPostRepository : IRepository<Post>
 {
-    
+
 }

@@ -6,11 +6,11 @@ using NewsNode.Modules.Socials.Application.Features.Queries.UserProfile;
 
 namespace NewsNode.Modules.Socials.Api.Controllers;
 
-internal class SocialController : BaseController
+internal class UserProfileController : BaseController
 {
     private readonly ISender _sender;
 
-    public SocialController(ISender sender)
+    public UserProfileController(ISender sender)
     {
         _sender = sender;
     }

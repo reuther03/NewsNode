@@ -9,7 +9,6 @@ public class NotificationService : INotificationService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-
     public NotificationService(IServiceScopeFactory serviceScopeFactory)
     {
         _serviceScopeFactory = serviceScopeFactory;

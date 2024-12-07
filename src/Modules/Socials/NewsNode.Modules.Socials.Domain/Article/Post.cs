@@ -33,6 +33,9 @@ public class Post : AggregateRoot<ArticleId>
         Reposts = 0;
     }
 
+    public static Post Create(string content, UserId createdBy)
+        => new(ArticleId.New(), content, createdBy);
+
     public void AddComment(Comment comment)
         => _comments.Add(comment);
 }
