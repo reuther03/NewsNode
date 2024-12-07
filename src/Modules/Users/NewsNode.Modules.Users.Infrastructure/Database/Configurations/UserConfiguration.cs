@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NewsNode.Modules.Users.Domain.Users;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
+using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Modules.Users.Infrastructure.Database.Configurations;
 

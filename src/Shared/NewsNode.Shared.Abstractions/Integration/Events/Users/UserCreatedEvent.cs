@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
+using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Shared.Abstractions.Integration.Events.Users;
 
