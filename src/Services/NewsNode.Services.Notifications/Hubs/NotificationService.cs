@@ -15,6 +15,7 @@ public class NotificationService : INotificationService
         _serviceScopeFactory = serviceScopeFactory;
     }
 
+    //todo: moze zmienic jako jedna metoda a nie rozdzielac per typ notyfikacji
     public async Task FollowedNotification(Guid followerId, Guid followedProfileId)
     {
         using var scope = _serviceScopeFactory.CreateScope();
