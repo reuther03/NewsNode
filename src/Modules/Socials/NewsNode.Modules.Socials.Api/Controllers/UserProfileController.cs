@@ -25,9 +25,10 @@ internal class UserProfileController : BaseController
 
     [HttpPost("{userProfileId:guid}/follow")]
     [Authorize]
-    public async Task<IActionResult> FollowUserProfile([FromRoute] Guid userProfileId)
+    public async Task<IActionResult> FollowUserProfile([FromBody] FollowUserProfileCommand command, [FromRoute] Guid userProfileId)
+
     {
-        var result = await _sender.Send(new FollowUserProfileCommand(userProfileId));
+        var result = await _sender.Send(command with { UserProfileId = userProfileId });
         return Ok(result);
     }
 }

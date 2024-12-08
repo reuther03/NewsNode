@@ -10,7 +10,8 @@ namespace NewsNode.Modules.Socials.Application.Features.Commands.FollowUserProfi
 
 public record FollowUserProfileCommand(
     [property: JsonIgnore]
-    Guid UserProfileId) : ICommand<Guid>
+    Guid UserProfileId,
+    bool Mute = false) : ICommand<Guid>
 {
     internal sealed class Handler : ICommandHandler<FollowUserProfileCommand, Guid>
     {
@@ -37,6 +38,9 @@ public record FollowUserProfileCommand(
             NullValidator.ValidateNotNull(profileToFollow);
 
             profileToFollow.Follow(follower.Id);
+
+            if (request.Mute)
+                follower.MuteUserProfile(profileToFollow.Id);
 
             await _unitOfWork.CommitAsync(cancellationToken);
 
