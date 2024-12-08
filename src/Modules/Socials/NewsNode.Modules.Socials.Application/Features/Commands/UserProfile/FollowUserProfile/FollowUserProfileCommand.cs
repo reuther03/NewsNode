@@ -6,7 +6,7 @@ using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 using NewsNode.Shared.Abstractions.Services;
 
-namespace NewsNode.Modules.Socials.Application.Features.Commands.FollowUserProfile;
+namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfile.FollowUserProfile;
 
 public record FollowUserProfileCommand(
     [property: JsonIgnore]
@@ -38,9 +38,6 @@ public record FollowUserProfileCommand(
             NullValidator.ValidateNotNull(profileToFollow);
 
             profileToFollow.Follow(follower.Id);
-
-            if (request.Mute)
-                follower.MuteUserProfile(profileToFollow.Id);
 
             await _unitOfWork.CommitAsync(cancellationToken);
 

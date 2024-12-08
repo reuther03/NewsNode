@@ -52,4 +52,12 @@ public class UserProfile : AggregateRoot<UserId>
 
         _mutedUserProfileIds.Add(userId);
     }
+
+    public void UnmuteUserProfile(UserId userId)
+    {
+        if (!_mutedUserProfileIds.Contains(userId))
+            throw new DomainException("User is not muted");
+
+        _mutedUserProfileIds.Remove(userId);
+    }
 }

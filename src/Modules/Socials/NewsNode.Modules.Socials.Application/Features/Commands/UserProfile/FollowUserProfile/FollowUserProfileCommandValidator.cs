@@ -1,7 +1,6 @@
-﻿using System.Data;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace NewsNode.Modules.Socials.Application.Features.Commands.FollowUserProfile;
+namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfile.FollowUserProfile;
 
 public class FollowUserProfileCommandValidator : AbstractValidator<FollowUserProfileCommand>
 {

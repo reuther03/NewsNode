@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NewsNode.Modules.Socials.Application.Features.Commands.FollowUserProfile;
+using NewsNode.Modules.Socials.Application.Features.Commands.UserProfile.FollowUserProfile;
+using NewsNode.Modules.Socials.Application.Features.Commands.UserProfile.MuteUserProfile;
 using NewsNode.Modules.Socials.Application.Features.Queries.UserProfile;
 
 namespace NewsNode.Modules.Socials.Api.Controllers;
@@ -29,6 +30,14 @@ internal class UserProfileController : BaseController
 
     {
         var result = await _sender.Send(command with { UserProfileId = userProfileId });
+        return Ok(result);
+    }
+
+    [HttpPatch("{userProfileId:guid}/mute")]
+    [Authorize]
+    public async Task<IActionResult> MuteUserProfile([FromRoute] Guid userProfileId)
+    {
+        var result = await _sender.Send(new MuteUserProfileCommand(UserProfileId: userProfileId));
         return Ok(result);
     }
 }
