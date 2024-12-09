@@ -13,7 +13,10 @@ public class UserProfile : AggregateRoot<UserId>
 
     //moze zmienic to nazwe
     private readonly List<UserProfileFollower> _profileFollowers = [];
-    public IReadOnlyList<UserProfileFollower> ProfileFollowers => _profileFollowers;
+    public IReadOnlyList<UserProfileFollower> ProfileFollowers => _profileFollowers.AsReadOnly();
+
+    private readonly List<UserProfileRelation> _profileRelations = [];
+    public IReadOnlyList<UserProfileRelation> ProfileRelations => _profileRelations.AsReadOnly();
 
     private UserProfile()
     {
@@ -34,5 +37,13 @@ public class UserProfile : AggregateRoot<UserId>
             throw new DomainException("Follower already exists");
 
         _profileFollowers.Add(UserProfileFollower.Create(followerId));
+    }
+
+    public void AddRelation(UserId targetUserProfileId)
+    {
+        if (_profileRelations.Exists(x => x.TargetUserProfileId == targetUserProfileId))
+            throw new DomainException("Relation already exists");
+
+        _profileRelations.Add(UserProfileRelation.Create(targetUserProfileId));
     }
 }
