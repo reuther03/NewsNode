@@ -39,11 +39,11 @@ public class UserProfile : AggregateRoot<UserId>
         _profileFollowers.Add(UserProfileFollower.Create(followerId));
     }
 
-    public void AddRelation(UserId targetUserProfileId)
+    public void AddRelation(UserId targetUserProfileId, UserProfileRelationStatus? relationStatus)
     {
         if (_profileRelations.Exists(x => x.TargetUserProfileId == targetUserProfileId))
             throw new DomainException("Relation already exists");
 
-        _profileRelations.Add(UserProfileRelation.Create(targetUserProfileId));
+        _profileRelations.Add(UserProfileRelation.Create(targetUserProfileId, relationStatus));
     }
 }

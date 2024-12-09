@@ -25,11 +25,16 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             .HasConversion(x => x.Value, x => new Name(x))
             .IsRequired();
 
+        builder.HasIndex(x => x.Email).IsUnique();
+
         builder.HasMany(x => x.ProfileFollowers)
             .WithOne()
             .HasForeignKey("UserProfileId")
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(x => x.Email).IsUnique();
+        builder.HasMany(x => x.ProfileRelations)
+            .WithOne()
+            .HasForeignKey("UserProfileId")
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
