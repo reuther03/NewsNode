@@ -6,7 +6,7 @@ using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 using NewsNode.Shared.Abstractions.Services;
 
-namespace NewsNode.Modules.Socials.Application.Features.Commands.CreatePost;
+namespace NewsNode.Modules.Socials.Application.Features.Commands.Posts.CreatePost;
 
 public record CreatePostCommand(string Content) : ICommand<Guid>
 {
@@ -43,7 +43,9 @@ public record CreatePostCommand(string Content) : ICommand<Guid>
             await _postRepository.AddAsync(post, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
-            // await _notificationService.PostedNotification(userProfile.Id, post.Id);
+            // var unMutedFollowers = await _userProfileRepository.GetFollowersWhereUnMutedAsync(userProfile.Id, cancellationToken);
+
+            // await _notificationService.PostNotification(unMutedFollowers, userProfile.Id, post.Id);
 
             return Result<Guid>.Ok(post.Id);
         }

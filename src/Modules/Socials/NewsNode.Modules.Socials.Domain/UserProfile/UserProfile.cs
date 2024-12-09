@@ -12,11 +12,8 @@ public class UserProfile : AggregateRoot<UserId>
 
 
     //moze zmienic to nazwe
-    private readonly List<UserId> _followIds = [];
-    public IReadOnlyList<UserId> FollowIds => _followIds.AsReadOnly();
-
-    private readonly List<UserId> _mutedUserProfileIds = [];
-    public IReadOnlyList<UserId> MutedUserProfileIds => _mutedUserProfileIds.AsReadOnly();
+    private readonly List<UserProfileFollower> _profileFollowers = [];
+    public IReadOnlyList<UserProfileFollower> ProfileFollowers => _profileFollowers;
 
     private UserProfile()
     {
@@ -30,34 +27,4 @@ public class UserProfile : AggregateRoot<UserId>
 
     public static UserProfile Create(Guid userId, Email email, Name userName)
         => new(UserId.From(userId), email, userName);
-
-    public void Follow(UserId userId)
-    {
-        if (userId == Id)
-            throw new DomainException("You can't follow yourself");
-
-        if (_followIds.Contains(userId))
-            throw new DomainException("User is already followed");
-
-        _followIds.Add(userId);
-    }
-
-    public void MuteUserProfile(UserId userId)
-    {
-        if (userId == Id)
-            throw new DomainException("You can't mute yourself");
-
-        if (_mutedUserProfileIds.Contains(userId))
-            throw new DomainException("User is already muted");
-
-        _mutedUserProfileIds.Add(userId);
-    }
-
-    public void UnmuteUserProfile(UserId userId)
-    {
-        if (!_mutedUserProfileIds.Contains(userId))
-            throw new DomainException("User is not muted");
-
-        _mutedUserProfileIds.Remove(userId);
-    }
 }

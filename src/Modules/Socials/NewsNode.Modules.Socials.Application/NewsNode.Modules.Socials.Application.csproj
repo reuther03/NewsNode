@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <Folder Include="Events\Domain\" />
+      <Folder Include="Features\Commands\Posts\" />
     </ItemGroup>
 
 </Project>

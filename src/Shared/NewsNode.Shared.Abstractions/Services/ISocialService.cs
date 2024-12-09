@@ -1,6 +1,9 @@
-﻿namespace NewsNode.Shared.Abstractions.Services;
+﻿using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
+
+namespace NewsNode.Shared.Abstractions.Services;
 
 public interface ISocialService
 {
-    Task<bool> IsFollowingAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default);
+    // Task<bool> IsFollowingAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default);
+
 }

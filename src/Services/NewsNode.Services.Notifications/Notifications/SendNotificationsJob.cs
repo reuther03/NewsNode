@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsNode.Services.Notifications.Database;
 using NewsNode.Services.Notifications.Hubs;
+using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Services.Notifications.Notifications;
 
@@ -30,12 +31,12 @@ public class SendNotificationsJob : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await SendNotification(stoppingToken);
-            await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+            await SendFollowNotification(stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(120), stoppingToken);
         }
     }
 
-    private async Task SendNotification(CancellationToken cancellationToken)
+    private async Task SendFollowNotification(CancellationToken cancellationToken)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
@@ -72,5 +73,13 @@ public class SendNotificationsJob : BackgroundService
         }
 
         await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task SendPostNotification(CancellationToken cancellationToken)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
+
+        var connectedUsersIds = _notificationsConnectionManager.GetActiveConnectionsUserIds();
     }
 }

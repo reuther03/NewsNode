@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Modules.Socials.Application.Abstractions;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
+using NewsNode.Modules.Socials.Application.Abstractions.Services;
 using NewsNode.Modules.Socials.Infrastructure.Database;
 using NewsNode.Modules.Socials.Infrastructure.Database.Repositories;
+using NewsNode.Shared.Abstractions.Services;
 using NewsNode.Shared.Infrastructure.Postgres;
 
 namespace NewsNode.Modules.Socials.Infrastructure;

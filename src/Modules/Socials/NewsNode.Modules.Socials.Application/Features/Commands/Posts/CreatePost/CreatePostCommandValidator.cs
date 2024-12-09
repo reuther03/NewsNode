@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace NewsNode.Modules.Socials.Application.Features.Commands.CreatePost;
+namespace NewsNode.Modules.Socials.Application.Features.Commands.Posts.CreatePost;
 
 public class CreatePostCommandValidator : AbstractValidator<CreatePostCommand>
 {

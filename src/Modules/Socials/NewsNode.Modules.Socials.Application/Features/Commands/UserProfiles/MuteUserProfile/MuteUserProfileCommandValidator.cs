@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfile.MuteUserProfile;
+namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.MuteUserProfile;
 
 public class MuteUserProfileCommandValidator : AbstractValidator<MuteUserProfileCommand>
 {

@@ -15,7 +15,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
             .HasConversion(x => x.Value, x => UserId.From(x))
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedNever();
 
         builder.Property(x => x.Email)
             .HasConversion(x => x.Value, x => new Email(x))
@@ -25,36 +25,11 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             .HasConversion(x => x.Value, x => new Name(x))
             .IsRequired();
 
+        builder.HasMany(x => x.ProfileFollowers)
+            .WithOne()
+            .HasForeignKey("UserProfileId")
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.HasIndex(x => x.Email).IsUnique();
-
-        builder.OwnsMany(x => x.FollowIds, ownedBuilder =>
-        {
-            ownedBuilder.WithOwner().HasForeignKey("UserProfileId");
-            ownedBuilder.ToTable("User_followers");
-            ownedBuilder.HasKey("Id");
-
-            ownedBuilder.Property(x => x.Value)
-                .ValueGeneratedNever()
-                .HasColumnName("FollowerId");
-
-            builder.Metadata
-                .FindNavigation(nameof(UserProfile.FollowIds))
-                ?.SetPropertyAccessMode(PropertyAccessMode.Field);
-        });
-
-        builder.OwnsMany(x => x.MutedUserProfileIds, ownedBuilder =>
-        {
-            ownedBuilder.WithOwner().HasForeignKey("UserProfileId");
-            ownedBuilder.ToTable("User_muted_profiles");
-            ownedBuilder.HasKey("Id");
-
-            ownedBuilder.Property(x => x.Value)
-                .ValueGeneratedNever()
-                .HasColumnName("MutedUserProfileId");
-
-            builder.Metadata
-                .FindNavigation(nameof(UserProfile.MutedUserProfileIds))
-                ?.SetPropertyAccessMode(PropertyAccessMode.Field);
-        });
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NewsNode.Modules.Socials.Application.Abstractions.Database;
+using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Modules.Socials.Application.Abstractions.Services;
@@ -12,6 +13,6 @@ public class SocialService : ISocialService
         _userProfileRepository = userProfileRepository;
     }
 
-    public Task<bool> IsFollowingAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default)
-        => _userProfileRepository.IsFollowingAsync(followerId, followedProfileId, cancellationToken);
+    // public Task<bool> IsFollowingAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default)
+    //     => _userProfileRepository.IsFollowingAsync(followerId, followedProfileId, cancellationToken);
 }

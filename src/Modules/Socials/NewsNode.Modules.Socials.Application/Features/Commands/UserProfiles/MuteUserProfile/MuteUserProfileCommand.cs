@@ -7,7 +7,7 @@ using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 using NewsNode.Shared.Abstractions.Services;
 using ICommand = NewsNode.Shared.Abstractions.QueriesAndCommands.Commands.ICommand;
 
-namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfile.MuteUserProfile;
+namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.MuteUserProfile;
 
 public record MuteUserProfileCommand(
     [property: JsonIgnore]
@@ -34,10 +34,10 @@ public record MuteUserProfileCommand(
             var profileToMute = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
             NullValidator.ValidateNotNull(profileToMute);
 
-            if (user.MutedUserProfileIds.Contains(profileToMute.Id))
-                user.UnmuteUserProfile(profileToMute.Id);
-            else
-                user.MuteUserProfile(profileToMute.Id);
+            // if (user.MutedUserProfileIds.Contains(profileToMute.Id))
+            //     user.UnmuteUserProfile(profileToMute.Id);
+            // else
+            //     user.MuteUserProfile(profileToMute.Id);
 
             await _unitOfWork.CommitAsync(cancellationToken);
 

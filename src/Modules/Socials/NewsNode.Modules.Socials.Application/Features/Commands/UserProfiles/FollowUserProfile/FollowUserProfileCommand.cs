@@ -6,12 +6,11 @@ using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 using NewsNode.Shared.Abstractions.Services;
 
-namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfile.FollowUserProfile;
+namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.FollowUserProfile;
 
 public record FollowUserProfileCommand(
     [property: JsonIgnore]
-    Guid UserProfileId,
-    bool Mute = false) : ICommand<Guid>
+    Guid UserProfileId) : ICommand<Guid>
 {
     internal sealed class Handler : ICommandHandler<FollowUserProfileCommand, Guid>
     {
@@ -37,10 +36,9 @@ public record FollowUserProfileCommand(
             var profileToFollow = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
             NullValidator.ValidateNotNull(profileToFollow);
 
-            profileToFollow.Follow(follower.Id);
+            // profileToFollow.Follow(follower.Id);
 
             await _unitOfWork.CommitAsync(cancellationToken);
-
             await _notificationService.FollowedNotification(follower.Id, profileToFollow.Id);
 
             return Result<Guid>.Ok(profileToFollow.Id);
