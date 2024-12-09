@@ -36,7 +36,7 @@ public record FollowUserProfileCommand(
             var profileToFollow = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
             NullValidator.ValidateNotNull(profileToFollow);
 
-            // profileToFollow.Follow(follower.Id);
+            follower.AddFollower(profileToFollow.Id);
 
             await _unitOfWork.CommitAsync(cancellationToken);
             await _notificationService.FollowedNotification(follower.Id, profileToFollow.Id);

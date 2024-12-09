@@ -34,10 +34,8 @@ public record MuteUserProfileCommand(
             var profileToMute = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
             NullValidator.ValidateNotNull(profileToMute);
 
-            // if (user.MutedUserProfileIds.Contains(profileToMute.Id))
-            //     user.UnmuteUserProfile(profileToMute.Id);
-            // else
-            //     user.MuteUserProfile(profileToMute.Id);
+            if (!await _userProfileRepository.IsFollowingAsync(user.Id, profileToMute.Id, cancellationToken))
+                return Result.BadRequest("You are not following this user.");
 
             await _unitOfWork.CommitAsync(cancellationToken);
 

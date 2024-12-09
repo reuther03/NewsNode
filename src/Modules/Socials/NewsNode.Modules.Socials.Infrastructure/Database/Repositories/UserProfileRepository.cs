@@ -19,10 +19,10 @@ internal class UserProfileRepository : Repository<UserProfile, SocialsDbContext>
         => await _context.UserProfiles
             .FirstOrDefaultAsync(x => x.Id == UserId.From(id), cancellationToken);
 
-    // public async Task<bool> IsFollowingAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default)
-    //     => await _context.UserProfiles
-    //         .Where(x => x.Id == UserId.From(followerId))
-    //         .AnyAsync(x => x.FollowIds.Contains(UserId.From(followedProfileId)), cancellationToken);
+    public async Task<bool> IsFollowingAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default)
+        => await _context.UserProfiles
+            .AnyAsync(x => x.Id.Value == followedProfileId &&
+                x.ProfileFollowers.Any(z => z.FollowerId.Value == followerId), cancellationToken);
 
     // public async Task<List<UserId>> GetFollowedProfilesAsync(Guid profileId, CancellationToken cancellationToken = default)
     // {

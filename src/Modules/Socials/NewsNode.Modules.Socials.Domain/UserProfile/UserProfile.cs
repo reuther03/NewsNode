@@ -27,4 +27,12 @@ public class UserProfile : AggregateRoot<UserId>
 
     public static UserProfile Create(Guid userId, Email email, Name userName)
         => new(UserId.From(userId), email, userName);
+
+    public void AddFollower(UserId followerId)
+    {
+        if (_profileFollowers.Exists(x => x.FollowerId == followerId))
+            throw new DomainException("Follower already exists");
+
+        _profileFollowers.Add(UserProfileFollower.Create(followerId));
+    }
 }

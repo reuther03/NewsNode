@@ -19,8 +19,5 @@ public class UserProfileFollowerConfiguration : IEntityTypeConfiguration<UserPro
             .HasConversion(x => x.Value, x => new UserId(x))
             .ValueGeneratedNever()
             .IsRequired();
-
-        builder.Property(x => x.IsUserProfileMuted)
-            .IsRequired();
     }
 }

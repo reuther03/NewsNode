@@ -8,8 +8,8 @@ public interface IUserProfileRepository : IRepository<UserProfile>
 {
     Task<UserProfile?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    // Task<bool> IsFollowingAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default);
-    //
+    Task<bool> IsFollowingAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default);
+
     // Task<List<UserId>> GetFollowedProfilesAsync(Guid profileId, CancellationToken cancellationToken = default);
     //
     // Task<List<UserId>> GetFollowersWhereUnMutedAsync(Guid profileId, CancellationToken cancellationToken = default);
