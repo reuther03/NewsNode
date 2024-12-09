@@ -39,6 +39,15 @@ public class UserProfile : AggregateRoot<UserId>
         _profileFollowers.Add(UserProfileFollower.Create(followerId));
     }
 
+    public void RemoveFollower(UserId followerId)
+    {
+        var follower = _profileFollowers.Find(x => x.FollowerId == followerId);
+        if (follower is null)
+            throw new DomainException("Follower not found");
+
+        _profileFollowers.Remove(follower);
+    }
+
     public void AddRelation(UserId targetUserProfileId, UserProfileRelationStatus? relationStatus)
     {
         if (_profileRelations.Exists(x => x.TargetUserProfileId == targetUserProfileId))
