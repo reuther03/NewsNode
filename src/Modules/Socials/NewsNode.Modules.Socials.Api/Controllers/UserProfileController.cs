@@ -34,9 +34,9 @@ internal class UserProfileController : BaseController
 
     [HttpPatch("{userProfileId:guid}/mute")]
     [Authorize]
-    public async Task<IActionResult> MuteUserProfile([FromRoute] Guid userProfileId)
+    public async Task<IActionResult> MuteUserProfile([FromBody] AddUserProfileRelationStatusCommand command, [FromRoute] Guid userProfileId)
     {
-        var result = await _sender.Send(new AddUserProfileRelationStatusCommand(UserProfileId: userProfileId));
+        var result = await _sender.Send(command with { UserProfileId = userProfileId });
         return Ok(result);
     }
 }

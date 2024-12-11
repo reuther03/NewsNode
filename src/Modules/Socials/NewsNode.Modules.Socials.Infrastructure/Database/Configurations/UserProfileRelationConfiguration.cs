@@ -9,7 +9,7 @@ public class UserProfileRelationConfiguration : IEntityTypeConfiguration<UserPro
 {
     public void Configure(EntityTypeBuilder<UserProfileRelation> builder)
     {
-        builder.ToTable("UserProfileRelations");
+        builder.ToTable("User_profile_relations");
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
