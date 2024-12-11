@@ -5,6 +5,7 @@ namespace NewsNode.Modules.Socials.Domain.UserProfile;
 
 public class UserProfileFollower : Entity<Guid>
 {
+    public UserId UserProfileId { get; private set; }
     public UserId FollowerId { get; private set; }
 
     private UserProfileFollower()

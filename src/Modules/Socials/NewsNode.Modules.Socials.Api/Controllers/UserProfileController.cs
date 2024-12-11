@@ -32,7 +32,7 @@ internal class UserProfileController : BaseController
         return Ok(result);
     }
 
-    [HttpPatch("{userProfileId:guid}/mute")]
+    [HttpPatch("{userProfileId:guid}/relation-status")]
     [Authorize]
     public async Task<IActionResult> MuteUserProfile([FromBody] AddUserProfileRelationStatusCommand command, [FromRoute] Guid userProfileId)
     {

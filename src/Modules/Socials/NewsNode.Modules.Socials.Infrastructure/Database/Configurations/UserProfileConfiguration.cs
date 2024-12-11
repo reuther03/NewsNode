@@ -27,11 +27,6 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
 
         builder.HasIndex(x => x.Email).IsUnique();
 
-        builder.HasMany(x => x.ProfileFollowers)
-            .WithOne()
-            .HasForeignKey("UserProfileId")
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasMany(x => x.ProfileRelations)
             .WithOne()
             .HasForeignKey("UserProfileId")

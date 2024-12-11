@@ -10,10 +10,8 @@ public class UserProfile : AggregateRoot<UserId>
     public Name UserName { get; private set; }
     public Email Email { get; private set; }
 
-
-    //moze zmienic to nazwe
-    private readonly List<UserProfileFollower> _profileFollowers = [];
-    public IReadOnlyList<UserProfileFollower> ProfileFollowers => _profileFollowers.AsReadOnly();
+    private readonly List<UserProfileFollower> _followers = [];
+    public IReadOnlyList<UserProfileFollower> Followers => _followers.AsReadOnly();
 
     private readonly List<UserProfileRelation> _profileRelations = [];
     public IReadOnlyList<UserProfileRelation> ProfileRelations => _profileRelations.AsReadOnly();
@@ -33,19 +31,10 @@ public class UserProfile : AggregateRoot<UserId>
 
     public void AddFollower(UserId followerId)
     {
-        if (_profileFollowers.Exists(x => x.FollowerId == followerId))
+        if (_followers.Exists(x => x.FollowerId == followerId))
             throw new DomainException("Follower already exists");
 
-        _profileFollowers.Add(UserProfileFollower.Create(followerId));
-    }
-
-    public void RemoveFollower(UserId followerId)
-    {
-        var follower = _profileFollowers.Find(x => x.FollowerId == followerId);
-        if (follower is null)
-            throw new DomainException("Follower not found");
-
-        _profileFollowers.Remove(follower);
+        _followers.Add(UserProfileFollower.Create(followerId));
     }
 
     public void AddRelation(UserId targetUserProfileId, UserProfileRelationStatus? relationStatus)

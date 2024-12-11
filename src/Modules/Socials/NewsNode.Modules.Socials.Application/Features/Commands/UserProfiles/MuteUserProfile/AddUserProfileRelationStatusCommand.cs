@@ -18,12 +18,14 @@ public record AddUserProfileRelationStatusCommand(
     internal sealed class Handler : ICommandHandler<AddUserProfileRelationStatusCommand>
     {
         private readonly IUserProfileRepository _userProfileRepository;
+        private readonly IFollowerRepository _followerRepository;
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public Handler(IUserProfileRepository userProfileRepository, IUserService userService, IUnitOfWork unitOfWork)
+        public Handler(IUserProfileRepository userProfileRepository, IFollowerRepository followerRepository, IUserService userService, IUnitOfWork unitOfWork)
         {
             _userProfileRepository = userProfileRepository;
+            _followerRepository = followerRepository;
             _userService = userService;
             _unitOfWork = unitOfWork;
         }
@@ -40,7 +42,7 @@ public record AddUserProfileRelationStatusCommand(
                 await _userProfileRepository.IsFollowingAsync(user.Id, profileForRelation.Id, cancellationToken))
             {
                 user.AddRelation(profileForRelation.Id, request.Status);
-                user.RemoveFollower(profileForRelation.Id);
+                await _followerRepository.RemoveAsync(user.Id, profileForRelation.Id, cancellationToken);
             }
             else
             {

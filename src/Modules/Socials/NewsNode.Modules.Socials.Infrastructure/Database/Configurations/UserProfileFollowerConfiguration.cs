@@ -15,9 +15,26 @@ public class UserProfileFollowerConfiguration : IEntityTypeConfiguration<UserPro
         builder.Property(x => x.Id)
             .ValueGeneratedNever();
 
+        builder.Property(x => x.UserProfileId)
+            .HasConversion(x => x.Value, x => new UserId(x))
+            .ValueGeneratedNever()
+            .IsRequired();
+
         builder.Property(x => x.FollowerId)
             .HasConversion(x => x.Value, x => new UserId(x))
             .ValueGeneratedNever()
             .IsRequired();
+
+        builder.HasOne<UserProfile>()
+            .WithMany(x => x.Followers)
+            .HasForeignKey(x => x.UserProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne<UserProfile>()
+            .WithMany()
+            .HasForeignKey(x => x.FollowerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(x => new { x.UserProfileId, x.FollowerId });
     }
 }
