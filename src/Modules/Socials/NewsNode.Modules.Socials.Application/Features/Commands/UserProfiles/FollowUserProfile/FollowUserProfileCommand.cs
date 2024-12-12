@@ -16,17 +16,15 @@ public record FollowUserProfileCommand(
     internal sealed class Handler : ICommandHandler<FollowUserProfileCommand, Guid>
     {
         private readonly IUserProfileRepository _userProfileRepository;
-        private readonly IFollowerRepository _followerRepository;
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly INotificationService _notificationService;
 
 
-        public Handler(IUserProfileRepository userProfileRepository, IFollowerRepository followerRepository, IUserService userService, IUnitOfWork unitOfWork,
+        public Handler(IUserProfileRepository userProfileRepository, IUserService userService, IUnitOfWork unitOfWork,
             INotificationService notificationService)
         {
             _userProfileRepository = userProfileRepository;
-            _followerRepository = followerRepository;
             _userService = userService;
             _unitOfWork = unitOfWork;
             _notificationService = notificationService;
@@ -43,8 +41,6 @@ public record FollowUserProfileCommand(
             var relation = UserProfileRelation.Create(profileToFollow.Id, UserProfileRelationStatus.Followed);
 
             follower.AddRelation(relation);
-
-            await _followerRepository.AddAsync(relation, cancellationToken);
 
             await _unitOfWork.CommitAsync(cancellationToken);
             await _notificationService.FollowedNotification(follower.Id, profileToFollow.Id);
