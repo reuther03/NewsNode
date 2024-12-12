@@ -13,16 +13,25 @@ public class UserProfileRelationConfiguration : IEntityTypeConfiguration<UserPro
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
-            .IsRequired()
             .ValueGeneratedNever();
 
-        builder.Property(x => x.TargetUserProfileId)
+        builder.Property(x => x.UserId)
             .HasConversion(x => x.Value, x => new UserId(x))
             .ValueGeneratedNever()
             .IsRequired();
 
-        builder.Property(x => x.RelationStatus)
+        builder.Property(x => x.TargetUserId)
+            .HasConversion(x => x.Value, x => new UserId(x))
+            .ValueGeneratedNever()
+            .IsRequired();
+
+        builder.Property(x => x.Status)
             .HasConversion<string>()
             .IsRequired();
+
+        builder.HasOne<UserProfile>()
+            .WithMany(x => x.Relations)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

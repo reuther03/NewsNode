@@ -3,6 +3,7 @@
 public enum UserProfileRelationStatus
 {
     None = 0,
-    Muted = 1,
-    Blocked = 2
+    Followed = 1,
+    Muted = 2,
+    Blocked = 3
 }

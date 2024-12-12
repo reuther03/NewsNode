@@ -3,7 +3,7 @@ using NewsNode.Shared.Abstractions.Kernel.Database;
 
 namespace NewsNode.Modules.Socials.Application.Abstractions.Database;
 
-public interface IFollowerRepository : IRepository<UserProfileFollower>
+public interface IFollowerRepository : IRepository<UserProfileRelation>
 {
     Task RemoveAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default);
 }

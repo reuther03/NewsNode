@@ -6,7 +6,7 @@ using NewsNode.Shared.Infrastructure.Postgres;
 
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Repositories;
 
-internal class FollowerRepository : Repository<UserProfileFollower, SocialsDbContext>, IFollowerRepository
+internal class FollowerRepository : Repository<UserProfileRelation, SocialsDbContext>, IFollowerRepository
 {
     private readonly SocialsDbContext _dbContext;
 
@@ -19,7 +19,7 @@ internal class FollowerRepository : Repository<UserProfileFollower, SocialsDbCon
     {
         var entity = await _dbContext.UserProfileFollowers
             .FirstOrDefaultAsync(
-                x => x.UserProfileId == UserId.From(followerId) && x.FollowerId == UserId.From(followedProfileId), cancellationToken);
+                x => x.UserId == UserId.From(followerId) && x.TargetUserId == UserId.From(followedProfileId), cancellationToken);
 
         if (entity is null)
             return;

@@ -16,14 +16,17 @@ public record FollowUserProfileCommand(
     internal sealed class Handler : ICommandHandler<FollowUserProfileCommand, Guid>
     {
         private readonly IUserProfileRepository _userProfileRepository;
+        private readonly IFollowerRepository _followerRepository;
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly INotificationService _notificationService;
 
 
-        public Handler(IUserProfileRepository userProfileRepository, IUserService userService, IUnitOfWork unitOfWork, INotificationService notificationService)
+        public Handler(IUserProfileRepository userProfileRepository, IFollowerRepository followerRepository, IUserService userService, IUnitOfWork unitOfWork,
+            INotificationService notificationService)
         {
             _userProfileRepository = userProfileRepository;
+            _followerRepository = followerRepository;
             _userService = userService;
             _unitOfWork = unitOfWork;
             _notificationService = notificationService;
@@ -31,14 +34,17 @@ public record FollowUserProfileCommand(
 
         public async Task<Result<Guid>> Handle(FollowUserProfileCommand request, CancellationToken cancellationToken)
         {
-            var follower = await _userProfileRepository.GetByIdAsync(_userService.UserId, cancellationToken);
+            var follower = await _userProfileRepository.GetFullByIdAsync(_userService.UserId, cancellationToken);
             NullValidator.ValidateNotNull(follower);
 
             var profileToFollow = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
             NullValidator.ValidateNotNull(profileToFollow);
 
-            follower.AddFollower(profileToFollow.Id);
-            profileToFollow.AddRelation(follower.Id, UserProfileRelationStatus.None);
+            var relation = UserProfileRelation.Create(profileToFollow.Id, UserProfileRelationStatus.Followed);
+
+            follower.AddRelation(relation);
+
+            await _followerRepository.AddAsync(relation, cancellationToken);
 
             await _unitOfWork.CommitAsync(cancellationToken);
             await _notificationService.FollowedNotification(follower.Id, profileToFollow.Id);

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(SocialsDbContext))]
-    [Migration("20241211014407_Test")]
-    partial class Test
+    [Migration("20241212181736_ChangeName")]
+    partial class ChangeName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,44 +111,25 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
                     b.ToTable("User_profiles", "socials");
                 });
 
-            modelBuilder.Entity("NewsNode.Modules.Socials.Domain.UserProfile.UserProfileFollower", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FollowerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserProfileId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FollowerId");
-
-                    b.HasIndex("UserProfileId", "FollowerId");
-
-                    b.ToTable("User_profile_followers", "socials");
-                });
-
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.UserProfile.UserProfileRelation", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("RelationStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("TargetUserProfileId")
+                    b.Property<Guid>("TargetUserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("UserProfileId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserProfileId");
+                    b.HasIndex("TargetUserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("User_profile_relations", "socials");
                 });
@@ -161,27 +142,19 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("NewsNode.Modules.Socials.Domain.UserProfile.UserProfileFollower", b =>
+            modelBuilder.Entity("NewsNode.Modules.Socials.Domain.UserProfile.UserProfileRelation", b =>
                 {
                     b.HasOne("NewsNode.Modules.Socials.Domain.UserProfile.UserProfile", null)
                         .WithMany()
-                        .HasForeignKey("FollowerId")
+                        .HasForeignKey("TargetUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("NewsNode.Modules.Socials.Domain.UserProfile.UserProfile", null)
-                        .WithMany("Followers")
-                        .HasForeignKey("UserProfileId")
+                        .WithMany("Relations")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("NewsNode.Modules.Socials.Domain.UserProfile.UserProfileRelation", b =>
-                {
-                    b.HasOne("NewsNode.Modules.Socials.Domain.UserProfile.UserProfile", null)
-                        .WithMany("ProfileRelations")
-                        .HasForeignKey("UserProfileId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.Article.Post", b =>
@@ -191,9 +164,7 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.UserProfile.UserProfile", b =>
                 {
-                    b.Navigation("Followers");
-
-                    b.Navigation("ProfileRelations");
+                    b.Navigation("Relations");
                 });
 #pragma warning restore 612, 618
         }

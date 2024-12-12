@@ -26,10 +26,5 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             .IsRequired();
 
         builder.HasIndex(x => x.Email).IsUnique();
-
-        builder.HasMany(x => x.ProfileRelations)
-            .WithOne()
-            .HasForeignKey("UserProfileId")
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

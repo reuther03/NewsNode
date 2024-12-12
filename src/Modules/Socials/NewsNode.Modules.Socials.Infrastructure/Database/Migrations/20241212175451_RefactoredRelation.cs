@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class RefactoredFollowers : Migration
+    public partial class RefactoredRelation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -78,37 +78,23 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserProfileId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FollowerId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TargetUserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User_profile_followers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_profile_followers_User_profiles_UserProfileId",
-                        column: x => x.UserProfileId,
+                        name: "FK_User_profile_followers_User_profiles_TargetUserId",
+                        column: x => x.TargetUserId,
                         principalSchema: "socials",
                         principalTable: "User_profiles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User_profile_relations",
-                schema: "socials",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TargetUserProfileId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RelationStatus = table.Column<string>(type: "text", nullable: false),
-                    UserProfileId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User_profile_relations", x => x.Id);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_User_profile_relations_User_profiles_UserProfileId",
-                        column: x => x.UserProfileId,
+                        name: "FK_User_profile_followers_User_profiles_UserId",
+                        column: x => x.UserId,
                         principalSchema: "socials",
                         principalTable: "User_profiles",
                         principalColumn: "Id",
@@ -122,16 +108,16 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_profile_followers_UserProfileId",
+                name: "IX_User_profile_followers_TargetUserId",
                 schema: "socials",
                 table: "User_profile_followers",
-                column: "UserProfileId");
+                column: "TargetUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_profile_relations_UserProfileId",
+                name: "IX_User_profile_followers_UserId",
                 schema: "socials",
-                table: "User_profile_relations",
-                column: "UserProfileId");
+                table: "User_profile_followers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_profiles_Email",
@@ -150,10 +136,6 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "User_profile_followers",
-                schema: "socials");
-
-            migrationBuilder.DropTable(
-                name: "User_profile_relations",
                 schema: "socials");
 
             migrationBuilder.DropTable(

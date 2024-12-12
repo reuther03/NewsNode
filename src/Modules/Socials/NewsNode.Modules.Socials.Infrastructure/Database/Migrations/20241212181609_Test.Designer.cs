@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsNode.Modules.Socials.Infrastructure.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(SocialsDbContext))]
-    partial class SocialsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241212181609_Test")]
+    partial class Test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,9 +116,8 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("TargetUserId")
                         .HasColumnType("uuid");
@@ -125,9 +127,11 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TargetUserId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("User_profile_relations", "socials");
+                    b.ToTable("User_profile_followers", "socials");
                 });
 
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.Article.Comment", b =>
@@ -140,6 +144,12 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.UserProfile.UserProfileRelation", b =>
                 {
+                    b.HasOne("NewsNode.Modules.Socials.Domain.UserProfile.UserProfile", null)
+                        .WithMany()
+                        .HasForeignKey("TargetUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("NewsNode.Modules.Socials.Domain.UserProfile.UserProfile", null)
                         .WithMany("Relations")
                         .HasForeignKey("UserId")

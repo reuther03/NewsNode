@@ -31,13 +31,13 @@ public record GetUserProfileQuery(
                 return Result.Unauthorized<UserProfileDto>("User is not authenticated");
 
             var userProfile = await _dbContext.UserProfiles
-                .Include(x => x.Followers)
+                .Include(x => x.Relations)
                 .FirstOrDefaultAsync(x => x.Id == UserId.From(request.UserProfilId), cancellationToken);
 
             NullValidator.ValidateNotNull(userProfile);
 
             var userProfileFollowingCount = await _dbContext.UserProfiles
-                .Where(x => x.Followers.Any(f => f.FollowerId == userProfile.Id))
+                .Where(x => x.Relations.Any(f => f.TargetUserId == userProfile.Id))
                 .CountAsync(cancellationToken);
 
             var userProfileDto = new UserProfileDto
@@ -45,7 +45,7 @@ public record GetUserProfileQuery(
                 Id = userProfile.Id,
                 UserName = userProfile.UserName,
                 Email = userProfile.Email,
-                FollowersCount = userProfile.Followers.Count,
+                FollowersCount = userProfile.Relations.Count,
                 FollowingCount = userProfileFollowingCount
             };
 
