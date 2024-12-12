@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using NewsNode.Modules.Socials.Application.Abstractions;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
+using NewsNode.Modules.Socials.Domain.UserProfile;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
@@ -37,6 +38,7 @@ public record FollowUserProfileCommand(
             NullValidator.ValidateNotNull(profileToFollow);
 
             follower.AddFollower(profileToFollow.Id);
+            profileToFollow.AddRelation(follower.Id, UserProfileRelationStatus.None);
 
             await _unitOfWork.CommitAsync(cancellationToken);
             await _notificationService.FollowedNotification(follower.Id, profileToFollow.Id);

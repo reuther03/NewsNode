@@ -3,7 +3,7 @@ using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Modules.Socials.Domain.Article;
 
-public class Post : AggregateRoot<ArticleId>
+public class Post : AggregateRoot<PostId>
 {
     public string Content { get; private set; }
     public DateTime PostedAt { get; private set; }
@@ -16,14 +16,14 @@ public class Post : AggregateRoot<ArticleId>
     private readonly List<Comment> _comments = [];
     public IReadOnlyList<Comment> Comments => _comments.AsReadOnly();
 
-    // private readonly List<ArticleFileUrl> _fileUrls = [];
-    // public IReadOnlyList<ArticleFileUrl> FileUrls => _fileUrls.AsReadOnly();
+    // private readonly List<PostFileUrl> _fileUrls = [];
+    // public IReadOnlyList<PostFileUrl> FileUrls => _fileUrls.AsReadOnly();
 
     public Post()
     {
     }
 
-    public Post(ArticleId id, string content, UserId createdBy) : base(id)
+    public Post(PostId id, string content, UserId createdBy) : base(id)
     {
         Content = content;
         PostedAt = DateTime.UtcNow;
@@ -34,7 +34,7 @@ public class Post : AggregateRoot<ArticleId>
     }
 
     public static Post Create(string content, UserId createdBy)
-        => new(ArticleId.New(), content, createdBy);
+        => new(PostId.New(), content, createdBy);
 
     public void AddComment(Comment comment)
         => _comments.Add(comment);

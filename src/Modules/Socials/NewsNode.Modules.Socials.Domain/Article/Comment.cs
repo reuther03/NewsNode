@@ -16,6 +16,6 @@ public class Comment : Entity<Guid>
     {
     }
 
-    // private readonly List<ArticleFileUrl> _fileUrls = [];
-    // public IReadOnlyList<ArticleFileUrl> FileUrls => _fileUrls.AsReadOnly();
+    // private readonly List<PostFileUrl> _fileUrls = [];
+    // public IReadOnlyList<PostFileUrl> FileUrls => _fileUrls.AsReadOnly();
 }

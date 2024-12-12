@@ -13,7 +13,7 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
-            .HasConversion(x => x.Value, x => ArticleId.From(x))
+            .HasConversion(x => x.Value, x => PostId.From(x))
             .ValueGeneratedNever();
 
         builder.Property(x => x.Content)
