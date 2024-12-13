@@ -27,14 +27,14 @@ public class UserProfile : AggregateRoot<UserId>
         => new(UserId.From(userId), email, userName);
 
 
-    public void AddRelation(UserProfileRelation relation)
+    public void AddRelation(UserId targetUserId, UserProfileRelationStatus status)
     {
-        if (_relations.Exists(x => x.TargetUserId == relation.TargetUserId && x.Status == relation.Status))
+        if (_relations.Exists(x => x.TargetUserId == targetUserId && x.Status == status))
             throw new DomainException("Relation already exists");
 
         if (_relations.Any(x => x.TargetUserId == Id))
             throw new DomainException("Cannot add self relation");
 
-        _relations.Add(relation);
+        _relations.Add(UserProfileRelation.Create(targetUserId, status));
     }
 }

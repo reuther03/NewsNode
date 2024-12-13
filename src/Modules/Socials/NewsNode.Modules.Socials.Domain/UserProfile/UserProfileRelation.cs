@@ -21,4 +21,7 @@ public class UserProfileRelation : Entity<Guid>
 
     public static UserProfileRelation Create(UserId targetUserId, UserProfileRelationStatus relationStatus)
         => new(Guid.NewGuid(), targetUserId, relationStatus);
+
+    public void UpdateStatus(UserProfileRelationStatus status)
+     => Status = status;
 }

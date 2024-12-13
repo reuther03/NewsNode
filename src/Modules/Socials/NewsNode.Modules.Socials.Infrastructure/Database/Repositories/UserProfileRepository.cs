@@ -24,9 +24,11 @@ internal class UserProfileRepository : Repository<UserProfile, SocialsDbContext>
             .Include(x => x.Relations)
             .FirstOrDefaultAsync(x => x.Id == UserId.From(id), cancellationToken);
 
-    public async Task<bool> IsFollowingAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default)
-        => await _context.UserProfiles.Where(x => x.Id == UserId.From(followerId))
-            .AnyAsync(x => x.Relations.Any(y => y.TargetUserId == UserId.From(followedProfileId)), cancellationToken);
+    public async Task<bool> IsFollowingAsync(Guid userProfileId, Guid targetUserProfileId, CancellationToken cancellationToken = default)
+        => await _context.UserProfiles
+            .Where(x => x.Id == UserId.From(userProfileId))
+            .AnyAsync(x => x.Relations.Any(y => y.TargetUserId == UserId.From(targetUserProfileId) &&
+                y.Status == UserProfileRelationStatus.Followed), cancellationToken);
 
     // public async Task<List<UserId>> GetFollowersWhereUnMutedAsync(Guid profileId, CancellationToken cancellationToken = default)
     //     => await _context.UserProfiles

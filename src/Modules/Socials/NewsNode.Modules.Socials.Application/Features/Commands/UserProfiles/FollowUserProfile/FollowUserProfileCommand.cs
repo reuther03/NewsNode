@@ -38,9 +38,7 @@ public record FollowUserProfileCommand(
             var profileToFollow = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
             NullValidator.ValidateNotNull(profileToFollow);
 
-            var relation = UserProfileRelation.Create(profileToFollow.Id, UserProfileRelationStatus.Followed);
-
-            follower.AddRelation(relation);
+            follower.AddRelation(profileToFollow.Id, UserProfileRelationStatus.Followed);
 
             await _unitOfWork.CommitAsync(cancellationToken);
             await _notificationService.FollowedNotification(follower.Id, profileToFollow.Id);
