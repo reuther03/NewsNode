@@ -30,9 +30,21 @@ internal class UserProfileRepository : Repository<UserProfile, SocialsDbContext>
             .AnyAsync(x => x.Relations.Any(y => y.TargetUserId == UserId.From(targetUserProfileId) &&
                 y.Status == UserProfileRelationStatus.Followed), cancellationToken);
 
-    // public async Task<List<UserId>> GetFollowersWhereUnMutedAsync(Guid profileId, CancellationToken cancellationToken = default)
-    //     => await _context.UserProfiles
-    //         .Where(x => x.ProfileRelations.Any(z => z.TargetUserProfileId == UserId.From(profileId) && z.RelationStatus == UserProfileRelationStatus.None))
-    //         .Select(x => x.Id)
-    //         .ToListAsync(cancellationToken);
+    public async Task<List<UserId>> GetFollowersWhereUnMutedAsync(Guid profileId, CancellationToken cancellationToken = default)
+    {
+        var allFollowers = await _context.UserProfiles
+            .Where(x => x.Relations
+                .Any(y => y.TargetUserId == UserId.From(profileId) &&
+                    y.Status == UserProfileRelationStatus.Followed))
+            .ToListAsync(cancellationToken);
+
+        var unMutedFollowers = allFollowers
+            .Where(x => x.Relations
+                .Any(y => y.TargetUserId == UserId.From(profileId) &&
+                    y.Status != UserProfileRelationStatus.Muted))
+            .Select(x => x.Id)
+            .ToList();
+
+        return unMutedFollowers;
+    }
 }

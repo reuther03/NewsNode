@@ -43,9 +43,9 @@ public record CreatePostCommand(string Content) : ICommand<Guid>
             await _postRepository.AddAsync(post, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
-            // var unMutedFollowers = await _userProfileRepository.GetFollowersWhereUnMutedAsync(userProfile.Id, cancellationToken);
+            var unMutedFollowers = await _userProfileRepository.GetFollowersWhereUnMutedAsync(userProfile.Id, cancellationToken);
 
-            // await _notificationService.PostNotification(unMutedFollowers, userProfile.Id, post.Id);
+            await _notificationService.PostNotification(unMutedFollowers, userProfile.Id, post.Id);
 
             return Result<Guid>.Ok(post.Id);
         }
