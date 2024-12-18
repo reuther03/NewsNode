@@ -7,6 +7,6 @@ namespace NewsNode.Modules.Socials.Application.Abstractions.Database;
 public interface ISocialsDbContext
 {
     DbSet<UserProfile> UserProfiles { get; }
-    DbSet<UserProfileRelation> UserProfileFollowers { get; }
+    DbSet<UserProfileFollow> UserProfileFollowers { get; }
     DbSet<Post> Posts { get; }
 }

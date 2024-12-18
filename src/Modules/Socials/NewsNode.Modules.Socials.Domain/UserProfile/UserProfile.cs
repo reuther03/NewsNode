@@ -10,8 +10,11 @@ public class UserProfile : AggregateRoot<UserId>
     public Name UserName { get; private set; }
     public Email Email { get; private set; }
 
-    private readonly List<UserProfileRelation> _relations = [];
-    public IReadOnlyList<UserProfileRelation> Relations => _relations.AsReadOnly();
+    private readonly List<UserProfileFollow> _profileFollows = [];
+    public IReadOnlyList<UserProfileFollow> ProfileFollows => _profileFollows.AsReadOnly();
+
+    private readonly List<UserProfileStatus> _profileStatus = [];
+    public IReadOnlyList<UserProfileStatus> ProfileStatus => _profileStatus.AsReadOnly();
 
     private UserProfile()
     {
@@ -25,16 +28,4 @@ public class UserProfile : AggregateRoot<UserId>
 
     public static UserProfile Create(Guid userId, Email email, Name userName)
         => new(UserId.From(userId), email, userName);
-
-
-    public void AddRelation(UserId targetUserId, UserProfileRelationStatus status)
-    {
-        if (_relations.Exists(x => x.TargetUserId == targetUserId && x.Status == status))
-            throw new DomainException("Relation already exists");
-
-        if (_relations.Any(x => x.TargetUserId == Id))
-            throw new DomainException("Cannot add self relation");
-
-        _relations.Add(UserProfileRelation.Create(targetUserId, status));
-    }
 }

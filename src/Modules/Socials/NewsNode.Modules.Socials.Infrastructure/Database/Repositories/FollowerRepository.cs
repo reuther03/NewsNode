@@ -6,7 +6,7 @@ using NewsNode.Shared.Infrastructure.Postgres;
 
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Repositories;
 
-internal class FollowerRepository : Repository<UserProfileRelation, SocialsDbContext>, IFollowerRepository
+internal class FollowerRepository : Repository<UserProfileFollow, SocialsDbContext>, IFollowerRepository
 {
     private readonly SocialsDbContext _dbContext;
 

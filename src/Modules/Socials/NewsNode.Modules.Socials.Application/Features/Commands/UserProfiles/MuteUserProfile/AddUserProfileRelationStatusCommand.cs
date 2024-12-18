@@ -38,16 +38,16 @@ public record AddUserProfileRelationStatusCommand(
             var targetUserProfile = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
             NullValidator.ValidateNotNull(targetUserProfile);
 
-            if (request.Status == UserProfileRelationStatus.Blocked &&
-                await _userProfileRepository.IsFollowingAsync(user.Id, targetUserProfile.Id, cancellationToken))
-            {
-                user.AddRelation(targetUserProfile.Id, request.Status);
-                await _followerRepository.RemoveAsync(user.Id, targetUserProfile.Id, cancellationToken);
-            }
-            else
-            {
-                user.AddRelation(targetUserProfile.Id, request.Status);
-            }
+            // if (request.Status == UserProfileRelationStatus.Blocked &&
+            //     await _userProfileRepository.IsFollowingAsync(user.Id, targetUserProfile.Id, cancellationToken))
+            // {
+            //     user.AddRelation(targetUserProfile.Id, request.Status);
+            //     await _followerRepository.RemoveAsync(user.Id, targetUserProfile.Id, cancellationToken);
+            // }
+            // else
+            // {
+            //     user.AddRelation(targetUserProfile.Id, request.Status);
+            // }
 
             await _unitOfWork.CommitAsync(cancellationToken);
 

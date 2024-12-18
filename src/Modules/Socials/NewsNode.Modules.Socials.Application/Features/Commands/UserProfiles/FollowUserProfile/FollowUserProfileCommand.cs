@@ -32,18 +32,19 @@ public record FollowUserProfileCommand(
 
         public async Task<Result<Guid>> Handle(FollowUserProfileCommand request, CancellationToken cancellationToken)
         {
-            var follower = await _userProfileRepository.GetFullByIdAsync(_userService.UserId, cancellationToken);
-            NullValidator.ValidateNotNull(follower);
-
-            var profileToFollow = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
-            NullValidator.ValidateNotNull(profileToFollow);
-
-            follower.AddRelation(profileToFollow.Id, UserProfileRelationStatus.Followed);
-
-            await _unitOfWork.CommitAsync(cancellationToken);
-            await _notificationService.FollowedNotification(follower.Id, profileToFollow.Id);
-
-            return Result<Guid>.Ok(profileToFollow.Id);
+            // var follower = await _userProfileRepository.GetFullByIdAsync(_userService.UserId, cancellationToken);
+            // NullValidator.ValidateNotNull(follower);
+            //
+            // var profileToFollow = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
+            // NullValidator.ValidateNotNull(profileToFollow);
+            //
+            // follower.AddRelation(profileToFollow.Id, UserProfileRelationStatus.Followed);
+            //
+            // await _unitOfWork.CommitAsync(cancellationToken);
+            // await _notificationService.FollowedNotification(follower.Id, profileToFollow.Id);
+            //
+            // return Result<Guid>.Ok(profileToFollow.Id);
+            return Result<Guid>.Ok(Guid.NewGuid());
         }
     }
 }

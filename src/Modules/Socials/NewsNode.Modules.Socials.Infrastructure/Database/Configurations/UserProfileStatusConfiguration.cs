@@ -5,11 +5,11 @@ using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Configurations;
 
-public class UserProfileRelationConfiguration : IEntityTypeConfiguration<UserProfileRelation>
+public class UserProfileStatusConfiguration : IEntityTypeConfiguration<UserProfileStatus>
 {
-    public void Configure(EntityTypeBuilder<UserProfileRelation> builder)
+    public void Configure(EntityTypeBuilder<UserProfileStatus> builder)
     {
-        builder.ToTable("User_profile_relations");
+        builder.ToTable("User_profile_statuses");
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
@@ -25,12 +25,8 @@ public class UserProfileRelationConfiguration : IEntityTypeConfiguration<UserPro
             .ValueGeneratedNever()
             .IsRequired();
 
-        builder.Property(x => x.Status)
-            .HasConversion<string>()
-            .IsRequired();
-
         builder.HasOne<UserProfile>()
-            .WithMany(x => x.Relations)
+            .WithMany(x => x.ProfileStatus)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
