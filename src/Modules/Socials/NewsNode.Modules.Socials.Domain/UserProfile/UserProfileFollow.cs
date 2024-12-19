@@ -12,11 +12,11 @@ public class UserProfileFollow : Entity<Guid>
     {
     }
 
-    private UserProfileFollow(Guid id, UserId targetUserId, UserProfileRelationStatus relationStatus) : base(id)
+    private UserProfileFollow(Guid id, UserId targetUserId) : base(id)
     {
         TargetUserId = targetUserId;
     }
 
-    public static UserProfileFollow Create(UserId targetUserId, UserProfileRelationStatus relationStatus)
-        => new(Guid.NewGuid(), targetUserId, relationStatus);
+    public static UserProfileFollow Create(UserId targetUserId)
+        => new(Guid.NewGuid(), targetUserId);
 }

@@ -26,7 +26,7 @@ public class UserProfileStatusConfiguration : IEntityTypeConfiguration<UserProfi
             .IsRequired();
 
         builder.HasOne<UserProfile>()
-            .WithMany(x => x.ProfileStatus)
+            .WithMany(x => x.ProfileStatuses)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }

@@ -19,11 +19,12 @@ internal class UserProfileRepository : Repository<UserProfile, SocialsDbContext>
         => await _context.UserProfiles
             .FirstOrDefaultAsync(x => x.Id == UserId.From(id), cancellationToken);
 
-    // public async Task<UserProfile?> GetFullByIdAsync(Guid id, CancellationToken cancellationToken = default)
-    //     => await _context.UserProfiles
-    //         .Include(x => x.Relations)
-    //         .FirstOrDefaultAsync(x => x.Id == UserId.From(id), cancellationToken);
-    //
+    public async Task<UserProfile?> GetFullByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => await _context.UserProfiles
+            .Include(x => x.ProfileFollows)
+            .Include(x => x.ProfileStatuses)
+            .FirstOrDefaultAsync(x => x.Id == UserId.From(id), cancellationToken);
+
     // public async Task<bool> IsFollowingAsync(Guid userProfileId, Guid targetUserProfileId, CancellationToken cancellationToken = default)
     //     => await _context.UserProfiles
     //         .Where(x => x.Id == UserId.From(userProfileId))

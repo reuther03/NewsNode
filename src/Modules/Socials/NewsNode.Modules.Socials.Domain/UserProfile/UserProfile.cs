@@ -13,8 +13,8 @@ public class UserProfile : AggregateRoot<UserId>
     private readonly List<UserProfileFollow> _profileFollows = [];
     public IReadOnlyList<UserProfileFollow> ProfileFollows => _profileFollows.AsReadOnly();
 
-    private readonly List<UserProfileStatus> _profileStatus = [];
-    public IReadOnlyList<UserProfileStatus> ProfileStatus => _profileStatus.AsReadOnly();
+    private readonly List<UserProfileStatus> _profileStatuses = [];
+    public IReadOnlyList<UserProfileStatus> ProfileStatuses => _profileStatuses.AsReadOnly();
 
     private UserProfile()
     {
@@ -28,4 +28,12 @@ public class UserProfile : AggregateRoot<UserId>
 
     public static UserProfile Create(Guid userId, Email email, Name userName)
         => new(UserId.From(userId), email, userName);
+
+    public void Follow(UserId targetUserId)
+    {
+        if (_profileFollows.Any(x => x.TargetUserId == targetUserId))
+            throw new DomainException("User is already following this user");
+
+        _profileFollows.Add(UserProfileFollow.Create(targetUserId));
+    }
 }
