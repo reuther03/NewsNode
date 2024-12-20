@@ -39,7 +39,7 @@ public class UserProfile : AggregateRoot<UserId>
 
     public void AddStatus(UserId targetUserId, UserProfileRelationStatus status)
     {
-        if (_profileStatuses.Any(x => x.TargetUserId == targetUserId))
+        if (_profileStatuses.Any(x => x.TargetUserId == targetUserId && x.Status == status))
             throw new DomainException("User is already in this relation");
 
         _profileStatuses.Add(UserProfileStatus.Create(targetUserId, status));
