@@ -36,4 +36,12 @@ public class UserProfile : AggregateRoot<UserId>
 
         _profileFollows.Add(UserProfileFollow.Create(targetUserId));
     }
+
+    public void AddStatus(UserId targetUserId, UserProfileRelationStatus status)
+    {
+        if (_profileStatuses.Any(x => x.TargetUserId == targetUserId))
+            throw new DomainException("User is already in this relation");
+
+        _profileStatuses.Add(UserProfileStatus.Create(targetUserId, status));
+    }
 }

@@ -32,22 +32,22 @@ public record AddUserProfileRelationStatusCommand(
 
         public async Task<Result> Handle(AddUserProfileRelationStatusCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userProfileRepository.GetByIdAsync(_userService.UserId, cancellationToken);
+            var user = await _userProfileRepository.GetFullByIdAsync(_userService.UserId, cancellationToken);
             NullValidator.ValidateNotNull(user);
 
             var targetUserProfile = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
             NullValidator.ValidateNotNull(targetUserProfile);
 
-            // if (request.Status == UserProfileRelationStatus.Blocked &&
-            //     await _userProfileRepository.IsFollowingAsync(user.Id, targetUserProfile.Id, cancellationToken))
-            // {
-            //     user.AddRelation(targetUserProfile.Id, request.Status);
-            //     await _followerRepository.RemoveAsync(user.Id, targetUserProfile.Id, cancellationToken);
-            // }
-            // else
-            // {
-            //     user.AddRelation(targetUserProfile.Id, request.Status);
-            // }
+            if (request.Status == UserProfileRelationStatus.Blocked &&
+                await _followerRepository.IsFollowingAsync(user.Id, targetUserProfile.Id, cancellationToken))
+            {
+                user.AddStatus(targetUserProfile.Id, request.Status);
+                await _followerRepository.RemoveAsync(user.Id, targetUserProfile.Id, cancellationToken);
+            }
+            else
+            {
+                user.AddStatus(targetUserProfile.Id, request.Status);
+            }
 
             await _unitOfWork.CommitAsync(cancellationToken);
 

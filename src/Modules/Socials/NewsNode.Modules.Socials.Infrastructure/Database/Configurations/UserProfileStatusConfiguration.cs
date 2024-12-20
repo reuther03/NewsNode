@@ -25,6 +25,10 @@ public class UserProfileStatusConfiguration : IEntityTypeConfiguration<UserProfi
             .ValueGeneratedNever()
             .IsRequired();
 
+        builder.Property(x => x.Status)
+            .HasConversion<string>()
+            .IsRequired();
+
         builder.HasOne<UserProfile>()
             .WithMany(x => x.ProfileStatuses)
             .HasForeignKey(x => x.UserId)

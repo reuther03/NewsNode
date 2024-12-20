@@ -13,12 +13,12 @@ public class UserProfileStatus : Entity<Guid>
     {
     }
 
-    private UserProfileStatus(Guid id, UserId userId, UserProfileRelationStatus status) : base(id)
+    private UserProfileStatus(Guid id, UserId targetUserId, UserProfileRelationStatus status) : base(id)
     {
-        UserId = userId;
+        TargetUserId = targetUserId;
         Status = status;
     }
 
-    public static UserProfileStatus Create(UserId userId, UserProfileRelationStatus status)
-        => new(Guid.NewGuid(), userId, status);
+    public static UserProfileStatus Create(UserId targetUserId, UserProfileRelationStatus status)
+        => new(Guid.NewGuid(), targetUserId, status);
 }

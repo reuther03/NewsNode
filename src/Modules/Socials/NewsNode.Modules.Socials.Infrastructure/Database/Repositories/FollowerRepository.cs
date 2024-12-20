@@ -15,6 +15,11 @@ internal class FollowerRepository : Repository<UserProfileFollow, SocialsDbConte
         _dbContext = dbContext;
     }
 
+    public async Task<bool> IsFollowingAsync(Guid userProfileId, Guid targetUserProfileId, CancellationToken cancellationToken = default)
+        => await _dbContext.UserProfileFollowers
+            .AnyAsync(x => x.UserId == UserId.From(userProfileId) &&
+                x.TargetUserId == UserId.From(targetUserProfileId), cancellationToken);
+
     public async Task RemoveAsync(Guid followerId, Guid followedProfileId, CancellationToken cancellationToken = default)
     {
         var entity = await _dbContext.UserProfileFollowers
