@@ -1,7 +1,7 @@
 ﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
-namespace NewsNode.Modules.Socials.Domain.Article;
+namespace NewsNode.Modules.Socials.Domain.Post;
 
 public class Comment : Entity<Guid>
 {

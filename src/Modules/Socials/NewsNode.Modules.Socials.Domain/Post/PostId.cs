@@ -1,6 +1,6 @@
 ﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
 
-namespace NewsNode.Modules.Socials.Domain.Article;
+namespace NewsNode.Modules.Socials.Domain.Post;
 
 public record PostId : EntityId
 {

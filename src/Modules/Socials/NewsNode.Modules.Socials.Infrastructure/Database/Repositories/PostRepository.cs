@@ -1,5 +1,5 @@
 ﻿using NewsNode.Modules.Socials.Application.Abstractions.Database;
-using NewsNode.Modules.Socials.Domain.Article;
+using NewsNode.Modules.Socials.Domain.Post;
 using NewsNode.Shared.Infrastructure.Postgres;
 
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Repositories;

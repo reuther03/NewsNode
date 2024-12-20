@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
-using NewsNode.Modules.Socials.Domain.Article;
+using NewsNode.Modules.Socials.Domain.Post;
 using NewsNode.Modules.Socials.Domain.UserProfile;
 
 namespace NewsNode.Modules.Socials.Infrastructure.Database;

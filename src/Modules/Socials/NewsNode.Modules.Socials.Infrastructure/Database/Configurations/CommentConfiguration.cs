@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using NewsNode.Modules.Socials.Domain.Article;
+using NewsNode.Modules.Socials.Domain.Post;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Configurations;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using NewsNode.Modules.Socials.Domain.Article;
+using NewsNode.Modules.Socials.Domain.Post;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Configurations;
@@ -26,6 +26,11 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
             .HasConversion(x => x.Value, x => UserId.From(x))
             .ValueGeneratedNever()
             .IsRequired();
+
+        builder.OwnsMany(x => x.Hashtags)
+            .Property(x => x.Value)
+            .HasColumnName("Hashtag")
+            .HasConversion(x => x, x => new Hashtag(x));
 
         builder.Property(x => x.Likes);
         builder.Property(x => x.Bookmarks);

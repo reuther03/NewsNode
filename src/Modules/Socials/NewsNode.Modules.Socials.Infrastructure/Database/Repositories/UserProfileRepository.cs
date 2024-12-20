@@ -24,23 +24,4 @@ internal class UserProfileRepository : Repository<UserProfile, SocialsDbContext>
             .Include(x => x.ProfileFollows)
             .Include(x => x.ProfileStatuses)
             .FirstOrDefaultAsync(x => x.Id == UserId.From(id), cancellationToken);
-
-    // public async Task<List<UserId>> GetFollowersWhereUnMutedAsync(Guid profileId, CancellationToken cancellationToken = default)
-    // {
-    //     var allFollowers = await _context.UserProfiles
-    //         .Include(x => x.Relations)
-    //         .Where(x => x.Relations
-    //             .Any(y => y.TargetUserId == UserId.From(profileId) &&
-    //                 y.Status == UserProfileRelationStatus.Followed))
-    //         .ToListAsync(cancellationToken);
-    //
-    //     var unMutedFollowers = allFollowers
-    //         .Where(x => !x.Relations
-    //             .Any(y => y.TargetUserId == UserId.From(profileId) &&
-    //                 y.Status == UserProfileRelationStatus.Muted))
-    //         .Select(x => x.Id)
-    //         .ToList();
-    //
-    //     return unMutedFollowers;
-    // }
 }

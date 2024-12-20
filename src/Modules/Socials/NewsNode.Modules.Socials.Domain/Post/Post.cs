@@ -1,7 +1,7 @@
 ﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
-namespace NewsNode.Modules.Socials.Domain.Article;
+namespace NewsNode.Modules.Socials.Domain.Post;
 
 public class Post : AggregateRoot<PostId>
 {
@@ -13,6 +13,9 @@ public class Post : AggregateRoot<PostId>
     public int Reposts { get; private set; }
     // moze dislikes
 
+    private readonly List<Hashtag> _hashtags = [];
+    public IReadOnlyList<Hashtag> Hashtags => _hashtags.AsReadOnly();
+
     private readonly List<Comment> _comments = [];
     public IReadOnlyList<Comment> Comments => _comments.AsReadOnly();
 
@@ -23,7 +26,7 @@ public class Post : AggregateRoot<PostId>
     {
     }
 
-    public Post(PostId id, string content, UserId createdBy) : base(id)
+    public Post(PostId id, string content, List<Hashtag> hashtags, UserId createdBy) : base(id)
     {
         Content = content;
         PostedAt = DateTime.UtcNow;
@@ -31,10 +34,11 @@ public class Post : AggregateRoot<PostId>
         Likes = 0;
         Bookmarks = 0;
         Reposts = 0;
+        _hashtags.AddRange(hashtags);
     }
 
-    public static Post Create(string content, UserId createdBy)
-        => new(PostId.New(), content, createdBy);
+    public static Post Create(string content, List<Hashtag> hashtags, UserId createdBy)
+        => new(PostId.New(), content, hashtags, createdBy);
 
     public void AddComment(Comment comment)
         => _comments.Add(comment);
