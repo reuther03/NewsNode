@@ -24,6 +24,7 @@ internal class FollowerRepository : Repository<UserProfileFollow, SocialsDbConte
     {
         var allFollowers = await _dbContext.UserProfiles
             .Include(x => x.ProfileFollows)
+            .Include(x => x.ProfileStatuses)
             .Where(x => x.ProfileFollows
                 .Any(y => y.TargetUserId == UserId.From(profileId)))
             .ToListAsync(cancellationToken);

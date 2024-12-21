@@ -4,13 +4,13 @@ namespace NewsNode.Modules.Socials.Domain.Post;
 
 public record Hashtag : ValueObject
 {
-    public string Value { get; }
+    public string Value { get; set; }
 
     public Hashtag(string value)
     {
         if (value[0] is not '#')
         {
-            value = '#' + value;
+            value = "#" + value;
         }
 
         Value = value;
