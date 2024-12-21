@@ -30,34 +30,27 @@ public record GetUserProfileQuery(
             if (!_userService.IsAuthenticated)
                 return Result.Unauthorized<UserProfileDto>("User is not authenticated");
 
-            // var userProfile = await _dbContext.UserProfiles
-            //     .Include(x => x.Relations)
-            //     .FirstOrDefaultAsync(x => x.Id == UserId.From(request.UserProfilId), cancellationToken);
-            //
-            // NullValidator.ValidateNotNull(userProfile);
-            //
-            // var userProfileFollowingCount = await _dbContext.UserProfiles
-            //     .Where(x => x.Relations.Any(f => f.TargetUserId == userProfile.Id))
-            //     .CountAsync(cancellationToken);
-            //
-            // var userProfileDto = new UserProfileDto
-            // {
-            //     Id = userProfile.Id,
-            //     UserName = userProfile.UserName,
-            //     Email = userProfile.Email,
-            //     FollowersCount = userProfile.Relations.Count,
-            //     FollowingCount = userProfileFollowingCount
-            // };
+            var userProfile = await _dbContext.UserProfiles
+                .Include(x => x.ProfileFollows)
+                .Include(x => x.ProfileStatuses)
+                .FirstOrDefaultAsync(x => x.Id == UserId.From(request.UserProfilId), cancellationToken);
 
-            // return Result.Ok(userProfileDto);
-            return Result<UserProfileDto>.Ok(new UserProfileDto
+            NullValidator.ValidateNotNull(userProfile);
+
+            var userProfileFollowingCount = await _dbContext.UserProfiles
+                .Where(x => x.ProfileFollows.Any(z => z.TargetUserId == userProfile.Id))
+                .CountAsync(cancellationToken);
+
+            var userProfileDto = new UserProfileDto
             {
-                Id = Guid.NewGuid(),
-                UserName = "UserName",
-                Email = "Email",
-                FollowersCount = 0,
-                FollowingCount = 0
-            });
+                Id = userProfile.Id,
+                UserName = userProfile.UserName,
+                Email = userProfile.Email,
+                FollowersCount = userProfile.ProfileFollows.Count,
+                FollowingCount = userProfileFollowingCount
+            };
+
+            return Result.Ok(userProfileDto);
         }
     }
 }
