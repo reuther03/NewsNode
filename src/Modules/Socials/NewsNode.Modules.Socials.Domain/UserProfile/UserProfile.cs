@@ -1,4 +1,5 @@
-﻿using NewsNode.Shared.Abstractions.Exception;
+﻿using NewsNode.Modules.Socials.Domain.Post;
+using NewsNode.Shared.Abstractions.Exception;
 using NewsNode.Shared.Abstractions.Kernel.Primitives;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 using UserId = NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids.UserId;
@@ -7,14 +8,15 @@ namespace NewsNode.Modules.Socials.Domain.UserProfile;
 
 public class UserProfile : AggregateRoot<UserId>
 {
+    private readonly List<UserProfileFollow> _profileFollows = [];
+    private readonly List<UserProfileStatus> _profileStatuses = [];
+    private readonly List<PostId> _repostedPosts = [];
     public Name UserName { get; private set; }
     public Email Email { get; private set; }
 
-    private readonly List<UserProfileFollow> _profileFollows = [];
     public IReadOnlyList<UserProfileFollow> ProfileFollows => _profileFollows.AsReadOnly();
-
-    private readonly List<UserProfileStatus> _profileStatuses = [];
     public IReadOnlyList<UserProfileStatus> ProfileStatuses => _profileStatuses.AsReadOnly();
+    public IReadOnlyList<PostId> RepostedPosts => _repostedPosts.AsReadOnly();
 
     private UserProfile()
     {
@@ -43,5 +45,13 @@ public class UserProfile : AggregateRoot<UserId>
             throw new DomainException("User is already in this relation");
 
         _profileStatuses.Add(UserProfileStatus.Create(targetUserId, status));
+    }
+
+    public void Repost(PostId postId)
+    {
+        if (_repostedPosts.Contains(postId))
+            throw new DomainException("You have already reposted this post");
+
+        _repostedPosts.Add(postId);
     }
 }

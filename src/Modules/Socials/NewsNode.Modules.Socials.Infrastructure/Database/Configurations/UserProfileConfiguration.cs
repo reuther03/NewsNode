@@ -25,6 +25,21 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             .HasConversion(x => x.Value, x => new Name(x))
             .IsRequired();
 
+        builder.OwnsMany(x => x.RepostedPosts, ownedBuilder =>
+        {
+            ownedBuilder.WithOwner().HasForeignKey("UserProfileId");
+            ownedBuilder.ToTable("User_profile_reposted_posts");
+            ownedBuilder.HasKey("Id");
+
+            ownedBuilder.Property(x => x.Value)
+                .ValueGeneratedNever()
+                .HasColumnName("PostId");
+
+            builder.Metadata
+                .FindNavigation(nameof(UserProfile.RepostedPosts))
+                !.SetPropertyAccessMode(PropertyAccessMode.Field);
+        });
+
         builder.HasIndex(x => x.Email).IsUnique();
     }
 }

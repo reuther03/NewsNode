@@ -16,6 +16,9 @@ public class Repository<TEntity, TDbContext> : IRepository<TEntity>
         _dbContext = dbContext;
     }
 
+    public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => await _dbContext.Set<TEntity>().FindAsync(id , cancellationToken);
+
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         => await _dbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
 

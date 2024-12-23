@@ -75,11 +75,11 @@ public class SendNotificationsJob : BackgroundService
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task SendPostNotification(CancellationToken cancellationToken)
-    {
-        using var scope = _serviceScopeFactory.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
-
-        var connectedUsersIds = _notificationsConnectionManager.GetActiveConnectionsUserIds();
-    }
+    // private async Task SendPostNotification(CancellationToken cancellationToken)
+    // {
+    //     using var scope = _serviceScopeFactory.CreateScope();
+    //     var context = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
+    //
+    //     var connectedUsersIds = _notificationsConnectionManager.GetActiveConnectionsUserIds();
+    // }
 }
