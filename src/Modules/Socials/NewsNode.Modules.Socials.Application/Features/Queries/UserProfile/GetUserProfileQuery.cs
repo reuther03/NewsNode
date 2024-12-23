@@ -47,7 +47,8 @@ public record GetUserProfileQuery(
                 UserName = userProfile.UserName,
                 Email = userProfile.Email,
                 FollowersCount = userProfile.ProfileFollows.Count,
-                FollowingCount = userProfileFollowingCount
+                FollowingCount = userProfileFollowingCount,
+                RepostedPosts = userProfile.RepostedPosts.Select(x => x.Value).ToList()
             };
 
             return Result.Ok(userProfileDto);

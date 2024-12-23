@@ -7,4 +7,5 @@ public class UserProfileDto
     public string Email { get; init; } = null!;
     public int? FollowersCount { get; init; }
     public int? FollowingCount { get; init; }
+    public List<Guid> RepostedPosts { get; init; } = [];
 }
