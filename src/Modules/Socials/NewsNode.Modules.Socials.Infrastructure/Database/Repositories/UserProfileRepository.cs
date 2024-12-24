@@ -23,5 +23,6 @@ internal class UserProfileRepository : Repository<UserProfile, SocialsDbContext>
         => await _context.UserProfiles
             .Include(x => x.ProfileFollows)
             .Include(x => x.ProfileStatuses)
+            .Include(x => x.PostActions)
             .FirstOrDefaultAsync(x => x.Id == UserId.From(id), cancellationToken);
 }

@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.AddUserProfileRelationStatus;
 using NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.FollowUserProfile;
-using NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.MuteUserProfile;
 using NewsNode.Modules.Socials.Application.Features.Queries.UserProfile;
 
 namespace NewsNode.Modules.Socials.Api.Controllers;

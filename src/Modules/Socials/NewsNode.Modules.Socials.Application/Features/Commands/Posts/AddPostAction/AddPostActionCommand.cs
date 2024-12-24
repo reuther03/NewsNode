@@ -6,11 +6,11 @@ using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 using NewsNode.Shared.Abstractions.Services;
 
-namespace NewsNode.Modules.Socials.Application.Features.Commands.Posts.RepostPost;
+namespace NewsNode.Modules.Socials.Application.Features.Commands.Posts.AddPostAction;
 
-public record RepostPostCommand(Guid PostId, PostActionType ActionType) : ICommand<Guid>
+public record AddPostActionCommand(Guid PostId, PostActionType ActionType) : ICommand<Guid>
 {
-    internal sealed class Handler : ICommandHandler<RepostPostCommand, Guid>
+    internal sealed class Handler : ICommandHandler<AddPostActionCommand, Guid>
     {
         private readonly IPostRepository _postRepository;
         private readonly IUserProfileRepository _userProfileRepository;
@@ -25,9 +25,9 @@ public record RepostPostCommand(Guid PostId, PostActionType ActionType) : IComma
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<Guid>> Handle(RepostPostCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(AddPostActionCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userProfileRepository.GetByIdAsync(_userService.UserId, cancellationToken);
+            var user = await _userProfileRepository.GetFullByIdAsync(_userService.UserId, cancellationToken);
             NullValidator.ValidateNotNull(user);
 
             var post = await _postRepository.GetPostByIdAsync(request.PostId, cancellationToken);

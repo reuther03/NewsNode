@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.MuteUserProfile;
+namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.AddUserProfileRelationStatus;
 
 public class AddUserProfileRelationStatusValidator : AbstractValidator<AddUserProfileRelationStatusCommand>
 {

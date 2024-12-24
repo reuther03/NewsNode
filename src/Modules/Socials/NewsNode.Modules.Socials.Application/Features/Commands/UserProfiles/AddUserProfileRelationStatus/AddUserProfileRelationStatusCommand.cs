@@ -8,7 +8,7 @@ using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 using NewsNode.Shared.Abstractions.Services;
 using ICommand = NewsNode.Shared.Abstractions.QueriesAndCommands.Commands.ICommand;
 
-namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.MuteUserProfile;
+namespace NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.AddUserProfileRelationStatus;
 
 public record AddUserProfileRelationStatusCommand(
     [property: JsonIgnore]

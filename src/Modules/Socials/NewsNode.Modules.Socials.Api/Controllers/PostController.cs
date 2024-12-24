@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NewsNode.Modules.Socials.Application.Features.Commands.Posts.AddPostAction;
 using NewsNode.Modules.Socials.Application.Features.Commands.Posts.CreatePost;
-using NewsNode.Modules.Socials.Application.Features.Commands.Posts.RepostPost;
 
 namespace NewsNode.Modules.Socials.Api.Controllers;
 
@@ -17,18 +17,17 @@ internal class PostController : BaseController
 
     [HttpPost]
     [Authorize]
-    public async  Task<IActionResult> CreatePost([FromBody] CreatePostCommand command)
+    public async Task<IActionResult> CreatePost([FromBody] CreatePostCommand command)
     {
         var result = await _sender.Send(command);
         return Ok(result);
     }
 
-    [HttpPost("repost")]
+    [HttpPost("addAction")]
     [Authorize]
-    public async Task<IActionResult> RepostPost([FromBody] RepostPostCommand command)
+    public async Task<IActionResult> AddAction([FromBody] AddPostActionCommand actionCommand)
     {
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(actionCommand);
         return Ok(result);
     }
-
 }
