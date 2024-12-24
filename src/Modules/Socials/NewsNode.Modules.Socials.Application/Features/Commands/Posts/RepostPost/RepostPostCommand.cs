@@ -1,5 +1,6 @@
 ﻿using NewsNode.Modules.Socials.Application.Abstractions;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
+using NewsNode.Modules.Socials.Domain.UserProfile;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
@@ -35,7 +36,7 @@ public record RepostPostCommand(Guid PostId) : ICommand<Guid>
             if (post.CreatedBy == user.Id)
                 return Result.BadRequest<Guid>("You can't repost your own post");
 
-            user.Repost(post.Id);
+            user.AddPostAction(post.Id, PostActionType.Reposted);
 
             await _unitOfWork.CommitAsync(cancellationToken);
 

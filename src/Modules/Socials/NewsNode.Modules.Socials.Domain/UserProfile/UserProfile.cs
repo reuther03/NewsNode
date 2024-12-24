@@ -10,13 +10,13 @@ public class UserProfile : AggregateRoot<UserId>
 {
     private readonly List<UserProfileFollow> _profileFollows = [];
     private readonly List<UserProfileStatus> _profileStatuses = [];
-    private readonly List<PostId> _repostedPosts = [];
+    private readonly List<PostAction> _postActions = [];
     public Name UserName { get; private set; }
     public Email Email { get; private set; }
 
     public IReadOnlyList<UserProfileFollow> ProfileFollows => _profileFollows.AsReadOnly();
     public IReadOnlyList<UserProfileStatus> ProfileStatuses => _profileStatuses.AsReadOnly();
-    public IReadOnlyList<PostId> RepostedPosts => _repostedPosts.AsReadOnly();
+    public IReadOnlyList<PostAction> PostActions => _postActions.AsReadOnly();
 
     private UserProfile()
     {
@@ -47,11 +47,11 @@ public class UserProfile : AggregateRoot<UserId>
         _profileStatuses.Add(UserProfileStatus.Create(targetUserId, status));
     }
 
-    public void Repost(PostId postId)
+    public void AddPostAction(PostId postId, PostActionType actionType)
     {
-        if (_repostedPosts.Contains(postId))
-            throw new DomainException("You have already reposted this post");
+        if (_postActions.Any(x => x.PostId == postId && x.ActionType == actionType))
+            throw new DomainException("User already performed this action");
 
-        _repostedPosts.Add(postId);
+        _postActions.Add(PostAction.Create(postId, actionType));
     }
 }

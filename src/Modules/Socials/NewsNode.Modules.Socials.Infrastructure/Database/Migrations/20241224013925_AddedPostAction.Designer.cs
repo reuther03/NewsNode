@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsNode.Modules.Socials.Infrastructure.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(SocialsDbContext))]
-    partial class SocialsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241224013925_AddedPostAction")]
+    partial class AddedPostAction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,7 +109,7 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 
                     b.HasIndex("UserProfileId");
 
-                    b.ToTable("Post_actions", "socials");
+                    b.ToTable("post_actions", "socials");
                 });
 
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.UserProfile.UserProfile", b =>

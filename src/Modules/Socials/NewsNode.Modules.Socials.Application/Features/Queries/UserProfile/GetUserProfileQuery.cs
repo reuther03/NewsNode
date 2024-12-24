@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
+using NewsNode.Modules.Socials.Domain.UserProfile;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
@@ -33,6 +34,7 @@ public record GetUserProfileQuery(
             var userProfile = await _dbContext.UserProfiles
                 .Include(x => x.ProfileFollows)
                 .Include(x => x.ProfileStatuses)
+                .Include(x => x.PostActions)
                 .FirstOrDefaultAsync(x => x.Id == UserId.From(request.UserProfilId), cancellationToken);
 
             NullValidator.ValidateNotNull(userProfile);
@@ -41,6 +43,11 @@ public record GetUserProfileQuery(
                 .Where(x => x.ProfileFollows.Any(z => z.TargetUserId == userProfile.Id))
                 .CountAsync(cancellationToken);
 
+            var userProfilePostActions = userProfile.PostActions
+                .Where(x => x.UserProfileId == userProfile.Id && x.ActionType == PostActionType.Reposted)
+                .Select(x => x.PostId.Value)
+                .ToList();
+
             var userProfileDto = new UserProfileDto
             {
                 Id = userProfile.Id,
@@ -48,7 +55,7 @@ public record GetUserProfileQuery(
                 Email = userProfile.Email,
                 FollowersCount = userProfile.ProfileFollows.Count,
                 FollowingCount = userProfileFollowingCount,
-                RepostedPosts = userProfile.RepostedPosts.Select(x => x.Value).ToList()
+                RepostedPosts = userProfilePostActions
             };
 
             return Result.Ok(userProfileDto);
