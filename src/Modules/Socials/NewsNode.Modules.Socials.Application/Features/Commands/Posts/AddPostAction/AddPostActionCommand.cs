@@ -8,7 +8,7 @@ using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Modules.Socials.Application.Features.Commands.Posts.RepostPost;
 
-public record RepostPostCommand(Guid PostId) : ICommand<Guid>
+public record RepostPostCommand(Guid PostId, PostActionType ActionType) : ICommand<Guid>
 {
     internal sealed class Handler : ICommandHandler<RepostPostCommand, Guid>
     {
@@ -36,7 +36,7 @@ public record RepostPostCommand(Guid PostId) : ICommand<Guid>
             if (post.CreatedBy == user.Id)
                 return Result.BadRequest<Guid>("You can't repost your own post");
 
-            user.AddPostAction(post.Id, PostActionType.Reposted);
+            user.AddPostAction(post.Id, request.ActionType);
 
             await _unitOfWork.CommitAsync(cancellationToken);
 
