@@ -1,5 +1,5 @@
-﻿using NewsNode.Modules.Socials.Domain.Post;
-using NewsNode.Shared.Abstractions.Kernel.Primitives;
+﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
+using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Modules.Socials.Domain.UserProfile;

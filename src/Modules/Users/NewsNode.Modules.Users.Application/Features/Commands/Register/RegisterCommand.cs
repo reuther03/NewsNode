@@ -2,7 +2,7 @@
 using NewsNode.Modules.Users.Application.Abstractions;
 using NewsNode.Modules.Users.Application.Abstractions.Database;
 using NewsNode.Modules.Users.Domain.Users;
-using NewsNode.Shared.Abstractions.Integration.Events.Users;
+using NewsNode.Shared.Abstractions.Events.Integration.Users;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Commands;
 

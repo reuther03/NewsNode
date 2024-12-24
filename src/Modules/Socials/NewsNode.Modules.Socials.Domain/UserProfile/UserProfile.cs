@@ -1,7 +1,8 @@
-﻿using NewsNode.Modules.Socials.Domain.Post;
+﻿using NewsNode.Shared.Abstractions.Events.Domain.Posts;
 using NewsNode.Shared.Abstractions.Exception;
 using NewsNode.Shared.Abstractions.Kernel.Primitives;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
+using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using UserId = NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids.UserId;
 
 namespace NewsNode.Modules.Socials.Domain.UserProfile;
@@ -53,5 +54,7 @@ public class UserProfile : AggregateRoot<UserId>
             throw new DomainException("User already performed this action");
 
         _postActions.Add(PostAction.Create(postId, actionType));
+
+        RaiseDomainEvent(new ActionPerformedEvent(postId, actionType));
     }
 }

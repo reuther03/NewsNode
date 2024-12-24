@@ -1,5 +1,4 @@
 ﻿using NewsNode.Modules.Socials.Application.Abstractions.Database;
-using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Modules.Socials.Application.Abstractions.Services;

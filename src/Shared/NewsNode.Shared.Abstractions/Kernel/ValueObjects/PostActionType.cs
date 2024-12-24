@@ -1,4 +1,4 @@
-﻿namespace NewsNode.Modules.Socials.Domain.UserProfile;
+﻿namespace NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 
 public enum PostActionType
 {

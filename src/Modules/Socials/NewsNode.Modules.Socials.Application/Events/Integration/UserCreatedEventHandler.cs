@@ -2,8 +2,7 @@
 using NewsNode.Modules.Socials.Application.Abstractions;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Domain.UserProfile;
-using NewsNode.Shared.Abstractions.Integration.Events.Users;
-using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
+using NewsNode.Shared.Abstractions.Events.Integration.Users;
 
 namespace NewsNode.Modules.Socials.Application.Events.Integration;
 

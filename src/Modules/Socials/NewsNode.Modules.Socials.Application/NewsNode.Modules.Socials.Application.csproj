@@ -10,8 +10,4 @@
       <ProjectReference Include="..\NewsNode.Modules.Socials.Domain\NewsNode.Modules.Socials.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Events\Domain\" />
-    </ItemGroup>
-
 </Project>

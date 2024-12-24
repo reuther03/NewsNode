@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsNode.Services.Notifications.Database;
 using NewsNode.Services.Notifications.Hubs;
-using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Services.Notifications.Notifications;
 

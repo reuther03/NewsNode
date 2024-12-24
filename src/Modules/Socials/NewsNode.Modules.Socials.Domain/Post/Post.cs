@@ -1,4 +1,5 @@
 ﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
+using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Modules.Socials.Domain.Post;
@@ -42,4 +43,22 @@ public class Post : AggregateRoot<PostId>
 
     public void AddComment(Comment comment)
         => _comments.Add(comment);
+
+    public void PerformAction(PostActionType actionType)
+    {
+        switch (actionType)
+        {
+            case PostActionType.Liked:
+                Likes++;
+                break;
+            case PostActionType.Bookmarked:
+                Bookmarks++;
+                break;
+            case PostActionType.Reposted:
+                Reposts++;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
+        }
+    }
 }
