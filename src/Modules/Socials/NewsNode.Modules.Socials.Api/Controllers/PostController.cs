@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsNode.Modules.Socials.Application.Features.Commands.Posts.AddPostAction;
 using NewsNode.Modules.Socials.Application.Features.Commands.Posts.CreatePost;
+using NewsNode.Modules.Socials.Application.Features.Queries.Posts;
 
 namespace NewsNode.Modules.Socials.Api.Controllers;
 
@@ -13,6 +14,14 @@ internal class PostController : BaseController
     public PostController(ISender sender)
     {
         _sender = sender;
+    }
+
+    [HttpGet("followers/posts")]
+    [Authorize]
+    public async Task<IActionResult> GetFollowersPosts([FromQuery] GetFollowersPosts query)
+    {
+        var result = await _sender.Send(query);
+        return Ok(result);
     }
 
     [HttpPost]
