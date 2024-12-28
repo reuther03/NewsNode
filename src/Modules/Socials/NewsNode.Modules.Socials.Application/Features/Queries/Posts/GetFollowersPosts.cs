@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
+using NewsNode.Modules.Socials.Domain.Post;
 using NewsNode.Modules.Socials.Domain.UserProfile;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Pagination;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
+using NewsNode.Shared.Abstractions.QueriesAndCommands.Extensions;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Queries;
 using NewsNode.Shared.Abstractions.Services;
 
@@ -43,11 +45,9 @@ public record GetFollowersPosts(int Page = 1, int PageSize = 10) : IQuery<Pagina
                     .Any(y => y.TargetUserId == x.CreatedBy &&
                         y.Status == UserProfileRelationStatus.Muted))
                 .OrderByDescending(x => x.PostedAt)
-                .ToListAsync(cancellationToken);
+                .ToPagedListAsync<Post, PostDto>(request.Page, request.PageSize, x => PostDto.AsDto(x), cancellationToken);
 
-            var postsDto = posts.Select(PostDto.AsDto).ToList();
-
-            return PaginatedList<PostDto>.Create(request.Page, request.PageSize, postsDto.Count, postsDto);
+            return Result.Ok(posts);
         }
     }
 }

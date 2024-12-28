@@ -12,7 +12,7 @@ public class PaginatedList<T>
     public bool HasNext => Page < TotalPages;
     public List<T> Items { get; private set; }
 
-    private PaginatedList(int page, int pageSize, int totalCount, List<T> items)
+    public PaginatedList(int page, int pageSize, int totalCount, List<T> items)
     {
         Page = page;
         PageSize = pageSize;
