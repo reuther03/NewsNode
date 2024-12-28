@@ -9,7 +9,7 @@ using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Queries;
 using NewsNode.Shared.Abstractions.Services;
 
-namespace NewsNode.Modules.Socials.Application.Features.Queries.UserProfile;
+namespace NewsNode.Modules.Socials.Application.Features.Queries.UserProfiles;
 
 public record GetUserProfileQuery(
     [property: JsonIgnore]

@@ -9,5 +9,6 @@ public interface ISocialsDbContext
     DbSet<UserProfile> UserProfiles { get; }
     DbSet<UserProfileFollow> UserProfileFollowers { get; }
     DbSet<UserProfileStatus> UserProfileStatuses { get; }
+    DbSet<PostAction> PostActions { get; }
     DbSet<Post> Posts { get; }
 }

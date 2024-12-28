@@ -12,9 +12,9 @@ using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Modules.Socials.Application.Features.Queries.Posts;
 
-public record GetFollowersPosts(int Page = 1, int PageSize = 10) : IQuery<PaginatedList<PostDto>>
+public record GetFollowersPostsQuery(int Page = 1, int PageSize = 10) : IQuery<PaginatedList<PostDto>>
 {
-    internal sealed class Handler : IQueryHandler<GetFollowersPosts, PaginatedList<PostDto>>
+    internal sealed class Handler : IQueryHandler<GetFollowersPostsQuery, PaginatedList<PostDto>>
     {
         private readonly ISocialsDbContext _dbContext;
         private readonly IUserService _userService;
@@ -25,7 +25,7 @@ public record GetFollowersPosts(int Page = 1, int PageSize = 10) : IQuery<Pagina
             _userService = userService;
         }
 
-        public async Task<Result<PaginatedList<PostDto>>> Handle(GetFollowersPosts request, CancellationToken cancellationToken)
+        public async Task<Result<PaginatedList<PostDto>>> Handle(GetFollowersPostsQuery request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.UserProfiles
                 .Include(x => x.ProfileFollows)

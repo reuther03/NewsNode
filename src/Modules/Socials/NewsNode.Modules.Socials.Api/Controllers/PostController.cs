@@ -16,9 +16,17 @@ internal class PostController : BaseController
         _sender = sender;
     }
 
+    [HttpGet("{postId:guid}")]
+    [Authorize]
+    public async Task<IActionResult> GetPosts([FromRoute] Guid postId)
+    {
+        var result = await _sender.Send(new GetPostQuery(postId));
+        return Ok(result);
+    }
+
     [HttpGet("followers/posts")]
     [Authorize]
-    public async Task<IActionResult> GetFollowersPosts([FromQuery] GetFollowersPosts query)
+    public async Task<IActionResult> GetFollowersPosts([FromQuery] GetFollowersPostsQuery query)
     {
         var result = await _sender.Send(query);
         return Ok(result);
