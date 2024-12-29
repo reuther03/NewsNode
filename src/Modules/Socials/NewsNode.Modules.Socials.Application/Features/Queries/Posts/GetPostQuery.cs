@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NewsNode.Modules.Socials.Application.Abstractions;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
+using NewsNode.Modules.Socials.Domain.UserProfile;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
@@ -30,7 +31,7 @@ public record GetPostQuery(
         public async Task<Result<PostDetailsDto>> Handle(GetPostQuery request, CancellationToken cancellationToken)
         {
             //dodac ze nie pokazuje jak user jest blocked
-            
+
 
             var user = await _dbContext.UserProfiles
                 .Include(x => x.ProfileStatuses)
@@ -43,13 +44,18 @@ public record GetPostQuery(
                 .Include(x => x.Comments)
                 .FirstOrDefaultAsync(x => x.Id == PostId.From(request.CurrentPostId), cancellationToken);
 
+
             NullValidator.ValidateNotNull(post);
+
+            if (await _dbContext.UserProfileStatuses.AnyAsync(x => x.TargetUserId == post.CreatedBy &&
+                    x.Status == UserProfileRelationStatus.Blocked, cancellationToken))
+                return Result<PostDetailsDto>.BadRequest("User is blocked");
+
 
             var postActions = await _dbContext.PostActions
                 .Where(x => x.PostId == post.Id)
                 .Select(x => new { x.ActionType, x.UserProfileId })
                 .ToListAsync(cancellationToken);
-
 
             var postDetails = new PostDetailsDto
             {
