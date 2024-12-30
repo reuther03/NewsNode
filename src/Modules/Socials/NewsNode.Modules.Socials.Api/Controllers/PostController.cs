@@ -24,6 +24,13 @@ internal class PostController : BaseController
         return Ok(result);
     }
 
+    [HttpGet("trending")]
+    public async Task<IActionResult> GetTrendingPosts([FromQuery] GetTrendingPosts query)
+    {
+        var result = await _sender.Send(query);
+        return Ok(result);
+    }
+
     [HttpGet("followers/posts")]
     [Authorize]
     public async Task<IActionResult> GetFollowersPosts([FromQuery] GetFollowersPostsQuery query)

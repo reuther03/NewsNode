@@ -30,9 +30,6 @@ public record GetPostQuery(
 
         public async Task<Result<PostDetailsDto>> Handle(GetPostQuery request, CancellationToken cancellationToken)
         {
-            //dodac ze nie pokazuje jak user jest blocked
-
-
             var user = await _dbContext.UserProfiles
                 .Include(x => x.ProfileStatuses)
                 .FirstOrDefaultAsync(x => x.Id == _userService.UserId, cancellationToken);
