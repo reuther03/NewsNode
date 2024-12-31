@@ -14,13 +14,16 @@ public record AddPostActionCommand(Guid PostId, PostActionType ActionType) : ICo
     {
         private readonly IPostRepository _postRepository;
         private readonly IUserProfileRepository _userProfileRepository;
+        private readonly IRecommendationsService _recommendationsService;
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public Handler(IPostRepository postRepository, IUserProfileRepository userProfileRepository, IUserService userService, IUnitOfWork unitOfWork)
+        public Handler(IPostRepository postRepository, IUserProfileRepository userProfileRepository, IRecommendationsService recommendationsService,
+            IUserService userService, IUnitOfWork unitOfWork)
         {
             _postRepository = postRepository;
             _userProfileRepository = userProfileRepository;
+            _recommendationsService = recommendationsService;
             _userService = userService;
             _unitOfWork = unitOfWork;
         }
@@ -39,6 +42,8 @@ public record AddPostActionCommand(Guid PostId, PostActionType ActionType) : ICo
             user.AddPostAction(post.Id, request.ActionType);
 
             await _unitOfWork.CommitAsync(cancellationToken);
+            await _recommendationsService.CreateRecommendation(user.Id, post.Hashtags.ToList(), cancellationToken);
+
 
             return Result.Ok<Guid>(post.Id);
         }

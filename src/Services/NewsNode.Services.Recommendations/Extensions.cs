@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NewsNode.Services.Recommendations.Recommendations;
+using NewsNode.Services.Recommendations.Database;
 using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Services.Recommendations;
