@@ -1,0 +1,8 @@
+{
+  "recommendations": {
+    "module": {
+      "name": "Recommendations",
+      "enabled": true
+    }
+  }
+}
