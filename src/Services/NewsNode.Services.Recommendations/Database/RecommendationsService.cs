@@ -30,13 +30,19 @@ public class RecommendationsService : IRecommendationsService
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public Task IncrementRecommendation(UserId userId, Hashtag hashtag, CancellationToken cancellationToken = default)
+    public Task IncrementRecommendation(UserId userId, Hashtag hashtag, PostActionType postActionType, CancellationToken cancellationToken = default)
     {
-        // using var scope = _serviceScopeFactory.CreateScope();
-        // var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
-        //
-        // var recommendation = context.Recommendations.FirstOrDefault(x => x.UserId == userId && x.Hashtag == hashtag.Value);
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
-        throw new NotImplementedException();
+        var recommendation = context.Recommendations.FirstOrDefault(x => x.UserId == userId && x.Hashtag == hashtag.Value);
+
+        if (recommendation is null)
+            return Task.CompletedTask;
+
+
+        recommendation.IncrementScore(postActionType);
+
+        return context.SaveChangesAsync(cancellationToken);
     }
 }

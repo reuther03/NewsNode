@@ -20,10 +20,17 @@ public class Recommendation : Entity<Guid>
     }
 
     public static Recommendation Create(UserId userId, Hashtag hashtag)
-        => new(Guid.NewGuid(), userId, hashtag, 0, RecommendationWeight.Low);
+        => new(Guid.NewGuid(), userId, hashtag, 0, RecommendationWeight.None);
 
-    public void IncrementScore(int score)
+    public void IncrementScore(PostActionType postActionType)
     {
+        var score = postActionType switch
+        {
+            PostActionType.Liked => 1,
+            PostActionType.Bookmarked => 2,
+            PostActionType.Reposted => 3,
+            _ => 0
+        };
         Score += score;
         Weight = Score switch
         {
