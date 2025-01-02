@@ -37,14 +37,13 @@ public record AddPostActionCommand(Guid PostId, PostActionType ActionType) : ICo
             NullValidator.ValidateNotNull(post);
 
             if (post.CreatedBy == user.Id)
-                return Result.BadRequest<Guid>("You can't repost your own post");
+                return Result.BadRequest<Guid>("You can't add action to your own post");
 
             user.AddPostAction(post.Id, request.ActionType);
 
             await _unitOfWork.CommitAsync(cancellationToken);
             await _recommendationsService.CreateRecommendation(user.Id, post.Hashtags.ToList(), cancellationToken);
             await _recommendationsService.IncrementRecommendation(user.Id, post.Hashtags.ToList(), request.ActionType, cancellationToken);
-
 
             return Result.Ok<Guid>(post.Id);
         }

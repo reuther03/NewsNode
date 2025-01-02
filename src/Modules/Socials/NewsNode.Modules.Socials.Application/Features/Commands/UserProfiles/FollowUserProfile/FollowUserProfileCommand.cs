@@ -16,15 +16,23 @@ public record FollowUserProfileCommand(
     {
         private readonly IUserProfileRepository _userProfileRepository;
         private readonly IUserService _userService;
+        private readonly IRecommendationsService _recommendationsService;
+        private readonly IPostRepository _postRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly INotificationService _notificationService;
 
 
-        public Handler(IUserProfileRepository userProfileRepository, IUserService userService, IUnitOfWork unitOfWork,
+        public Handler(IUserProfileRepository userProfileRepository,
+            IUserService userService,
+            IRecommendationsService recommendationsService,
+            IPostRepository postRepository,
+            IUnitOfWork unitOfWork,
             INotificationService notificationService)
         {
             _userProfileRepository = userProfileRepository;
             _userService = userService;
+            _recommendationsService = recommendationsService;
+            _postRepository = postRepository;
             _unitOfWork = unitOfWork;
             _notificationService = notificationService;
         }
@@ -37,10 +45,28 @@ public record FollowUserProfileCommand(
             var profileToFollow = await _userProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken);
             NullValidator.ValidateNotNull(profileToFollow);
 
+            var posts = await _postRepository.GetPostsByUserProfileIdAsync(profileToFollow.Id, cancellationToken);
+            if (posts.Count == 0)
+                return Result<Guid>.BadRequest("User has no posts");
+
+            var hashtags = posts
+                .SelectMany(x => x.Hashtags)
+                .DistinctBy(x => x.Value)
+                .ToList();
+
+            var mostInteractedHashtags = posts
+                .Where(x => x.Hashtags.Count > 0)
+                .OrderByDescending(x => x.Likes + x.Bookmarks + x.Reposts + x.Comments.Count)
+                .SelectMany(x => x.Hashtags)
+                .DistinctBy(x => x.Value)
+                .Take(5)
+                .ToList();
+
             follower.Follow(profileToFollow.Id);
 
             await _unitOfWork.CommitAsync(cancellationToken);
             await _notificationService.FollowedNotification(follower.Id, profileToFollow.Id);
+            await _recommendationsService.CreateRecommendation(follower.Id, mostInteractedHashtags, cancellationToken);
 
             return Result<Guid>.Ok(profileToFollow.Id);
         }

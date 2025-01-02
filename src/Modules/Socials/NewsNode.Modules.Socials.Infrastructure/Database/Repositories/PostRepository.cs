@@ -16,8 +16,13 @@ internal class PostRepository : Repository<Post, SocialsDbContext>, IPostReposit
     }
 
     public async Task<Post?> GetPostByIdAsync(PostId id, CancellationToken cancellationToken = default)
-    => await _dbContext.Posts
-        .Include(x => x.Hashtags)
-        .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        => await _dbContext.Posts
+            .Include(x => x.Hashtags)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
+    public async Task<List<Post>> GetPostsByUserProfileIdAsync(UserId userProfileId, CancellationToken cancellationToken = default)
+        => await _dbContext.Posts
+            .Include(x => x.Hashtags)
+            .Where(x => x.CreatedBy == userProfileId)
+            .ToListAsync(cancellationToken);
 }

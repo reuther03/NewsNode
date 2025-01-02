@@ -38,7 +38,9 @@ public class RecommendationsService : IRecommendationsService
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
-        var recommendations = await context.Recommendations.Where(x => x.UserId == userId && hashtags.Contains(x.Hashtag)).ToListAsync(cancellationToken);
+        var recommendations = await context.Recommendations
+            .Where(x => x.UserId == userId && hashtags.Contains(x.Hashtag))
+            .ToListAsync(cancellationToken);
 
         if (recommendations.Count == 0)
             return;

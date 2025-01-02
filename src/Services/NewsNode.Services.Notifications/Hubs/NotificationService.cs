@@ -34,8 +34,8 @@ public class NotificationService : INotificationService
         var context = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
 
         var notifications = followerIds.Select(followerId =>
-            Notification.Create(followerId, nameof(PostNotification), $"{userProfileId} posted a new post {postId}.")
-        ).ToList();
+                Notification.Create(followerId, nameof(PostNotification), $"{userProfileId} posted a new post {postId}."))
+            .ToList();
 
         await context.Notifications.AddRangeAsync(notifications);
         await context.SaveChangesAsync();
