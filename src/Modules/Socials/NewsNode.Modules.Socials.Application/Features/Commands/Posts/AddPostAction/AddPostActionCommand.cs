@@ -43,6 +43,7 @@ public record AddPostActionCommand(Guid PostId, PostActionType ActionType) : ICo
 
             await _unitOfWork.CommitAsync(cancellationToken);
             await _recommendationsService.CreateRecommendation(user.Id, post.Hashtags.ToList(), cancellationToken);
+            await _recommendationsService.IncrementRecommendation(user.Id, post.Hashtags.ToList(), request.ActionType, cancellationToken);
 
 
             return Result.Ok<Guid>(post.Id);

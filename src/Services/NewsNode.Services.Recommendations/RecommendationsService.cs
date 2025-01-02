@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using NewsNode.Services.Recommendations.Database;
 using NewsNode.Services.Recommendations.Recommendations;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using NewsNode.Shared.Abstractions.Services;
 
-namespace NewsNode.Services.Recommendations.Database;
+namespace NewsNode.Services.Recommendations;
 
 public class RecommendationsService : IRecommendationsService
 {
@@ -21,7 +23,7 @@ public class RecommendationsService : IRecommendationsService
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
-        if (context.Recommendations.Any(x => x.UserId == userId && hashtags.Any(z => z.Value == x.Hashtag)))
+        if (await context.Recommendations.AnyAsync(x => x.UserId == userId && hashtags.Contains(x.Hashtag), cancellationToken))
             return;
 
         foreach (var recommendation in hashtags.Select(hashtag => Recommendation.Create(userId, hashtag)))
@@ -30,19 +32,20 @@ public class RecommendationsService : IRecommendationsService
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public Task IncrementRecommendation(UserId userId, Hashtag hashtag, PostActionType postActionType, CancellationToken cancellationToken = default)
+    public async Task IncrementRecommendation(UserId userId, List<Hashtag> hashtags, PostActionType postActionType,
+        CancellationToken cancellationToken = default)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
-        var recommendation = context.Recommendations.FirstOrDefault(x => x.UserId == userId && x.Hashtag == hashtag.Value);
+        var recommendations = await context.Recommendations.Where(x => x.UserId == userId && hashtags.Contains(x.Hashtag)).ToListAsync(cancellationToken);
 
-        if (recommendation is null)
-            return Task.CompletedTask;
+        if (recommendations.Count == 0)
+            return;
 
+        foreach (var recommendation in recommendations)
+            recommendation.IncrementScore(postActionType);
 
-        recommendation.IncrementScore(postActionType);
-
-        return context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
     }
 }
