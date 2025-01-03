@@ -12,8 +12,6 @@ public class Post : AggregateRoot<PostId>
     public int Likes { get; private set; }
     public int Bookmarks { get; private set; }
     public int Reposts { get; private set; }
-    // moze dislikes
-
     private readonly List<Hashtag> _hashtags = [];
     public IReadOnlyList<Hashtag> Hashtags => _hashtags.AsReadOnly();
 
@@ -50,6 +48,9 @@ public class Post : AggregateRoot<PostId>
         {
             case PostActionType.Liked:
                 Likes++;
+                break;
+            case PostActionType.Disliked:
+                Likes--;
                 break;
             case PostActionType.Bookmarked:
                 Bookmarks++;

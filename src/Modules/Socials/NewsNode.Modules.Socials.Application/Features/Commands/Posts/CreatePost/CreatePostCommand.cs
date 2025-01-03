@@ -48,7 +48,6 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
             await _unitOfWork.CommitAsync(cancellationToken);
 
             var unMutedFollowers = await _followerRepository.GetFollowersWhereUnMutedAsync(userProfile.Id, cancellationToken);
-
             await _notificationService.PostNotification(unMutedFollowers, userProfile.Id, post.Id);
 
             return Result<Guid>.Ok(post.Id);
