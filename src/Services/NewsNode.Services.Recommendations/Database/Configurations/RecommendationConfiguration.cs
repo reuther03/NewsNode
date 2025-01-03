@@ -28,7 +28,7 @@ public class RecommendationConfiguration : IEntityTypeConfiguration<Recommendati
             .IsRequired();
 
         builder.Property(x => x.Weight)
-            .HasConversion<string>()
+            .HasConversion<int>()
             .IsRequired();
     }
 }
