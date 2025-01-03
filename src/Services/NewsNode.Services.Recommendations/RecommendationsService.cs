@@ -50,4 +50,19 @@ public class RecommendationsService : IRecommendationsService
 
         await context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<List<Hashtag>> GetRecommendedHashtags(UserId userId, CancellationToken cancellationToken = default)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
+
+        var recommendations = await context.Recommendations
+            .Where(x => x.UserId == userId)
+            .OrderByDescending(x => (int)x.Weight)
+            .ThenByDescending(x => x.Score)
+            .Select(x => x.Hashtag)
+            .ToListAsync(cancellationToken);
+
+        return recommendations;
+    }
 }

@@ -49,11 +49,6 @@ public record FollowUserProfileCommand(
             if (posts.Count == 0)
                 return Result<Guid>.BadRequest("User has no posts");
 
-            var hashtags = posts
-                .SelectMany(x => x.Hashtags)
-                .DistinctBy(x => x.Value)
-                .ToList();
-
             var mostInteractedHashtags = posts
                 .Where(x => x.Hashtags.Count > 0)
                 .OrderByDescending(x => x.Likes + x.Bookmarks + x.Reposts + x.Comments.Count)

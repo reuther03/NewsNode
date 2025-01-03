@@ -23,7 +23,7 @@ namespace NewsNode.Services.Recommendations.Database.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Hashtag = table.Column<string>(type: "text", nullable: false),
                     Score = table.Column<int>(type: "integer", nullable: false),
-                    Weight = table.Column<string>(type: "text", nullable: false)
+                    Weight = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

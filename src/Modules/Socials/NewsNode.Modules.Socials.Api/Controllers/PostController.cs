@@ -39,6 +39,14 @@ internal class PostController : BaseController
         return Ok(result);
     }
 
+    [HttpGet("recommended")]
+    [Authorize]
+    public async Task<IActionResult> GetRecommendedPosts([FromQuery] GetRecommendedPostsQuery query)
+    {
+        var result = await _sender.Send(query);
+        return Ok(result);
+    }
+
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreatePost([FromBody] CreatePostCommand command)

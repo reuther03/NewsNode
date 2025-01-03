@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Services.Recommendations.Database.Migrations
 {
     [DbContext(typeof(RecommendationsDbContext))]
-    [Migration("20250102014910_Init")]
+    [Migration("20250103013556_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -41,9 +41,8 @@ namespace NewsNode.Services.Recommendations.Database.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Weight")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Weight")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
