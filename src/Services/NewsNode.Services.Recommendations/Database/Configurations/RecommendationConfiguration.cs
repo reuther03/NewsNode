@@ -24,6 +24,9 @@ public class RecommendationConfiguration : IEntityTypeConfiguration<Recommendati
             .HasConversion(x => x.Value, x => new Hashtag(x))
             .IsRequired();
 
+        builder.Property(x => x.LastInteraction)
+            .IsRequired();
+
         builder.Property(x => x.Score)
             .IsRequired();
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Services.Recommendations.Database;
+using NewsNode.Services.Recommendations.Recommendations;
 using NewsNode.Shared.Abstractions.Services;
 using NewsNode.Shared.Infrastructure.Postgres;
 
@@ -12,6 +13,7 @@ public static class Extensions
         services.AddPostgres<RecommendationsDbContext>();
         services.AddScoped<RecommendationsDbContext>();
         services.AddSingleton<IRecommendationsService, RecommendationsService>();
+        services.AddHostedService<DecayScoreJob>();
         return services;
     }
 }

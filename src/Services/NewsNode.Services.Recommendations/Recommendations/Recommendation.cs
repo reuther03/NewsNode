@@ -8,6 +8,7 @@ public class Recommendation : Entity<Guid>
 {
     public UserId UserId { get; private set; }
     public Hashtag Hashtag { get; private set; }
+    public DateTime LastInteraction { get; private set; }
     public int Score { get; private set; }
     public RecommendationWeight Weight { get; private set; }
 
@@ -15,6 +16,7 @@ public class Recommendation : Entity<Guid>
     {
         UserId = userId;
         Hashtag = hashtag;
+        LastInteraction = DateTime.UtcNow.Date;
         Score = score;
         Weight = weight;
     }
@@ -45,5 +47,11 @@ public class Recommendation : Entity<Guid>
             < 800 => RecommendationWeight.High,
             _ => RecommendationWeight.VeryHigh
         };
+        LastInteraction = DateTime.UtcNow;
+    }
+
+    public void SetScore(int score)
+    {
+        Score = score;
     }
 }

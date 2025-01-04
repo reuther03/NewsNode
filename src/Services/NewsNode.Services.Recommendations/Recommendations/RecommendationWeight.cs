@@ -2,11 +2,11 @@
 
 public enum RecommendationWeight
 {
-    None = 1,
-    Low = 2,
-    MediumLow = 3,
-    Medium = 4,
-    MediumHigh = 5,
-    High = 6,
-    VeryHigh = 7
+    None = 0,
+    Low = 1,
+    MediumLow = 2,
+    Medium = 3,
+    MediumHigh = 4,
+    High = 5,
+    VeryHigh = 6
 }
