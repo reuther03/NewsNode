@@ -19,7 +19,7 @@ public class DecayScoreJob : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             await DecayScore(stoppingToken);
-            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
         }
     }
 
@@ -37,8 +37,9 @@ public class DecayScoreJob : BackgroundService
             if (daysSinceInteraction < 3)
                 continue;
 
-            var score = recommendation.Score * Math.Pow(0.995, daysSinceInteraction);
-            recommendation.SetScore((int)score);
+            var score = recommendation.Score - 1;
+
+            recommendation.SetScore(score);
         }
 
         await context.SaveChangesAsync(cancellationToken);

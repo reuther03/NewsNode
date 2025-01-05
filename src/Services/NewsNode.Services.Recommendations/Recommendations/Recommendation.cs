@@ -37,8 +37,24 @@ public class Recommendation : Entity<Guid>
             _ => 0
         };
         Score += score;
-        Weight = Score switch
+        SetWeight(Score);
+        LastInteraction = DateTime.UtcNow;
+    }
+
+    public void SetScore(int score)
+    {
+        Score = score;
+        SetWeight(score);
+    }
+
+    private void SetWeight(int score)
+    {
+        Weight = score switch
         {
+            <= -800 => RecommendationWeight.VeryHighNegative,
+            <= -400 => RecommendationWeight.HighNegative,
+            <= -200 => RecommendationWeight.MediumNegative,
+            <= -50 => RecommendationWeight.LowNegative,
             > 0 and < 25 => RecommendationWeight.None,
             < 50 => RecommendationWeight.Low,
             < 100 => RecommendationWeight.MediumLow,
@@ -48,10 +64,5 @@ public class Recommendation : Entity<Guid>
             _ => RecommendationWeight.VeryHigh
         };
         LastInteraction = DateTime.UtcNow;
-    }
-
-    public void SetScore(int score)
-    {
-        Score = score;
     }
 }
