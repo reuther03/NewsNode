@@ -3,9 +3,10 @@
 public enum PostActionType
 {
     //TODO: czy dodac disliked i comment?
-    Liked = 0,
-    Disliked = 1,
+    Disliked = 0,
+    ShowLess = 1,
     NotInterested = 2,
+    Liked = 3,
     Reposted = 4,
     Bookmarked = 5,
     Commented = 6

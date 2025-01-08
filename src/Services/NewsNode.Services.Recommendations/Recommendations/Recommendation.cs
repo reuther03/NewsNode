@@ -28,9 +28,10 @@ public class Recommendation : Entity<Guid>
     {
         var score = postActionType switch
         {
-            PostActionType.Liked => 2,
             PostActionType.Disliked => -1,
             PostActionType.NotInterested => -5,
+            PostActionType.ShowLess => -10,
+            PostActionType.Liked => 2,
             PostActionType.Reposted => 5,
             PostActionType.Bookmarked => 4,
             PostActionType.Commented => 3,
