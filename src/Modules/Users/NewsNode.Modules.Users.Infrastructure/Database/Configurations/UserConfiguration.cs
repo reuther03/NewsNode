@@ -30,6 +30,18 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasConversion(x => x.Value, x => new Email(x))
             .IsRequired();
 
+        builder.OwnsOne(x => x.Location, location =>
+        {
+            location.Property(x => x.Country)
+                .HasColumnName("Country")
+                .IsRequired();
+
+            location.Property(x => x.City)
+                .HasColumnName("City")
+                .IsRequired();
+        });
+
+
         builder.HasIndex(x => x.Email).IsUnique();
     }
 }

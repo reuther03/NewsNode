@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Services.Recommendations.Database;
-using NewsNode.Services.Recommendations.Recommendations;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using NewsNode.Shared.Abstractions.Services;
 
-namespace NewsNode.Services.Recommendations;
+namespace NewsNode.Services.Recommendations.Recommendations;
 
 public class RecommendationsService : IRecommendationsService
 {

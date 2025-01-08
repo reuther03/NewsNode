@@ -25,6 +25,17 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             .HasConversion(x => x.Value, x => new Name(x))
             .IsRequired();
 
+        builder.OwnsOne(x => x.Location, location =>
+        {
+            location.Property(x => x.Country)
+                .HasColumnName("Country")
+                .IsRequired();
+
+            location.Property(x => x.City)
+                .HasColumnName("City")
+                .IsRequired();
+        });
+
         builder.HasIndex(x => x.Email).IsUnique();
     }
 }

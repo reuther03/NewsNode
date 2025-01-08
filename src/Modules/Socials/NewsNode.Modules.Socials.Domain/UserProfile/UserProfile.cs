@@ -13,7 +13,11 @@ public class UserProfile : AggregateRoot<UserId>
     private readonly List<UserProfileStatus> _profileStatuses = [];
     private readonly List<PostAction> _postActions = [];
     public Name UserName { get; private set; }
+
     public Email Email { get; private set; }
+
+    // public string Bio { get; private set; }
+    public Location Location { get; private set; }
 
     public IReadOnlyList<UserProfileFollow> ProfileFollows => _profileFollows.AsReadOnly();
     public IReadOnlyList<UserProfileStatus> ProfileStatuses => _profileStatuses.AsReadOnly();
@@ -23,14 +27,15 @@ public class UserProfile : AggregateRoot<UserId>
     {
     }
 
-    private UserProfile(UserId id, Email email, Name userName) : base(id)
+    private UserProfile(UserId id, Email email, Name userName, Location location) : base(id)
     {
         Email = email;
         UserName = userName;
+        Location = location;
     }
 
-    public static UserProfile Create(Guid userId, Email email, Name userName)
-        => new(UserId.From(userId), email, userName);
+    public static UserProfile Create(Guid userId, Email email, Name userName, Location location) =>
+        new(UserId.From(userId), email, userName, location);
 
     public void Follow(UserId targetUserId)
     {

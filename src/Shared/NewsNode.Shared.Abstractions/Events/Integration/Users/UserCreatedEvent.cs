@@ -4,4 +4,4 @@ using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Shared.Abstractions.Events.Integration.Users;
 
-public record UserCreatedEvent(UserId UserId, Email Email, Name UserName) : INotification;
+public record UserCreatedEvent(UserId UserId, Email Email, Name UserName, Location Location) : INotification;

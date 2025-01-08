@@ -19,7 +19,7 @@ public class UserCreatedEventHandler : INotificationHandler<UserCreatedEvent>
 
     public async Task Handle(UserCreatedEvent notification, CancellationToken cancellationToken)
     {
-        var userProfile = UserProfile.Create(notification.UserId, notification.Email, notification.UserName);
+        var userProfile = UserProfile.Create(notification.UserId, notification.Email, notification.UserName, notification.Location);
 
         await _userProfileRepository.AddAsync(userProfile, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
