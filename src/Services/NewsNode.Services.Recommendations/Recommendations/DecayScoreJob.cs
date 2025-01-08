@@ -28,20 +28,25 @@ public class DecayScoreJob : BackgroundService
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
-        var recommendations = await context.Recommendations.ToListAsync(cancellationToken);
-
-        foreach (var recommendation in recommendations)
+        const int batchSize = 1000;
+        var totalRecommendations = await context.Recommendations.CountAsync(cancellationToken);
+        for (var i = 0; i < totalRecommendations; i += batchSize)
         {
-            var daysSinceInteraction = (DateTime.UtcNow - recommendation.LastInteraction).Days;
+            var recommendations = await context.Recommendations.Skip(i).Take(batchSize).ToListAsync(cancellationToken);
 
-            if (daysSinceInteraction < 3)
-                continue;
+            foreach (var recommendation in recommendations)
+            {
+                var daysSinceInteraction = (DateTime.UtcNow - recommendation.LastInteraction).Days;
 
-            var score = recommendation.Score - 1;
+                if (daysSinceInteraction < 3)
+                    continue;
 
-            recommendation.SetScore(score);
+                var score = recommendation.Score - 1;
+
+                recommendation.SetScore(score);
+            }
+
+            await context.SaveChangesAsync(cancellationToken);
         }
-
-        await context.SaveChangesAsync(cancellationToken);
     }
 }
