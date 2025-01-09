@@ -6,21 +6,21 @@ namespace NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 public record Location : ValueObject
 {
     public string Country { get; }
-    public string City { get; }
+    public string? City { get; }
 
 
-    public Location(string country, string city)
+    public Location(string country, string? city)
     {
-        if (string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city))
-            throw new DomainException("Country and city must be provided");
+        if (string.IsNullOrWhiteSpace(country))
+            throw new DomainException("Country cannot be empty");
 
         Country = country;
-        City = city;
+        City = city ?? string.Empty;
     }
 
     protected override IEnumerable<object> GetAtomicValues()
     {
         yield return Country;
-        yield return City;
+        yield return City ?? string.Empty;
     }
 }
