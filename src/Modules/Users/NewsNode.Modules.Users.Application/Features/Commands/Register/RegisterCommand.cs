@@ -15,7 +15,7 @@ public record RegisterCommand : ICommand<Guid>
     public string Email { get; init; } = null!;
     public string Password { get; init; } = null!;
     public string Country { get; init; } = null!;
-    public string City { get; init; } = null!;
+    public string? City { get; init; } = null!;
 
     internal sealed class Handler : ICommandHandler<RegisterCommand, Guid>
     {

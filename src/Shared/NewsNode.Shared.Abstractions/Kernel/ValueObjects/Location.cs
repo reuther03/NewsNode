@@ -15,12 +15,12 @@ public record Location : ValueObject
             throw new DomainException("Country cannot be empty");
 
         Country = country;
-        City = city ?? string.Empty;
+        City = city ?? "None";
     }
 
     protected override IEnumerable<object> GetAtomicValues()
     {
         yield return Country;
-        yield return City ?? string.Empty;
+        yield return City ?? "None";
     }
 }
