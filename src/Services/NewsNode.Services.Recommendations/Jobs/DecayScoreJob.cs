@@ -19,7 +19,7 @@ public class DecayScoreJob : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             await DecayScore(stoppingToken);
-            await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+            await Task.Delay(TimeSpan.FromHours(12), stoppingToken);
         }
     }
 
