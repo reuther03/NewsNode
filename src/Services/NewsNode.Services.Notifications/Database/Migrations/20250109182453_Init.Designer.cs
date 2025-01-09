@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Services.Notifications.Database.Migrations
 {
     [DbContext(typeof(NotificationsDbContext))]
-    [Migration("20241204191121_AddedNotification")]
-    partial class AddedNotification
+    [Migration("20250109182453_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,8 +34,10 @@ namespace NewsNode.Services.Notifications.Database.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("ReceivedAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<Guid>("ReceiverId")
                         .HasColumnType("uuid");

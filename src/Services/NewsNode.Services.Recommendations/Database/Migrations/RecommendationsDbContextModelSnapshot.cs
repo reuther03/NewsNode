@@ -67,7 +67,7 @@ namespace NewsNode.Services.Recommendations.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.ToTable("LocalRecommendations", "recommendations");
+                    b.ToTable("CountryRecommendations", "recommendations");
                 });
 
             modelBuilder.Entity("NewsNode.Services.Recommendations.Recommendations.ActionRecommendation", b =>

@@ -31,7 +31,7 @@ public class RecommendationsService : IRecommendationsService
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task IncrementRecommendation(UserId userId, List<Hashtag> hashtags, PostActionType postActionType,
+    public async Task IncrementActionRecommendation(UserId userId, List<Hashtag> hashtags, PostActionType postActionType,
         CancellationToken cancellationToken = default)
     {
         using var scope = _serviceScopeFactory.CreateScope();
@@ -50,7 +50,7 @@ public class RecommendationsService : IRecommendationsService
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<List<Hashtag>> GetRecommendedHashtags(UserId userId, CancellationToken cancellationToken = default)
+    public async Task<List<Hashtag>> GetActionRecommendedHashtags(UserId userId, CancellationToken cancellationToken = default)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
@@ -63,5 +63,37 @@ public class RecommendationsService : IRecommendationsService
             .ToListAsync(cancellationToken);
 
         return recommendations;
+    }
+
+    public async Task CreateCountryRecommendation(string country, List<Hashtag> hashtags, CancellationToken cancellationToken = default)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
+
+        if (await context.CountryRecommendations.AnyAsync(x => x.Country == country && hashtags.Contains(x.Hashtag), cancellationToken))
+            return;
+
+        foreach (var recommendation in hashtags.Select(hashtag => CountryRecommendation.Create(country, hashtag)))
+            context.Recommendations.Add(recommendation);
+
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task IncrementCountryRecommendation(string country, List<Hashtag> hashtags, PostActionType postActionType, CancellationToken cancellationToken = default)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
+
+        var recommendations = await context.CountryRecommendations
+            .Where(x => x.Country == country && hashtags.Contains(x.Hashtag))
+            .ToListAsync(cancellationToken);
+
+        if (recommendations.Count == 0)
+            return;
+
+        foreach (var recommendation in recommendations)
+            recommendation.IncrementScore(postActionType);
+
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

@@ -7,7 +7,7 @@ public class RecommendationsDbContext : DbContext
 {
     public DbSet<Recommendation> Recommendations => Set<Recommendation>();
     public DbSet<ActionRecommendation> ActionRecommendations => Set<ActionRecommendation>();
-    public DbSet<CountryRecommendation> LocalRecommendations => Set<CountryRecommendation>();
+    public DbSet<CountryRecommendation> CountryRecommendations => Set<CountryRecommendation>();
 
     public RecommendationsDbContext(DbContextOptions<RecommendationsDbContext> options) : base(options)
     {

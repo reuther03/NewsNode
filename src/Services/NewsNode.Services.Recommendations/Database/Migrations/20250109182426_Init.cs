@@ -51,7 +51,7 @@ namespace NewsNode.Services.Recommendations.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LocalRecommendations",
+                name: "CountryRecommendations",
                 schema: "recommendations",
                 columns: table => new
                 {
@@ -60,9 +60,9 @@ namespace NewsNode.Services.Recommendations.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LocalRecommendations", x => x.Id);
+                    table.PrimaryKey("PK_CountryRecommendations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LocalRecommendations_Recommendations_Id",
+                        name: "FK_CountryRecommendations_Recommendations_Id",
                         column: x => x.Id,
                         principalSchema: "recommendations",
                         principalTable: "Recommendations",
@@ -79,7 +79,7 @@ namespace NewsNode.Services.Recommendations.Database.Migrations
                 schema: "recommendations");
 
             migrationBuilder.DropTable(
-                name: "LocalRecommendations",
+                name: "CountryRecommendations",
                 schema: "recommendations");
 
             migrationBuilder.DropTable(

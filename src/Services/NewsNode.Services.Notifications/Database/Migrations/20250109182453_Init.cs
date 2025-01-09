@@ -22,10 +22,10 @@ namespace NewsNode.Services.Notifications.Database.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ReceiverId = table.Column<Guid>(type: "uuid", nullable: false),
                     Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Message = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    SentAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ReceivedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    SentAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {

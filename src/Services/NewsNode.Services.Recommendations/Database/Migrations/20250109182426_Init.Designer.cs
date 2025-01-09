@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Services.Recommendations.Database.Migrations
 {
     [DbContext(typeof(RecommendationsDbContext))]
-    [Migration("20250109015203_Init")]
+    [Migration("20250109182426_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -70,7 +70,7 @@ namespace NewsNode.Services.Recommendations.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.ToTable("LocalRecommendations", "recommendations");
+                    b.ToTable("CountryRecommendations", "recommendations");
                 });
 
             modelBuilder.Entity("NewsNode.Services.Recommendations.Recommendations.ActionRecommendation", b =>
