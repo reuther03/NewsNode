@@ -5,7 +5,7 @@ namespace NewsNode.Services.Recommendations.Database;
 
 public class RecommendationsDbContext : DbContext
 {
-    public DbSet<Recommendation> Recommendations => Set<Recommendation>();
+    public DbSet<ActionRecommendation> Recommendations => Set<ActionRecommendation>();
 
     public RecommendationsDbContext(DbContextOptions<RecommendationsDbContext> options) : base(options)
     {

@@ -25,7 +25,7 @@ public class RecommendationsService : IRecommendationsService
         if (await context.Recommendations.AnyAsync(x => x.UserId == userId && hashtags.Contains(x.Hashtag), cancellationToken))
             return;
 
-        foreach (var recommendation in hashtags.Select(hashtag => Recommendation.Create(userId, hashtag)))
+        foreach (var recommendation in hashtags.Select(hashtag => ActionRecommendation.Create(userId, hashtag)))
             context.Recommendations.Add(recommendation);
 
         await context.SaveChangesAsync(cancellationToken);

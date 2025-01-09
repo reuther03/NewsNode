@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
-using NewsNode.Modules.Socials.Domain.Post;
-using NewsNode.Modules.Socials.Domain.UserProfile;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Pagination;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
-using NewsNode.Shared.Abstractions.QueriesAndCommands.Extensions;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Queries;
 using NewsNode.Shared.Abstractions.Services;
 

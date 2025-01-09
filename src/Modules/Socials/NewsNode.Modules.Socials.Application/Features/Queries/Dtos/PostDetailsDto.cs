@@ -1,6 +1,4 @@
-﻿using NewsNode.Modules.Socials.Domain.Post;
-
-namespace NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
+﻿namespace NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
 
 public class PostDetailsDto
 {

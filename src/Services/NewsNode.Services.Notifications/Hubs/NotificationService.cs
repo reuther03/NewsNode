@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Services.Notifications.Database;
 using NewsNode.Services.Notifications.Notifications;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;

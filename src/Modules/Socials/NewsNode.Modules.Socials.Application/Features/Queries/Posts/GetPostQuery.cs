@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using NewsNode.Modules.Socials.Application.Abstractions;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
 using NewsNode.Modules.Socials.Domain.UserProfile;

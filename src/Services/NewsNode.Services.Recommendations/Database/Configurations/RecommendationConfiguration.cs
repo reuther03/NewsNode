@@ -6,9 +6,9 @@ using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Services.Recommendations.Database.Configurations;
 
-public class RecommendationConfiguration : IEntityTypeConfiguration<Recommendation>
+public class RecommendationConfiguration : IEntityTypeConfiguration<ActionRecommendation>
 {
-    public void Configure(EntityTypeBuilder<Recommendation> builder)
+    public void Configure(EntityTypeBuilder<ActionRecommendation> builder)
     {
         builder.ToTable("Recommendations");
 

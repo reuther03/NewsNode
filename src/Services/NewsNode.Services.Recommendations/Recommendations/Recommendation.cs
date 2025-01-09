@@ -4,25 +4,24 @@ using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Services.Recommendations.Recommendations;
 
-public class Recommendation : Entity<Guid>
+public abstract class Recommendation : AggregateRoot<RecommendationId>
 {
-    public UserId UserId { get; private set; }
     public Hashtag Hashtag { get; private set; }
     public DateTime LastInteraction { get; private set; }
     public int Score { get; private set; }
     public RecommendationWeight Weight { get; private set; }
 
-    public Recommendation(Guid id, UserId userId, Hashtag hashtag, int score, RecommendationWeight weight) : base(id)
+    private Recommendation()
     {
-        UserId = userId;
+    }
+
+    protected Recommendation(Guid id,Hashtag hashtag, DateTime lastInteraction, int score, RecommendationWeight weight) : base(id)
+    {
         Hashtag = hashtag;
-        LastInteraction = DateTime.UtcNow.Date;
+        LastInteraction = lastInteraction;
         Score = score;
         Weight = weight;
     }
-
-    public static Recommendation Create(UserId userId, Hashtag hashtag)
-        => new(Guid.NewGuid(), userId, hashtag, 0, RecommendationWeight.None);
 
     public void IncrementScore(PostActionType postActionType)
     {
