@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NewsNode.Services.Recommendations.Database;
 
-namespace NewsNode.Services.Recommendations.Recommendations;
+namespace NewsNode.Services.Recommendations.Jobs;
 
 public class DecayScoreJob : BackgroundService
 {

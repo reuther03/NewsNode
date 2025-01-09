@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NewsNode.Services.Recommendations.Database;
+using NewsNode.Services.Recommendations.Recommendations;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using NewsNode.Shared.Abstractions.Services;
 
-namespace NewsNode.Services.Recommendations.Recommendations;
+namespace NewsNode.Services.Recommendations.Database;
 
 public class RecommendationsService : IRecommendationsService
 {
@@ -17,12 +17,12 @@ public class RecommendationsService : IRecommendationsService
     }
 
 
-    public async Task CreateRecommendation(UserId userId, List<Hashtag> hashtags, CancellationToken cancellationToken = default)
+    public async Task CreateActionRecommendation(UserId userId, List<Hashtag> hashtags, CancellationToken cancellationToken = default)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
-        if (await context.Recommendations.AnyAsync(x => x.UserId == userId && hashtags.Contains(x.Hashtag), cancellationToken))
+        if (await context.ActionRecommendations.AnyAsync(x => x.UserId == userId && hashtags.Contains(x.Hashtag), cancellationToken))
             return;
 
         foreach (var recommendation in hashtags.Select(hashtag => ActionRecommendation.Create(userId, hashtag)))
@@ -37,7 +37,7 @@ public class RecommendationsService : IRecommendationsService
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
-        var recommendations = await context.Recommendations
+        var recommendations = await context.ActionRecommendations
             .Where(x => x.UserId == userId && hashtags.Contains(x.Hashtag))
             .ToListAsync(cancellationToken);
 
@@ -55,7 +55,7 @@ public class RecommendationsService : IRecommendationsService
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
-        var recommendations = await context.Recommendations
+        var recommendations = await context.ActionRecommendations
             .Where(x => x.UserId == userId)
             .OrderByDescending(x => (int)x.Weight)
             .ThenByDescending(x => x.Score)

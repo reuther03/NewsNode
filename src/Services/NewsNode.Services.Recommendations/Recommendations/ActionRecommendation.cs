@@ -7,6 +7,10 @@ public class ActionRecommendation : Recommendation
 {
     public UserId UserId { get; private set; }
 
+    private ActionRecommendation()
+    {
+    }
+
     private ActionRecommendation(Guid id, UserId userId, Hashtag hashtag, DateTime lastInteraction, int score, RecommendationWeight weight)
         : base(id, hashtag, lastInteraction, score, weight)
     {
@@ -15,5 +19,4 @@ public class ActionRecommendation : Recommendation
 
     public static ActionRecommendation Create(UserId userId, Hashtag hashtag)
         => new(Guid.NewGuid(), userId, hashtag, DateTime.UtcNow.Date, 0, RecommendationWeight.None);
-
 }

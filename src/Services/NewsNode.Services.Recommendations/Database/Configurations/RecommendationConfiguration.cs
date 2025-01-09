@@ -6,19 +6,16 @@ using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Services.Recommendations.Database.Configurations;
 
-public class RecommendationConfiguration : IEntityTypeConfiguration<ActionRecommendation>
+public class RecommendationConfiguration : IEntityTypeConfiguration<Recommendation>
 {
-    public void Configure(EntityTypeBuilder<ActionRecommendation> builder)
+    public void Configure(EntityTypeBuilder<Recommendation> builder)
     {
         builder.ToTable("Recommendations");
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
+            .HasConversion(x => x.Value, x => RecommendationId.From(x))
             .ValueGeneratedNever();
-
-        builder.Property(x => x.UserId)
-            .HasConversion(x => x.Value, x => new UserId(x))
-            .IsRequired();
 
         builder.Property(x => x.Hashtag)
             .HasConversion(x => x.Value, x => new Hashtag(x))
@@ -32,5 +29,7 @@ public class RecommendationConfiguration : IEntityTypeConfiguration<ActionRecomm
 
         builder.Property(x => x.Weight)
             .IsRequired();
+
+        builder.UseTptMappingStrategy();
     }
 }

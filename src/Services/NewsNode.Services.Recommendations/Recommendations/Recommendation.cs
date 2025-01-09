@@ -1,6 +1,5 @@
 ﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
-using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Services.Recommendations.Recommendations;
 
@@ -11,11 +10,11 @@ public abstract class Recommendation : AggregateRoot<RecommendationId>
     public int Score { get; private set; }
     public RecommendationWeight Weight { get; private set; }
 
-    private Recommendation()
+    protected Recommendation()
     {
     }
 
-    protected Recommendation(Guid id,Hashtag hashtag, DateTime lastInteraction, int score, RecommendationWeight weight) : base(id)
+    protected Recommendation(Guid id, Hashtag hashtag, DateTime lastInteraction, int score, RecommendationWeight weight) : base(id)
     {
         Hashtag = hashtag;
         LastInteraction = lastInteraction;

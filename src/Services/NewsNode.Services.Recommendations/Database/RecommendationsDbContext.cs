@@ -5,7 +5,9 @@ namespace NewsNode.Services.Recommendations.Database;
 
 public class RecommendationsDbContext : DbContext
 {
-    public DbSet<ActionRecommendation> Recommendations => Set<ActionRecommendation>();
+    public DbSet<Recommendation> Recommendations => Set<Recommendation>();
+    public DbSet<ActionRecommendation> ActionRecommendations => Set<ActionRecommendation>();
+    public DbSet<CountryRecommendation> LocalRecommendations => Set<CountryRecommendation>();
 
     public RecommendationsDbContext(DbContextOptions<RecommendationsDbContext> options) : base(options)
     {
