@@ -14,7 +14,7 @@ public static class Extensions
         services.AddPostgres<RecommendationsDbContext>();
         services.AddScoped<RecommendationsDbContext>();
         services.AddSingleton<IRecommendationsService, RecommendationsService>();
-        services.AddHostedService<DecayScoreJob>();
+        services.AddHostedService<RecommendationJob>();
         return services;
     }
 }
