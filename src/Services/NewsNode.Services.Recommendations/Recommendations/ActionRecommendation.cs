@@ -12,7 +12,7 @@ public class ActionRecommendation : Recommendation
     }
 
     private ActionRecommendation(Guid id, UserId userId, Hashtag hashtag, DateTime lastInteraction, int score, RecommendationWeight weight)
-        : base(id, hashtag, lastInteraction, score, weight)
+        : base(id, hashtag, lastInteraction, score, weight, nameof(ActionRecommendation))
     {
         UserId = userId;
     }

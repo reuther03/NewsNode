@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Services.Notifications.Database.Migrations
 {
     [DbContext(typeof(NotificationsDbContext))]
-    [Migration("20250109182453_Init")]
+    [Migration("20250110012755_Init")]
     partial class Init
     {
         /// <inheritdoc />

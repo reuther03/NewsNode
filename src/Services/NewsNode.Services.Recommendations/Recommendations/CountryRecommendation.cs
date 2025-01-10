@@ -12,7 +12,7 @@ public class CountryRecommendation : Recommendation
     }
 
     public CountryRecommendation(Guid id, Hashtag hashtag, string country, DateTime lastInteraction, int score, RecommendationWeight weight)
-        : base(id, hashtag, lastInteraction, score, weight)
+        : base(id, hashtag, lastInteraction, score, weight, nameof(CountryRecommendation))
     {
         Country = country;
     }

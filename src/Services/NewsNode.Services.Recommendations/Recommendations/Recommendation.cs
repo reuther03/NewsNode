@@ -9,17 +9,19 @@ public abstract class Recommendation : AggregateRoot<RecommendationId>
     public DateTime LastInteraction { get; private set; }
     public int Score { get; private set; }
     public RecommendationWeight Weight { get; private set; }
+    public string Type { get; private set; }
 
     protected Recommendation()
     {
     }
 
-    protected Recommendation(Guid id, Hashtag hashtag, DateTime lastInteraction, int score, RecommendationWeight weight) : base(id)
+    protected Recommendation(Guid id, Hashtag hashtag, DateTime lastInteraction, int score, RecommendationWeight weight, string type) : base(id)
     {
         Hashtag = hashtag;
         LastInteraction = lastInteraction;
         Score = score;
         Weight = weight;
+        Type = type;
     }
 
     public void IncrementScore(PostActionType postActionType)

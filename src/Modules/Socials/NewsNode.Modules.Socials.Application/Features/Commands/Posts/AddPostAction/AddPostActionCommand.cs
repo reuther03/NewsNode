@@ -43,6 +43,7 @@ public record AddPostActionCommand(Guid PostId, PostActionType ActionType) : ICo
 
             await _unitOfWork.CommitAsync(cancellationToken);
             await _recommendationsService.CreateActionRecommendation(user.Id, post.Hashtags.ToList(), cancellationToken);
+            //todo: przeniesc to do create post??? zeby nie wywolywac tego przy kazdym dodaniu akcji
             await _recommendationsService.CreateCountryRecommendation(user.Location.Country, post.Hashtags.ToList(), cancellationToken);
             await _recommendationsService.IncrementActionRecommendation(user.Id, post.Hashtags.ToList(), request.ActionType, cancellationToken);
             await _recommendationsService.IncrementCountryRecommendation(user.Location.Country, post.Hashtags.ToList(), request.ActionType, cancellationToken);
