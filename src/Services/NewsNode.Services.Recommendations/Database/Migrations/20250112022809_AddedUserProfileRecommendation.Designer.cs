@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsNode.Services.Recommendations.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Services.Recommendations.Database.Migrations
 {
     [DbContext(typeof(RecommendationsDbContext))]
-    partial class RecommendationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250112022809_AddedUserProfileRecommendation")]
+    partial class AddedUserProfileRecommendation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,7 +92,7 @@ namespace NewsNode.Services.Recommendations.Database.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.ToTable("UserProfileRecommendations", "recommendations");
+                    b.ToTable("UserProfileRecommendation", "recommendations");
                 });
 
             modelBuilder.Entity("NewsNode.Services.Recommendations.Recommendations.ActionRecommendation", b =>

@@ -4,17 +4,18 @@ namespace NewsNode.Services.Recommendations.Recommendations;
 
 public class CountryRecommendation : Recommendation
 {
-    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string Country { get; private set; }
+    public Hashtag Hashtag { get; private set; }
 
     private CountryRecommendation()
     {
     }
 
     public CountryRecommendation(Guid id, Hashtag hashtag, string country, DateTime lastInteraction, int score, RecommendationWeight weight)
-        : base(id, hashtag, lastInteraction, score, weight, nameof(CountryRecommendation))
+        : base(id,lastInteraction, score, weight, nameof(CountryRecommendation))
     {
         Country = country;
+        Hashtag = hashtag;
     }
 
     public static CountryRecommendation Create(string country, Hashtag hashtag)

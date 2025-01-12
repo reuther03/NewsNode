@@ -61,7 +61,7 @@ public record FollowUserProfileCommand(
 
             await _unitOfWork.CommitAsync(cancellationToken);
             await _notificationService.FollowedNotification(follower.Id, profileToFollow.Id);
-            await _recommendationsService.CreateActionRecommendation(follower.Id, mostInteractedHashtags, cancellationToken);
+            await _recommendationsService.CreateCountryRecommendation(follower.Id, mostInteractedHashtags, cancellationToken);
 
             return Result<Guid>.Ok(profileToFollow.Id);
         }

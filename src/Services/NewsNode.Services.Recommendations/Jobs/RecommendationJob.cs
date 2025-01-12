@@ -46,7 +46,6 @@ public class RecommendationJob : BackgroundService
                         continue;
                 }
 
-
                 var score = recommendation.Score - 1;
 
                 recommendation.SetScore(score);
@@ -55,31 +54,4 @@ public class RecommendationJob : BackgroundService
             await context.SaveChangesAsync(cancellationToken);
         }
     }
-
-    // private async Task DecayCountryRecommendationScore(CancellationToken cancellationToken)
-    // {
-    //     using var scope = _serviceScopeFactory.CreateScope();
-    //     var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
-    //
-    //     const int batchSize = 1000;
-    //     var totalRecommendations = await context.Recommendations.CountAsync(cancellationToken);
-    //     for (var i = 0; i < totalRecommendations; i += batchSize)
-    //     {
-    //         var recommendations = await context.Recommendations.Skip(i).Take(batchSize).ToListAsync(cancellationToken);
-    //
-    //         foreach (var recommendation in recommendations)
-    //         {
-    //             var daysSinceInteraction = (DateTime.UtcNow - recommendation.LastInteraction).Days;
-    //
-    //             if (daysSinceInteraction < 3)
-    //                 continue;
-    //
-    //             var score = recommendation.Score - 1;
-    //
-    //             recommendation.SetScore(score);
-    //         }
-    //
-    //         await context.SaveChangesAsync(cancellationToken);
-    //     }
-    // }
 }

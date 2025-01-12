@@ -5,7 +5,6 @@ namespace NewsNode.Services.Recommendations.Recommendations;
 
 public abstract class Recommendation : AggregateRoot<RecommendationId>
 {
-    public Hashtag Hashtag { get; private set; }
     public DateTime LastInteraction { get; private set; }
     public int Score { get; private set; }
     public RecommendationWeight Weight { get; private set; }
@@ -15,9 +14,8 @@ public abstract class Recommendation : AggregateRoot<RecommendationId>
     {
     }
 
-    protected Recommendation(Guid id, Hashtag hashtag, DateTime lastInteraction, int score, RecommendationWeight weight, string type) : base(id)
+    protected Recommendation(Guid id, DateTime lastInteraction, int score, RecommendationWeight weight, string type) : base(id)
     {
-        Hashtag = hashtag;
         LastInteraction = lastInteraction;
         Score = score;
         Weight = weight;

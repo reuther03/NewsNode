@@ -17,10 +17,6 @@ public class RecommendationConfiguration : IEntityTypeConfiguration<Recommendati
             .HasConversion(x => x.Value, x => RecommendationId.From(x))
             .ValueGeneratedNever();
 
-        builder.Property(x => x.Hashtag)
-            .HasConversion(x => x.Value, x => new Hashtag(x))
-            .IsRequired();
-
         builder.Property(x => x.LastInteraction)
             .IsRequired();
 
@@ -28,6 +24,10 @@ public class RecommendationConfiguration : IEntityTypeConfiguration<Recommendati
             .IsRequired();
 
         builder.Property(x => x.Weight)
+            .IsRequired();
+
+        builder.Property(x => x.Type)
+            .HasMaxLength(100)
             .IsRequired();
 
         builder.UseTptMappingStrategy();

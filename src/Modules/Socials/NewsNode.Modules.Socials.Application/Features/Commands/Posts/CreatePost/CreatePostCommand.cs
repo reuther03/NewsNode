@@ -18,6 +18,7 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
         private readonly IFollowerRepository _followerRepository;
         private readonly IUserService _userService;
         private readonly INotificationService _notificationService;
+        private readonly IRecommendationsService _recommendationsService;
         private readonly IUnitOfWork _unitOfWork;
 
         public Handler
@@ -27,6 +28,7 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
             IFollowerRepository followerRepository,
             IUserService userService,
             INotificationService notificationService,
+            IRecommendationsService recommendationsService,
             IUnitOfWork unitOfWork)
         {
             _postRepository = postRepository;
@@ -34,6 +36,7 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
             _followerRepository = followerRepository;
             _userService = userService;
             _notificationService = notificationService;
+            _recommendationsService = recommendationsService;
             _unitOfWork = unitOfWork;
         }
 
@@ -49,6 +52,8 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
 
             var unMutedFollowers = await _followerRepository.GetFollowersWhereUnMutedAsync(userProfile.Id, cancellationToken);
             await _notificationService.PostNotification(unMutedFollowers, userProfile.Id, post.Id);
+            await _recommendationsService.CreateActionRecommendation(userProfile.Id, post.Hashtags.ToList(), cancellationToken);
+            await _recommendationsService.CreateCountryRecommendation(userProfile.Location.Country, post.Hashtags.ToList(), cancellationToken);
 
             return Result<Guid>.Ok(post.Id);
         }
