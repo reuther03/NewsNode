@@ -52,8 +52,6 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
 
             var unMutedFollowers = await _followerRepository.GetFollowersWhereUnMutedAsync(userProfile.Id, cancellationToken);
             await _notificationService.PostNotification(unMutedFollowers, userProfile.Id, post.Id);
-            await _recommendationsService.CreateActionRecommendation(userProfile.Id, post.Hashtags.ToList(), cancellationToken);
-            await _recommendationsService.CreateCountryRecommendation(userProfile.Location.Country, post.Hashtags.ToList(), cancellationToken);
 
             return Result<Guid>.Ok(post.Id);
         }

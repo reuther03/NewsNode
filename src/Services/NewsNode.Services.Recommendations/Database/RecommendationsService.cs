@@ -50,7 +50,7 @@ public class RecommendationsService : IRecommendationsService
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<List<Hashtag>> GetActionRecommendedHashtags(UserId userId, CancellationToken cancellationToken = default)
+    public async Task<List<Hashtag>> GetRecommendedHashtags(UserId userId, CancellationToken cancellationToken = default)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
@@ -60,6 +60,21 @@ public class RecommendationsService : IRecommendationsService
             .OrderByDescending(x => (int)x.Weight)
             .ThenByDescending(x => x.Score)
             .Select(x => x.Hashtag)
+            .ToListAsync(cancellationToken);
+
+        return recommendations;
+    }
+
+    public async Task<List<UserId>> GetRecommendedProfiles(UserId userId, CancellationToken cancellationToken = default)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
+
+        var recommendations = await context.ActionRecommendations
+            .Where(x => x.UserId == userId)
+            .OrderByDescending(x => (int)x.Weight)
+            .ThenByDescending(x => x.Score)
+            .Select(x => x.UserId)
             .ToListAsync(cancellationToken);
 
         return recommendations;

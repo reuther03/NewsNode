@@ -42,9 +42,10 @@ public record AddPostActionCommand(Guid PostId, PostActionType ActionType) : ICo
             user.AddPostAction(post.Id, request.ActionType);
 
             await _unitOfWork.CommitAsync(cancellationToken);
+            await _recommendationsService.CreateActionRecommendation(user.Id, post.Hashtags.ToList(), cancellationToken);
+            await _recommendationsService.CreateCountryRecommendation(user.Location.Country, post.Hashtags.ToList(), cancellationToken);
             await _recommendationsService.IncrementActionRecommendation(user.Id, post.Hashtags.ToList(), request.ActionType, cancellationToken);
             await _recommendationsService.IncrementCountryRecommendation(user.Location.Country, post.Hashtags.ToList(), request.ActionType, cancellationToken);
-
 
             return Result.Ok<Guid>(post.Id);
         }
