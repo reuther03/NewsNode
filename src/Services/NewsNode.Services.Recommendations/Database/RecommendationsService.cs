@@ -71,14 +71,14 @@ public class RecommendationsService : IRecommendationsService
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
         var userTopHashtags = await context.ActionRecommendations
-            .Where(x => x.UserId == userId)
+            .Where(x => x.UserId == userId && x.Weight >= RecommendationWeight.MediumLow)
+            .OrderByDescending(x => x.Weight)
+            .Take(5)
             .Select(x => x.Hashtag)
             .ToListAsync(cancellationToken);
 
         var similarUsers = await context.ActionRecommendations
             .Where(x => userTopHashtags.Contains(x.Hashtag) && x.UserId != userId)
-            .OrderByDescending(x => (int)x.Weight)
-            .ThenByDescending(x => x.Score)
             .Select(x => x.UserId)
             .ToListAsync(cancellationToken);
 
