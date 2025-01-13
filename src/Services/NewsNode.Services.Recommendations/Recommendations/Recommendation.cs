@@ -31,8 +31,9 @@ public abstract class Recommendation : AggregateRoot<RecommendationId>
             PostActionType.ShowLess => -10,
             PostActionType.Liked => 2,
             PostActionType.Reposted => 5,
-            PostActionType.Bookmarked => 4,
-            PostActionType.Commented => 3,
+            PostActionType.Bookmarked => 3,
+            PostActionType.Commented => 6,
+            PostActionType.Created => 10,
             _ => 0
         };
         Score += score;

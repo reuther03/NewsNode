@@ -9,5 +9,6 @@ public enum PostActionType
     Liked = 3,
     Reposted = 4,
     Bookmarked = 5,
-    Commented = 6
+    Commented = 6,
+    Created = 7
 }

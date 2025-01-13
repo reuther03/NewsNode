@@ -70,14 +70,19 @@ public class RecommendationsService : IRecommendationsService
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
-        var recommendations = await context.ActionRecommendations
+        var userTopHashtags = await context.ActionRecommendations
             .Where(x => x.UserId == userId)
+            .Select(x => x.Hashtag)
+            .ToListAsync(cancellationToken);
+
+        var similarUsers = await context.ActionRecommendations
+            .Where(x => userTopHashtags.Contains(x.Hashtag) && x.UserId != userId)
             .OrderByDescending(x => (int)x.Weight)
             .ThenByDescending(x => x.Score)
             .Select(x => x.UserId)
             .ToListAsync(cancellationToken);
 
-        return recommendations;
+        return similarUsers;
     }
 
     public async Task CreateCountryRecommendation(string country, List<Hashtag> hashtags, CancellationToken cancellationToken = default)
@@ -94,7 +99,8 @@ public class RecommendationsService : IRecommendationsService
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task IncrementCountryRecommendation(string country, List<Hashtag> hashtags, PostActionType postActionType, CancellationToken cancellationToken = default)
+    public async Task IncrementCountryRecommendation(string country, List<Hashtag> hashtags, PostActionType postActionType,
+        CancellationToken cancellationToken = default)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();

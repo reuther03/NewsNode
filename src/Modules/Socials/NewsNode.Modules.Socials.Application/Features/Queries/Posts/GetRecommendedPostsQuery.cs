@@ -30,6 +30,7 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
             NullValidator.ValidateNotNull(user);
 
             var recommendedHashtags = await _recommendations.GetRecommendedHashtags(user.Id, cancellationToken);
+            var recommendedProfiles = await _recommendations.GetRecommendedProfiles(user.Id, cancellationToken);
 
             var posts = await _dbContext.Posts
                 .Include(p => p.Hashtags)
