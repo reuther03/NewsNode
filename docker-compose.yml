@@ -21,6 +21,16 @@ services:
     networks:
       - NewsNode.Network
 
+  newsnode.redis:
+    image: redis:latest
+    container_name: newsnode.Redis
+    hostname: newsnode.Redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./.container/redis:/data
+      - ./.container/redis:/var/log/redis
+
 volumes:
   postgres:
     driver: local
