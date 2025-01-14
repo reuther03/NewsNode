@@ -31,6 +31,18 @@ public static class Extensions
         return services;
     }
 
+    public static IServiceCollection AddRedis(this IServiceCollection services)
+    {
+        services.AddStackExchangeRedisCache(options =>
+        {
+            var redisOptions = services.GetOptions<RedisOptions>("redis");
+            options.Configuration = redisOptions.ConnectionString;
+            services.AddSingleton(options);
+        });
+
+        return services;
+    }
+
     public static IServiceCollection AddUnitOfWork<TUnitOfWork, TImplementation>(this IServiceCollection services)
         where TUnitOfWork : class, IBaseUnitOfWork where TImplementation : class, TUnitOfWork
     {
