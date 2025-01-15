@@ -19,17 +19,25 @@ public record GetUserProfileQuery(
     {
         private readonly ISocialsDbContext _dbContext;
         private readonly IUserService _userService;
+        private readonly IRedisCacheService _redisCacheService;
 
-        public Handler(ISocialsDbContext dbContext, IUserService userService)
+        public Handler(ISocialsDbContext dbContext, IUserService userService, IRedisCacheService redisCacheService)
         {
             _dbContext = dbContext;
             _userService = userService;
+            _redisCacheService = redisCacheService;
         }
 
         public async Task<Result<UserProfileDto>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
         {
             if (!_userService.IsAuthenticated)
                 return Result.Unauthorized<UserProfileDto>("User is not authenticated");
+
+            var key = $"UserProfile:{request.UserProfilId}";
+
+            var cachedDto = await _redisCacheService.GetDataAsync<UserProfileDto>(key);
+            if (cachedDto != null)
+                return Result.Ok(cachedDto);
 
             var userProfile = await _dbContext.UserProfiles
                 .Include(x => x.ProfileFollows)
@@ -57,6 +65,8 @@ public record GetUserProfileQuery(
                 FollowingCount = userProfileFollowingCount,
                 RepostedPosts = userProfilePostActions
             };
+
+            await _redisCacheService.SetDataAsync(key, userProfileDto, TimeSpan.FromMinutes(5));
 
             return Result.Ok(userProfileDto);
         }

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Shared.Abstractions.Services;
 using StackExchange.Redis;
 
@@ -16,6 +17,7 @@ public class RedisCacheService : IRedisCacheService
 
     public async Task SetDataAsync<T>(string key, T data, TimeSpan? expirationTime = null)
     {
+
         var serializedData = JsonSerializer.Serialize(data);
         var options = new DistributedCacheEntryOptions
         {

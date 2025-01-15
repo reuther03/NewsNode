@@ -37,7 +37,6 @@ public static class Extensions
         {
             var redisOptions = services.GetOptions<RedisOptions>("redis");
             options.Configuration = redisOptions.ConnectionString;
-            services.AddSingleton(options);
         });
 
         return services;
