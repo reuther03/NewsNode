@@ -9,6 +9,7 @@ internal static class Extensions
     {
         services.AddHttpContextAccessor();
         services.AddSingleton<IUserService, UserService>();
+        services.AddSingleton<IRedisCacheService, RedisCacheService>();
 
         return services;
     }

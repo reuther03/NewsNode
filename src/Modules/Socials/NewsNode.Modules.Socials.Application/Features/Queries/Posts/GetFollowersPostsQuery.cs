@@ -9,6 +9,7 @@ using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Extensions;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Queries;
 using NewsNode.Shared.Abstractions.Services;
+using StackExchange.Redis;
 
 namespace NewsNode.Modules.Socials.Application.Features.Queries.Posts;
 
