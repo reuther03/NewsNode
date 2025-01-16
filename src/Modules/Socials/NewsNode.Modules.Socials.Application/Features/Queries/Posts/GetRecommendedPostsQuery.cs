@@ -32,21 +32,16 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
             var recommendedHashtags = await _recommendations.GetRecommendedHashtags(user.Id, cancellationToken);
             var recommendedProfiles = await _recommendations.GetRecommendedProfiles(user.Id, cancellationToken);
 
-
             var posts = await _dbContext.Posts
-                .Include(p => p.Hashtags)
-                .Where(p => !_dbContext.UserProfileStatuses.Any(y =>
-                    y.UserId == user.Id &&
-                    y.TargetUserId == p.CreatedBy))
+                .Where(p => recommendedProfiles.Contains(p.CreatedBy) ||
+                    recommendedHashtags.Select(x => x.Value)
+                        .Intersect(p.Hashtags.Select(y => y.Value)).Any() &&
+                    p.CreatedBy != user.Id &&
+                    !_dbContext.UserProfileStatuses
+                        .Any(y => y.TargetUserId == p.CreatedBy))
                 .ToListAsync(cancellationToken);
 
-            var filteredPosts = posts
-                .Where(p => p.Hashtags.Any(h => recommendedHashtags.Contains(h.Value)))
-                .OrderByDescending(p => p.Likes + p.Bookmarks + p.Reposts + p.Comments.Count)
-                .ThenByDescending(p => p.PostedAt)
-                .ToList();
-
-            var postsDto = filteredPosts.Select(PostDto.AsDto).ToList();
+            var postsDto = posts.Select(PostDto.AsDto).ToList();
 
             return PaginatedList<PostDto>.Create(1, postsDto.Count, postsDto.Count, postsDto);
         }
