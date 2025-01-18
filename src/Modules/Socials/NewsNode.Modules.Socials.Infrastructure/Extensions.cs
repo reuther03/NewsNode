@@ -16,6 +16,7 @@ public static class Extensions
             .AddScoped<ISocialsDbContext, SocialsDbContext>()
             .AddScoped<IUserProfileRepository, UserProfileRepository>()
             .AddScoped<IPostRepository, PostRepository>()
+            .AddScoped<ISeenPostRepository, SeenPostRepository>()
             .AddScoped<IFollowerRepository, FollowerRepository>()
             .AddUnitOfWork<IUnitOfWork, UnitOfWork>();
 

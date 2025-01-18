@@ -22,5 +22,7 @@ public class SeenPost : Entity<Guid>
     }
 
     public static SeenPost Create(UserId userId, PostId postId)
-        => new(Guid.NewGuid(), userId, postId);
+    {
+        return new SeenPost(Guid.NewGuid(), userId, postId);
+    }
 }

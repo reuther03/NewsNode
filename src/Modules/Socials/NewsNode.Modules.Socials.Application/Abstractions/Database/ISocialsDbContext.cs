@@ -11,4 +11,5 @@ public interface ISocialsDbContext
     DbSet<UserProfileStatus> UserProfileStatuses { get; }
     DbSet<PostAction> PostActions { get; }
     DbSet<Post> Posts { get; }
+    DbSet<SeenPost> SeenPosts { get; }
 }

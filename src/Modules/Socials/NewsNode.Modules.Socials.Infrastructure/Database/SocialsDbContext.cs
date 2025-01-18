@@ -12,6 +12,8 @@ internal class SocialsDbContext : DbContext, ISocialsDbContext
     public DbSet<UserProfileStatus> UserProfileStatuses => Set<UserProfileStatus>();
     public DbSet<PostAction> PostActions => Set<PostAction>();
     public DbSet<Post> Posts => Set<Post>();
+    public DbSet<SeenPost> SeenPosts => Set<SeenPost>();
+
 
     public SocialsDbContext(DbContextOptions<SocialsDbContext> options) : base(options)
     {

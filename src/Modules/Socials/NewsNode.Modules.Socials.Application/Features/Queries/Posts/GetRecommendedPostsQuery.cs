@@ -16,12 +16,14 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
         private readonly IRecommendationsService _recommendations;
         private readonly ISocialsDbContext _dbContext;
         private readonly IUserService _userService;
+        private readonly ISeenPostService _seenPostService;
 
-        public Handler(IRecommendationsService recommendations, IUserService userService, ISocialsDbContext dbContext)
+        public Handler(IRecommendationsService recommendations, IUserService userService, ISocialsDbContext dbContext, ISeenPostService seenPostService)
         {
             _recommendations = recommendations;
             _userService = userService;
             _dbContext = dbContext;
+            _seenPostService = seenPostService;
         }
 
         public async Task<Result<PaginatedList<PostDto>>> Handle(GetRecommendedPostsQuery request, CancellationToken cancellationToken)
@@ -42,6 +44,8 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
                 .ToListAsync(cancellationToken);
 
             var postsDto = posts.Select(PostDto.AsDto).ToList();
+
+            await _seenPostService.MarkAsSeenAsync(user.Id, posts.Select(x => x.Id).ToList(), cancellationToken);
 
             return PaginatedList<PostDto>.Create(1, postsDto.Count, postsDto.Count, postsDto);
         }
