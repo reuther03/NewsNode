@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NewsNode.Modules.Socials.Domain.Post;
+using NewsNode.Modules.Socials.Domain.UserProfile;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Configurations;
@@ -25,5 +26,10 @@ public class SeenPostConfiguration : IEntityTypeConfiguration<SeenPost>
 
         builder.Property(x => x.SeenAt)
             .IsRequired();
+
+        builder.HasOne<UserProfile>()
+            .WithMany(x => x.SeenPosts)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -46,7 +46,8 @@ public record GetFollowersPostsQuery(int Page = 1, int PageSize = 10) : IQuery<P
                     .Any(y => y.TargetUserId == x.CreatedBy &&
                         y.Status == UserProfileRelationStatus.Muted))
                 .OrderByDescending(x => x.PostedAt)
-                .ToPagedListAsync<Post, PostDto>(request.Page, request.PageSize, x => PostDto.AsDto(x), cancellationToken);
+                //czy na pewno null? w dto
+                .ToPagedListAsync<Post, PostDto>(request.Page, request.PageSize, x => PostDto.AsDto(x, null), cancellationToken);
 
             return Result.Ok(posts);
         }

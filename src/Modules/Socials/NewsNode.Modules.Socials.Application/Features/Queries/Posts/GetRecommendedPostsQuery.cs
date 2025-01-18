@@ -28,7 +28,9 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
 
         public async Task<Result<PaginatedList<PostDto>>> Handle(GetRecommendedPostsQuery request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.UserProfiles.FirstOrDefaultAsync(x => x.Id == _userService.UserId, cancellationToken);
+            var user = await _dbContext.UserProfiles
+                .Include(x => x.SeenPosts)
+                .FirstOrDefaultAsync(x => x.Id == _userService.UserId, cancellationToken);
             NullValidator.ValidateNotNull(user);
 
             var recommendedHashtags = await _recommendations.GetRecommendedHashtags(user.Id, cancellationToken);
@@ -44,11 +46,21 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
                 .Where(x => !_dbContext.SeenPosts.Any(y => y.UserId == user.Id && y.PostId == x.Id))
                 .ToListAsync(cancellationToken);
 
-            var postsDto = posts.Select(PostDto.AsDto).ToList();
+            var seenPosts = await _dbContext.Posts
+                .Where(x => _dbContext.SeenPosts.Any(y => y.UserId == user.Id && y.PostId == x.Id))
+                .ToListAsync(cancellationToken);
+
+            var unSeenPostsDto = posts.Select(x => PostDto.AsDto(x, false)).ToList();
+            var seenPostsDto = seenPosts.Select(x => PostDto.AsDto(x, true)).ToList();
+
+            var allPostsDto = unSeenPostsDto
+                .Concat(seenPostsDto)
+                .OrderBy(x => x.Seen)
+                .ToList();
 
             await _seenPostService.MarkAsSeenAsync(user.Id, posts.Select(x => x.Id).ToList(), cancellationToken);
 
-            return PaginatedList<PostDto>.Create(1, postsDto.Count, postsDto.Count, postsDto);
+            return PaginatedList<PostDto>.Create(1, allPostsDto.Count, allPostsDto.Count, allPostsDto);
         }
     }
 }

@@ -13,8 +13,9 @@ public class PostDto
     public int Reposts { get; init; }
     public List<string> Hashtags { get; init; } = [];
     public int Comments { get; init; }
+    public bool? Seen { get; set; }
 
-    public static PostDto AsDto(Post post)
+    public static PostDto AsDto(Post post, bool? seen)
     {
         return new PostDto
         {
@@ -26,7 +27,8 @@ public class PostDto
             Bookmarks = post.Bookmarks,
             Reposts = post.Reposts,
             Hashtags = post.Hashtags.Select(x => x.Value).ToList(),
-            Comments = post.Comments.Count
+            Comments = post.Comments.Count,
+            Seen = seen
         };
     }
 }

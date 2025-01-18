@@ -1,4 +1,5 @@
-﻿using NewsNode.Shared.Abstractions.Events.Domain.Posts;
+﻿using NewsNode.Modules.Socials.Domain.Post;
+using NewsNode.Shared.Abstractions.Events.Domain.Posts;
 using NewsNode.Shared.Abstractions.Exception;
 using NewsNode.Shared.Abstractions.Kernel.Primitives;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
@@ -12,6 +13,7 @@ public class UserProfile : AggregateRoot<UserId>
     private readonly List<UserProfileFollow> _profileFollows = [];
     private readonly List<UserProfileStatus> _profileStatuses = [];
     private readonly List<PostAction> _postActions = [];
+    private readonly List<SeenPost> _seenPosts = [];
     public Name UserName { get; private set; }
 
     public Email Email { get; private set; }
@@ -22,6 +24,7 @@ public class UserProfile : AggregateRoot<UserId>
     public IReadOnlyList<UserProfileFollow> ProfileFollows => _profileFollows.AsReadOnly();
     public IReadOnlyList<UserProfileStatus> ProfileStatuses => _profileStatuses.AsReadOnly();
     public IReadOnlyList<PostAction> PostActions => _postActions.AsReadOnly();
+    public IReadOnlyList<SeenPost> SeenPosts => _seenPosts.AsReadOnly();
 
     private UserProfile()
     {

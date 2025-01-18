@@ -18,8 +18,10 @@ public class SeenPostService : ISeenPostService
 
     public async Task MarkAsSeenAsync(UserId userId, List<PostId> postIds, CancellationToken cancellationToken = default)
     {
-        var seenPosts = postIds.Select(postId => SeenPost.Create(userId, postId)).ToList();
-        await _seenPostRepository.AddRangeAsync(seenPosts, cancellationToken);
+        var unSeenPosts = postIds
+            .Where(x => !_seenPostRepository.Exists(userId, x))
+            .Select(postId => SeenPost.Create(userId, postId)).ToList();
+        await _seenPostRepository.AddRangeAsync(unSeenPosts, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
     }
 }
