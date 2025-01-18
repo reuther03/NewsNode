@@ -41,6 +41,7 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
                     p.CreatedBy != user.Id &&
                     !_dbContext.UserProfileStatuses
                         .Any(y => y.TargetUserId == p.CreatedBy))
+                .Where(x => !_dbContext.SeenPosts.Any(y => y.UserId == user.Id && y.PostId == x.Id))
                 .ToListAsync(cancellationToken);
 
             var postsDto = posts.Select(PostDto.AsDto).ToList();
