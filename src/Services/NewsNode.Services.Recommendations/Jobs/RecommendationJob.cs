@@ -50,8 +50,8 @@ public class RecommendationJob : BackgroundService
 
                 recommendation.SetScore(score);
             }
-
-            await context.SaveChangesAsync(cancellationToken);
         }
+
+        await context.SaveChangesAsync(cancellationToken);
     }
 }
