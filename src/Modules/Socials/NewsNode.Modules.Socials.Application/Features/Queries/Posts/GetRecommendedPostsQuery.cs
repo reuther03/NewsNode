@@ -36,6 +36,11 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
             var recommendedHashtags = await _recommendations.GetRecommendedHashtags(user.Id, cancellationToken);
             var recommendedProfiles = await _recommendations.GetRecommendedProfiles(user.Id, cancellationToken);
 
+            var seenPostsIds = await _dbContext.SeenPosts
+                .Where(x => x.UserId == user.Id)
+                .Select(x => x.PostId)
+                .ToHashSetAsync(cancellationToken);
+
             var posts = await _dbContext.Posts
                 .Where(p => recommendedProfiles.Contains(p.CreatedBy) ||
                     recommendedHashtags.Select(x => x.Value)
@@ -43,22 +48,18 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
                     p.CreatedBy != user.Id &&
                     !_dbContext.UserProfileStatuses
                         .Any(y => y.TargetUserId == p.CreatedBy))
-                .Where(x => !_dbContext.SeenPosts.Any(y => y.UserId == user.Id && y.PostId == x.Id))
+                .Select(x => new { Post = x, Seen = seenPostsIds.Contains(x.Id) })
                 .ToListAsync(cancellationToken);
 
-            var seenPosts = await _dbContext.Posts
-                .Where(x => _dbContext.SeenPosts.Any(y => y.UserId == user.Id && y.PostId == x.Id))
-                .ToListAsync(cancellationToken);
+            var unseenPostsDto = posts.Where(p => !p.Seen).Select(p => PostDto.AsDto(p.Post, false)).ToList();
+            var seenPostsDto = posts.Where(p => p.Seen).Select(p => PostDto.AsDto(p.Post, true)).ToList();
 
-            var unSeenPostsDto = posts.Select(x => PostDto.AsDto(x, false)).ToList();
-            var seenPostsDto = seenPosts.Select(x => PostDto.AsDto(x, true)).ToList();
-
-            var allPostsDto = unSeenPostsDto
+            var allPostsDto = unseenPostsDto
                 .Concat(seenPostsDto)
                 .OrderBy(x => x.Seen)
                 .ToList();
 
-            await _seenPostService.MarkAsSeenAsync(user.Id, posts.Select(x => x.Id).ToList(), cancellationToken);
+            await _seenPostService.MarkAsSeenAsync(user.Id, posts.Select(x => x.Post.Id).ToList(), cancellationToken);
 
             return PaginatedList<PostDto>.Create(1, allPostsDto.Count, allPostsDto.Count, allPostsDto);
         }
