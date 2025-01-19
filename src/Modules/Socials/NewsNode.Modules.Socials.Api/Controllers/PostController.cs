@@ -41,9 +41,9 @@ internal class PostController : BaseController
 
     [HttpGet("recommended")]
     [Authorize]
-    public async Task<IActionResult> GetRecommendedPosts([FromQuery] GetRecommendedPostsQuery query)
+    public async Task<IActionResult> GetRecommendedPosts()
     {
-        var result = await _sender.Send(query);
+        var result = await _sender.Send(new GetRecommendedPostsQuery());
         return Ok(result);
     }
 
