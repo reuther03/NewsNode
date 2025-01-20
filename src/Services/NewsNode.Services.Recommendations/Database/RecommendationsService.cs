@@ -57,6 +57,7 @@ public class RecommendationsService : IRecommendationsService
 
         var recommendations = await context.ActionRecommendations
             .Where(x => x.UserId == userId)
+            .Where(x => x.Weight >= RecommendationWeight.MediumLow)
             .OrderByDescending(x => (int)x.Weight)
             .ThenByDescending(x => x.Score)
             .Select(x => x.Hashtag)
