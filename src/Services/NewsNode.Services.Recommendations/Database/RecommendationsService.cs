@@ -50,20 +50,36 @@ public class RecommendationsService : IRecommendationsService
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<List<Hashtag>> GetRecommendedHashtags(UserId userId, CancellationToken cancellationToken = default)
+    public async Task<Dictionary<Hashtag, RecommendationWeight>> GetRecommendedHashtags(UserId userId, CancellationToken cancellationToken = default)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
 
         var recommendations = await context.ActionRecommendations
-            .Where(x => x.UserId == userId)
-            .Where(x => x.Weight >= RecommendationWeight.MediumLow)
-            .OrderByDescending(x => (int)x.Weight)
+            .Where(x => x.UserId == userId && x.Weight >= RecommendationWeight.MediumLow)
+            .OrderByDescending(x => x.Weight)
             .ThenByDescending(x => x.Score)
-            .Select(x => x.Hashtag)
+            .Take(5)
+            .Select(x => new { x.Hashtag, x.Weight })
             .ToListAsync(cancellationToken);
 
-        return recommendations;
+        return recommendations.ToDictionary(x => x.Hashtag, x => x.Weight);
+    }
+
+    public async Task<Dictionary<Hashtag, RecommendationWeight>> GetLessInterestedHashtags(UserId userId, CancellationToken cancellationToken = default)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
+
+        var recommendations = await context.ActionRecommendations
+            .Where(x => x.UserId == userId && x.Weight < RecommendationWeight.MediumLow)
+            .OrderByDescending(x => x.Weight)
+            .ThenByDescending(x => x.Score)
+            .Take(5)
+            .Select(x => new { x.Hashtag, x.Weight })
+            .ToListAsync(cancellationToken);
+
+        return recommendations.ToDictionary(x => x.Hashtag, x => x.Weight);
     }
 
     public async Task<List<UserId>> GetRecommendedProfiles(UserId userId, CancellationToken cancellationToken = default)

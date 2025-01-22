@@ -1,4 +1,5 @@
 ﻿using NewsNode.Modules.Socials.Domain.Post;
+using NewsNode.Services.Recommendations.Recommendations;
 
 namespace NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
 
@@ -13,9 +14,11 @@ public class PostDto
     public int Reposts { get; init; }
     public List<string> Hashtags { get; init; } = [];
     public int Comments { get; init; }
-    public bool? Seen { get; set; }
+    public bool? Seen { get; init; }
+    public RecommendationWeight? Weight { get; init; }
 
-    public static PostDto AsDto(Post post, bool? seen)
+
+    public static PostDto AsDto(Post post, bool? seen, RecommendationWeight? recommendationWeight)
     {
         return new PostDto
         {
@@ -28,7 +31,8 @@ public class PostDto
             Reposts = post.Reposts,
             Hashtags = post.Hashtags.Select(x => x.Value).ToList(),
             Comments = post.Comments.Count,
-            Seen = seen
+            Seen = seen,
+            Weight = recommendationWeight
         };
     }
 }

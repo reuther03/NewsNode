@@ -55,7 +55,7 @@ public record GetTrendingPosts(int Days = 14) : IQuery<PaginatedList<PostDto>>
                     .ToListAsync(cancellationToken);
             }
 
-            var postsDto = posts.Select(x => PostDto.AsDto(x, null)).ToList();
+            var postsDto = posts.Select(x => PostDto.AsDto(x, null, null)).ToList();
 
             return PaginatedList<PostDto>.Create(1, postsDto.Count, postsDto.Count, postsDto);
         }

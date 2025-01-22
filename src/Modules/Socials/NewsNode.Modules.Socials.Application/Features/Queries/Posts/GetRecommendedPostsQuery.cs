@@ -33,8 +33,13 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
                 .FirstOrDefaultAsync(x => x.Id == _userService.UserId, cancellationToken);
             NullValidator.ValidateNotNull(user);
 
+           //sprawdzic czy napewno recommended profiles nie powinno miec weight dla hashtagow, bo tera zwraca z 0
+
             var recommendedHashtags = await _recommendations.GetRecommendedHashtags(user.Id, cancellationToken);
+            var lessInterestedHashtags = await _recommendations.GetLessInterestedHashtags(user.Id, cancellationToken);
             var recommendedProfiles = await _recommendations.GetRecommendedProfiles(user.Id, cancellationToken);
+
+            //cache na last seen posts po kazdym getcie ma sie zapisywac jako poprzednie i dodawac ja na koniec postow bez powtorzen
 
             var seenPostsIds = await _dbContext.SeenPosts
                 .Where(x => x.UserId == user.Id)
@@ -43,23 +48,29 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
 
             var posts = await _dbContext.Posts
                 .Where(p => recommendedProfiles.Contains(p.CreatedBy) ||
-                    recommendedHashtags.Select(x => x.Value)
+                    recommendedHashtags.Select(x => x.Key.Value)
                         .Intersect(p.Hashtags.Select(y => y.Value)).Any() &&
                     p.CreatedBy != user.Id &&
                     !_dbContext.UserProfileStatuses
                         .Any(y => y.TargetUserId == p.CreatedBy))
-                .Select(x => new { Post = x, Seen = seenPostsIds.Contains(x.Id) })
                 .ToListAsync(cancellationToken);
 
-            var unseenPostsDto = posts.Where(p => !p.Seen).Select(p => PostDto.AsDto(p.Post, false)).ToList();
-            var seenPostsDto = posts.Where(p => p.Seen).Select(p => PostDto.AsDto(p.Post, true)).ToList();
+            var postsWithWeights = posts.Select(x => new
+            {
+                Post = x,
+                Seen = seenPostsIds.Contains(x.Id),
+                Weight = recommendedHashtags.FirstOrDefault(h => x.Hashtags.Contains(h.Key)).Value
+            }).ToList();
+
+            var unseenPostsDto = postsWithWeights.Where(p => !p.Seen).Select(p => PostDto.AsDto(p.Post, false, p.Weight)).ToList();
+            var seenPostsDto = postsWithWeights.Where(p => p.Seen).Select(p => PostDto.AsDto(p.Post, true, p.Weight)).ToList();
 
             var allPostsDto = unseenPostsDto
                 .Concat(seenPostsDto)
                 .OrderBy(x => x.Seen)
                 .ToList();
 
-            await _seenPostService.MarkAsSeenAsync(user.Id, posts.Select(x => x.Post.Id).ToList(), cancellationToken);
+            await _seenPostService.MarkAsSeenAsync(user.Id, postsWithWeights.Select(x => x.Post.Id).ToList(), cancellationToken);
 
             return PaginatedList<PostDto>.Create(1, allPostsDto.Count, allPostsDto.Count, allPostsDto);
         }
