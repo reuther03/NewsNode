@@ -50,6 +50,8 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
                 .Where(p => recommendedProfiles.Contains(p.CreatedBy) ||
                     recommendedHashtags.Select(x => x.Key.Value)
                         .Intersect(p.Hashtags.Select(y => y.Value)).Any() &&
+                    lessInterestedHashtags.Select(x => x.Key.Value)
+                        .Intersect(p.Hashtags.Select(y => y.Value)).Any() &&
                     p.CreatedBy != user.Id &&
                     !_dbContext.UserProfileStatuses
                         .Any(y => y.TargetUserId == p.CreatedBy))
@@ -68,11 +70,12 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
             var allPostsDto = unseenPostsDto
                 .Concat(seenPostsDto)
                 .OrderBy(x => x.Seen)
+                .ThenByDescending(x => x.Weight)
                 .ToList();
 
             await _seenPostService.MarkAsSeenAsync(user.Id, postsWithWeights.Select(x => x.Post.Id).ToList(), cancellationToken);
 
-            return PaginatedList<PostDto>.Create(1, allPostsDto.Count, allPostsDto.Count, allPostsDto);
+            return PaginatedList<PostDto>.Create(1, 10, allPostsDto.Count, allPostsDto);
         }
     }
 }
