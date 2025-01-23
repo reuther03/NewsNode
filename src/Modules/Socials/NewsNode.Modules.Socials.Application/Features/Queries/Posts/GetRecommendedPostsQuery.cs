@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
+using NewsNode.Services.Recommendations.Recommendations;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Pagination;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
@@ -33,7 +34,7 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
                 .FirstOrDefaultAsync(x => x.Id == _userService.UserId, cancellationToken);
             NullValidator.ValidateNotNull(user);
 
-           //sprawdzic czy napewno recommended profiles nie powinno miec weight dla hashtagow, bo tera zwraca z 0
+            //sprawdzic czy napewno recommended profiles nie powinno miec weight dla hashtagow, bo tera zwraca z 0
 
             var recommendedHashtags = await _recommendations.GetRecommendedHashtags(user.Id, cancellationToken);
             var lessInterestedHashtags = await _recommendations.GetLessInterestedHashtags(user.Id, cancellationToken);
@@ -57,6 +58,15 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
                         .Any(y => y.TargetUserId == p.CreatedBy))
                 .ToListAsync(cancellationToken);
 
+            var trendingPosts = await _dbContext.Posts
+                .Where(p => p.PostedAt > DateTime.UtcNow.AddDays(-7) &&
+                    p.CreatedBy != user.Id &&
+                    !_dbContext.UserProfileStatuses
+                        .Any(y => y.TargetUserId == p.CreatedBy))
+                .OrderByDescending(p => p.Likes + p.Bookmarks + p.Reposts + p.Comments.Count)
+                .Take(25)
+                .ToListAsync(cancellationToken);
+
             var postsWithWeights = posts.Select(x => new
             {
                 Post = x,
@@ -66,9 +76,11 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
 
             var unseenPostsDto = postsWithWeights.Where(p => !p.Seen).Select(p => PostDto.AsDto(p.Post, false, p.Weight)).ToList();
             var seenPostsDto = postsWithWeights.Where(p => p.Seen).Select(p => PostDto.AsDto(p.Post, true, p.Weight)).ToList();
+            var trendingPostsDto = trendingPosts.Select(p => PostDto.AsDto(p, false,)).ToList();
 
             var allPostsDto = unseenPostsDto
                 .Concat(seenPostsDto)
+                .Concat(trendingPostsDto)
                 .OrderBy(x => x.Seen)
                 .ThenByDescending(x => x.Weight)
                 .ToList();
