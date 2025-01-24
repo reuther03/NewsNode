@@ -6,6 +6,7 @@ using NewsNode.Services.Recommendations.Recommendations;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Pagination;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
+using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Queries;
 using NewsNode.Shared.Abstractions.Services;
 
@@ -19,17 +20,22 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
         private readonly ISocialsDbContext _dbContext;
         private readonly IUserService _userService;
         private readonly ISeenPostService _seenPostService;
+        private readonly IRedisCacheService _redisCacheService;
 
-        public Handler(IRecommendationsService recommendations, IUserService userService, ISocialsDbContext dbContext, ISeenPostService seenPostService)
+        public Handler(IRecommendationsService recommendations, IUserService userService, ISocialsDbContext dbContext, ISeenPostService seenPostService,
+            IRedisCacheService redisCacheService)
         {
             _recommendations = recommendations;
             _userService = userService;
             _dbContext = dbContext;
             _seenPostService = seenPostService;
+            _redisCacheService = redisCacheService;
         }
 
         public async Task<Result<PaginatedList<PostDto>>> Handle(GetRecommendedPostsQuery request, CancellationToken cancellationToken)
         {
+            const string trendingCacheKey = "GlobalTrendingPosts";
+
             var user = await _dbContext.UserProfiles
                 .Include(x => x.SeenPosts)
                 .FirstOrDefaultAsync(x => x.Id == _userService.UserId, cancellationToken);
@@ -49,6 +55,7 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
                 .ToHashSetAsync(cancellationToken);
 
             var posts = await _dbContext.Posts
+                .AsNoTracking()
                 .Where(p => recommendedProfiles.Contains(p.CreatedBy) ||
                     recommendedHashtags.Select(x => x.Key.Value)
                         .Intersect(p.Hashtags.Select(y => y.Value)).Any() &&
@@ -59,14 +66,33 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
                         .Any(y => y.TargetUserId == p.CreatedBy))
                 .ToListAsync(cancellationToken);
 
-            var trendingPosts = await _dbContext.Posts
-                .Where(p => p.PostedAt > DateTime.UtcNow.AddDays(-7) &&
-                    p.CreatedBy != user.Id &&
+            var cachedTrendingPosts = await _redisCacheService.GetDataAsync<List<PostDto>>(trendingCacheKey);
+            if (cachedTrendingPosts == null)
+            {
+                cachedTrendingPosts = await _dbContext.Posts
+                    .Where(p => p.PostedAt > DateTime.UtcNow.AddDays(-7))
+                    .OrderByDescending(p => p.Likes + p.Bookmarks + p.Reposts)
+                    .Take(25)
+                    .Select(p => PostDto.AsDto(p, false, RecommendationWeight.None))
+                    .ToListAsync(cancellationToken);
+
+                await _redisCacheService.SetDataAsync(trendingCacheKey, cachedTrendingPosts, TimeSpan.FromMinutes(5));
+            }
+
+            var filteredTrendingPostsDto = cachedTrendingPosts
+                .Where(p => p.CreatedBy != user.Id.Value &&
                     !_dbContext.UserProfileStatuses
-                        .Any(y => y.TargetUserId == p.CreatedBy))
-                .OrderByDescending(p => p.Likes + p.Bookmarks + p.Reposts + p.Comments.Count)
-                .Take(25)
-                .ToListAsync(cancellationToken);
+                        .Any(y => y.TargetUserId == UserId.From(p.CreatedBy)))
+                .ToList();
+            // var trendingPosts = await _dbContext.Posts
+            //     .AsNoTracking()
+            //     .Where(p => p.PostedAt > DateTime.UtcNow.AddDays(-7) &&
+            //         p.CreatedBy != user.Id &&
+            //         !_dbContext.UserProfileStatuses
+            //             .Any(y => y.TargetUserId == p.CreatedBy))
+            //     .OrderByDescending(p => p.Likes + p.Bookmarks + p.Reposts + p.Comments.Count)
+            //     .Take(25)
+            //     .ToListAsync(cancellationToken);
 
             var postsWithWeights = posts.Select(x => new
             {
@@ -77,11 +103,10 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
 
             var unseenPostsDto = postsWithWeights.Where(p => !p.Seen).Select(p => PostDto.AsDto(p.Post, false, p.Weight)).ToList();
             var seenPostsDto = postsWithWeights.Where(p => p.Seen).Select(p => PostDto.AsDto(p.Post, true, p.Weight)).ToList();
-            var trendingPostsDto = trendingPosts.Select(p => PostDto.AsDto(p, false, RecommendationWeight.None)).ToList();
 
             var allPostsDto = unseenPostsDto
                 .Union(seenPostsDto)
-                .Union(trendingPostsDto)
+                .Union(filteredTrendingPostsDto)
                 .OrderBy(x => x.Seen)
                 .ThenByDescending(x => x.Weight)
                 .Skip((request.Page - 1) * 10)
@@ -91,6 +116,8 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
             await _seenPostService.MarkAsSeenAsync(user.Id, postsWithWeights.Select(x => x.Post.Id).ToList(), cancellationToken);
 
             return PaginatedList<PostDto>.Create(request.Page, 10, allPostsDto.Count, allPostsDto);
+
+            // zrobic cos z tym zeby trending nie byly jako pierwsze/ tera sa bo maja seen na false
         }
     }
 }
