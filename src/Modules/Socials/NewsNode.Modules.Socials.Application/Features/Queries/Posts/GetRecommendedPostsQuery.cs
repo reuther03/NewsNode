@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
+using NewsNode.Modules.Socials.Domain.Post;
 using NewsNode.Services.Recommendations.Recommendations;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Pagination;
@@ -10,7 +11,7 @@ using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Modules.Socials.Application.Features.Queries.Posts;
 
-public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
+public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<PostDto>>
 {
     internal sealed class Handler : IQueryHandler<GetRecommendedPostsQuery, PaginatedList<PostDto>>
     {
@@ -79,15 +80,17 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
             var trendingPostsDto = trendingPosts.Select(p => PostDto.AsDto(p, false, RecommendationWeight.None)).ToList();
 
             var allPostsDto = unseenPostsDto
-                .Concat(seenPostsDto)
-                .Concat(trendingPostsDto)
+                .Union(seenPostsDto)
+                .Union(trendingPostsDto)
                 .OrderBy(x => x.Seen)
                 .ThenByDescending(x => x.Weight)
+                .Skip((request.Page - 1) * 10)
+                .Take(10)
                 .ToList();
 
             await _seenPostService.MarkAsSeenAsync(user.Id, postsWithWeights.Select(x => x.Post.Id).ToList(), cancellationToken);
 
-            return PaginatedList<PostDto>.Create(1, 10, allPostsDto.Count, allPostsDto);
+            return PaginatedList<PostDto>.Create(request.Page, 10, allPostsDto.Count, allPostsDto);
         }
     }
 }
