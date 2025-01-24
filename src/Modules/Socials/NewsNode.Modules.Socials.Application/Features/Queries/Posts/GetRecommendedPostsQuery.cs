@@ -76,7 +76,7 @@ public record GetRecommendedPostsQuery : IQuery<PaginatedList<PostDto>>
 
             var unseenPostsDto = postsWithWeights.Where(p => !p.Seen).Select(p => PostDto.AsDto(p.Post, false, p.Weight)).ToList();
             var seenPostsDto = postsWithWeights.Where(p => p.Seen).Select(p => PostDto.AsDto(p.Post, true, p.Weight)).ToList();
-            var trendingPostsDto = trendingPosts.Select(p => PostDto.AsDto(p, false,)).ToList();
+            var trendingPostsDto = trendingPosts.Select(p => PostDto.AsDto(p, false, RecommendationWeight.None)).ToList();
 
             var allPostsDto = unseenPostsDto
                 .Concat(seenPostsDto)
