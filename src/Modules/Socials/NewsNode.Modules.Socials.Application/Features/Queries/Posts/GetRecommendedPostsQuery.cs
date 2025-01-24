@@ -73,7 +73,7 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
                     .Where(p => p.PostedAt > DateTime.UtcNow.AddDays(-7))
                     .OrderByDescending(p => p.Likes + p.Bookmarks + p.Reposts)
                     .Take(25)
-                    .Select(p => PostDto.AsDto(p, false, RecommendationWeight.None))
+                    .Select(p => PostDto.AsDto(p, true, RecommendationWeight.None))
                     .ToListAsync(cancellationToken);
 
                 await _redisCacheService.SetDataAsync(trendingCacheKey, cachedTrendingPosts, TimeSpan.FromMinutes(5));
@@ -84,6 +84,7 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
                     !_dbContext.UserProfileStatuses
                         .Any(y => y.TargetUserId == UserId.From(p.CreatedBy)))
                 .ToList();
+
             // var trendingPosts = await _dbContext.Posts
             //     .AsNoTracking()
             //     .Where(p => p.PostedAt > DateTime.UtcNow.AddDays(-7) &&
@@ -107,6 +108,7 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
             var allPostsDto = unseenPostsDto
                 .Union(seenPostsDto)
                 .Union(filteredTrendingPostsDto)
+                .Distinct()
                 .OrderBy(x => x.Seen)
                 .ThenByDescending(x => x.Weight)
                 .Skip((request.Page - 1) * 10)
