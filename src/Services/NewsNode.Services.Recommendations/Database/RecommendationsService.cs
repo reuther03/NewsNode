@@ -94,6 +94,8 @@ public class RecommendationsService : IRecommendationsService
             .Select(x => x.Hashtag)
             .ToListAsync(cancellationToken);
 
+        // pomyslec czy da sie to w ogole zrobic zeby zwrocilo hashtagi z postami
+
         var similarUsers = await context.ActionRecommendations
             .Where(x => userTopHashtags.Contains(x.Hashtag) && x.UserId != userId)
             .Select(x => x.UserId)

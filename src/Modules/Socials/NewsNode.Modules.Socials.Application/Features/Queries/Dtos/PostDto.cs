@@ -1,5 +1,5 @@
 ﻿using NewsNode.Modules.Socials.Domain.Post;
-using NewsNode.Services.Recommendations.Recommendations;
+using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 
 namespace NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
 

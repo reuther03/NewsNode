@@ -1,4 +1,4 @@
-﻿namespace NewsNode.Services.Recommendations.Recommendations;
+﻿namespace NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 
 public enum RecommendationWeight
 {

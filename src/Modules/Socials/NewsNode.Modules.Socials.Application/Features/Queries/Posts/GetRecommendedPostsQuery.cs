@@ -2,10 +2,10 @@
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
 using NewsNode.Modules.Socials.Domain.Post;
-using NewsNode.Services.Recommendations.Recommendations;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
 using NewsNode.Shared.Abstractions.Kernel.Pagination;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
+using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using NewsNode.Shared.Abstractions.QueriesAndCommands.Queries;
 using NewsNode.Shared.Abstractions.Services;
@@ -41,13 +41,9 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
                 .FirstOrDefaultAsync(x => x.Id == _userService.UserId, cancellationToken);
             NullValidator.ValidateNotNull(user);
 
-            //sprawdzic czy napewno recommended profiles nie powinno miec weight dla hashtagow, bo tera zwraca z 0
-
             var recommendedHashtags = await _recommendations.GetRecommendedHashtags(user.Id, cancellationToken);
             var lessInterestedHashtags = await _recommendations.GetLessInterestedHashtags(user.Id, cancellationToken);
             var recommendedProfiles = await _recommendations.GetRecommendedProfiles(user.Id, cancellationToken);
-
-            //cache na last seen posts po kazdym getcie ma sie zapisywac jako poprzednie i dodawac ja na koniec postow bez powtorzen
 
             var seenPostsIds = await _dbContext.SeenPosts
                 .Where(x => x.UserId == user.Id)
@@ -85,16 +81,6 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
                         .Any(y => y.TargetUserId == UserId.From(p.CreatedBy)))
                 .ToList();
 
-            // var trendingPosts = await _dbContext.Posts
-            //     .AsNoTracking()
-            //     .Where(p => p.PostedAt > DateTime.UtcNow.AddDays(-7) &&
-            //         p.CreatedBy != user.Id &&
-            //         !_dbContext.UserProfileStatuses
-            //             .Any(y => y.TargetUserId == p.CreatedBy))
-            //     .OrderByDescending(p => p.Likes + p.Bookmarks + p.Reposts + p.Comments.Count)
-            //     .Take(25)
-            //     .ToListAsync(cancellationToken);
-
             var postsWithWeights = posts.Select(x => new
             {
                 Post = x,
@@ -118,8 +104,6 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
             await _seenPostService.MarkAsSeenAsync(user.Id, postsWithWeights.Select(x => x.Post.Id).ToList(), cancellationToken);
 
             return PaginatedList<PostDto>.Create(request.Page, 10, allPostsDto.Count, allPostsDto);
-
-            // zrobic cos z tym zeby trending nie byly jako pierwsze/ tera sa bo maja seen na false
         }
     }
 }
