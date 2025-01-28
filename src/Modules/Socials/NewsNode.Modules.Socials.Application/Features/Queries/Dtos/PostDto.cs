@@ -35,4 +35,20 @@ public class PostDto
             Weight = recommendationWeight
         };
     }
+
+    public static PostDto AsDto(Post post)
+    {
+        return new PostDto
+        {
+            Id = post.Id,
+            Content = post.Content,
+            PostedAt = post.PostedAt,
+            CreatedBy = post.CreatedBy,
+            Likes = post.Likes,
+            Bookmarks = post.Bookmarks,
+            Reposts = post.Reposts,
+            Hashtags = post.Hashtags.Select(x => x.Value).ToList(),
+            Comments = post.Comments.Count,
+        };
+    }
 }

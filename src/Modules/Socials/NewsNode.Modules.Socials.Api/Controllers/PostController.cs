@@ -47,6 +47,14 @@ internal class PostController : BaseController
         return Ok(result);
     }
 
+    [HttpPost("filtered")]
+    [Authorize]
+    public async Task<IActionResult> GetFilteredPosts([FromBody] GetFilteredPostsQuery query, [FromQuery] int page = 1)
+    {
+        var result = await _sender.Send(query with { Page = page });
+        return Ok(result);
+    }
+
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreatePost([FromBody] CreatePostCommand command)

@@ -39,6 +39,7 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
             var user = await _dbContext.UserProfiles
                 .Include(x => x.SeenPosts)
                 .FirstOrDefaultAsync(x => x.Id == _userService.UserId, cancellationToken);
+
             NullValidator.ValidateNotNull(user);
 
             var recommendedHashtags = await _recommendations.GetRecommendedHashtags(user.Id, cancellationToken);
