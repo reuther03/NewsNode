@@ -1,0 +1,8 @@
+{
+    "groupchat": {
+        "module": {
+            "name": "groupchat",
+            "enabled": true
+        }
+    }
+}

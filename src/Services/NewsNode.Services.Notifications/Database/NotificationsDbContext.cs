@@ -3,7 +3,7 @@ using NewsNode.Services.Notifications.Notifications;
 
 namespace NewsNode.Services.Notifications.Database;
 
-public class NotificationsDbContext : DbContext
+internal class NotificationsDbContext : DbContext
 {
     public DbSet<Notification> Notifications => Set<Notification>();
 

@@ -4,11 +4,12 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>NewsNode.Services.GroupChats</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Shared\NewsNode.Shared.Abstractions\NewsNode.Shared.Abstractions.csproj"/>
-        <ProjectReference Include="..\..\Shared\NewsNode.Shared.Infrastructure\NewsNode.Shared.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\Shared\NewsNode.Shared.Abstractions\NewsNode.Shared.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Shared\NewsNode.Shared.Infrastructure\NewsNode.Shared.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

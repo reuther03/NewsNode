@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsNode.Services.Notificat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsNode.Services.Recommendations", "src\Services\NewsNode.Services.Recommendations\NewsNode.Services.Recommendations.csproj", "{A1A59B12-1786-4CE0-BB15-D6A58052C99A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsNode.Services.GroupChats", "src\Services\NewsNode.Services.GroupChats\NewsNode.Services.GroupChats.csproj", "{C79626C9-6574-4B7D-A8C5-082868B0FDB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{A1A59B12-1786-4CE0-BB15-D6A58052C99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1A59B12-1786-4CE0-BB15-D6A58052C99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1A59B12-1786-4CE0-BB15-D6A58052C99A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C79626C9-6574-4B7D-A8C5-082868B0FDB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C79626C9-6574-4B7D-A8C5-082868B0FDB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C79626C9-6574-4B7D-A8C5-082868B0FDB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C79626C9-6574-4B7D-A8C5-082868B0FDB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4EE34D7F-4AD5-41B7-BC4B-B68DE0FBA71C} = {706E81DE-D7D5-42B7-96DD-8974223D1F3C}
@@ -122,5 +128,6 @@ Global
 		{BC6B1F70-3986-44F3-9917-05D1A4233F73} = {706E81DE-D7D5-42B7-96DD-8974223D1F3C}
 		{1CC6E659-2812-4DAE-BFF5-6033CD7D8C2B} = {BC6B1F70-3986-44F3-9917-05D1A4233F73}
 		{A1A59B12-1786-4CE0-BB15-D6A58052C99A} = {BC6B1F70-3986-44F3-9917-05D1A4233F73}
+		{C79626C9-6574-4B7D-A8C5-082868B0FDB6} = {BC6B1F70-3986-44F3-9917-05D1A4233F73}
 	EndGlobalSection
 EndGlobal
