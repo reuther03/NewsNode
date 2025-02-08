@@ -1,8 +1,8 @@
 ﻿using System.Collections.Concurrent;
 
-namespace NewsNode.Services.Notifications.Hubs;
+namespace NewsNode.Shared.Abstractions.Hubs;
 
-public sealed class NotificationsConnectionManager
+public sealed class HubConnectionManager
 {
     private static readonly ConcurrentDictionary<string, string> Connections = [];
 

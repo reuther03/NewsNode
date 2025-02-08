@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using NewsNode.Shared.Abstractions.Hubs;
 
 namespace NewsNode.Services.Notifications.Hubs;
 
 [Authorize]
 public class NotificationHub : Hub
 {
-    private readonly NotificationsConnectionManager _connections;
+    private readonly HubConnectionManager _connections;
 
-    public NotificationHub(NotificationsConnectionManager connections)
+    public NotificationHub(HubConnectionManager connections)
     {
         _connections = connections;
     }

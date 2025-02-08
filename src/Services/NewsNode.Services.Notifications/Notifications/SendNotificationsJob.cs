@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsNode.Services.Notifications.Database;
 using NewsNode.Services.Notifications.Hubs;
+using NewsNode.Shared.Abstractions.Hubs;
 
 namespace NewsNode.Services.Notifications.Notifications;
 
@@ -13,11 +14,11 @@ public class SendNotificationsJob : BackgroundService
     private const string ReceiveNotification = nameof(ReceiveNotification);
 
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly NotificationsConnectionManager _notificationsConnectionManager;
+    private readonly HubConnectionManager _notificationsConnectionManager;
     private readonly IHubContext<NotificationHub> _hubContext;
     private readonly ILogger<SendNotificationsJob> _logger;
 
-    public SendNotificationsJob(IServiceScopeFactory serviceScopeFactory, NotificationsConnectionManager notificationsConnectionManager,
+    public SendNotificationsJob(IServiceScopeFactory serviceScopeFactory, HubConnectionManager notificationsConnectionManager,
         IHubContext<NotificationHub> hubContext, ILogger<SendNotificationsJob> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
