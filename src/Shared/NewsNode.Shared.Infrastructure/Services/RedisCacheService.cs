@@ -1,8 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Shared.Abstractions.Services;
-using StackExchange.Redis;
 
 namespace NewsNode.Shared.Infrastructure.Services;
 

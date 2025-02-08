@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Services.Notifications.Database;
 using NewsNode.Services.Notifications.Hubs;
 using NewsNode.Services.Notifications.Notifications;
-using NewsNode.Shared.Abstractions.Hubs;
 using NewsNode.Shared.Abstractions.Services;
 using NewsNode.Shared.Infrastructure.Postgres;
+using NewsNode.Shared.Infrastructure.Services;
 
 namespace NewsNode.Services.Notifications;
 
@@ -16,7 +16,7 @@ public static class Extensions
     {
         services.AddPostgres<NotificationsDbContext>();
         services.AddScoped<NotificationsDbContext>();
-        services.AddSingleton<HubConnectionManager>();
+        services.AddSingleton<IHubConnectionService, HubConnectionService>();
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddHostedService<SendNotificationsJob>();
         services.AddSignalR();

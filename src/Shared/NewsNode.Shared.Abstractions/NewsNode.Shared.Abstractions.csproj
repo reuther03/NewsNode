@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <Folder Include="Events\Domain\" />
+      <Folder Include="Hubs\" />
     </ItemGroup>
 
 </Project>

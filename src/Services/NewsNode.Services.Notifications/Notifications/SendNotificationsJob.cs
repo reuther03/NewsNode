@@ -5,7 +5,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsNode.Services.Notifications.Database;
 using NewsNode.Services.Notifications.Hubs;
-using NewsNode.Shared.Abstractions.Hubs;
+using NewsNode.Shared.Abstractions.Services;
+using NewsNode.Shared.Infrastructure.Services;
 
 namespace NewsNode.Services.Notifications.Notifications;
 
@@ -14,15 +15,15 @@ public class SendNotificationsJob : BackgroundService
     private const string ReceiveNotification = nameof(ReceiveNotification);
 
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly HubConnectionManager _notificationsConnectionManager;
+    private readonly IHubConnectionService _notificationsConnectionService;
     private readonly IHubContext<NotificationHub> _hubContext;
     private readonly ILogger<SendNotificationsJob> _logger;
 
-    public SendNotificationsJob(IServiceScopeFactory serviceScopeFactory, HubConnectionManager notificationsConnectionManager,
+    public SendNotificationsJob(IServiceScopeFactory serviceScopeFactory, IHubConnectionService notificationsConnectionService,
         IHubContext<NotificationHub> hubContext, ILogger<SendNotificationsJob> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
-        _notificationsConnectionManager = notificationsConnectionManager;
+        _notificationsConnectionService = notificationsConnectionService;
         _hubContext = hubContext;
         _logger = logger;
     }
@@ -41,7 +42,7 @@ public class SendNotificationsJob : BackgroundService
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
 
-        var connectedUsersIds = _notificationsConnectionManager.GetActiveConnectionsUserIds();
+        var connectedUsersIds = _notificationsConnectionService.GetActiveConnectionsUserIds();
 
         var notifications = await context.Notifications
             .Where(x => connectedUsersIds.Contains(x.ReceiverId) &&

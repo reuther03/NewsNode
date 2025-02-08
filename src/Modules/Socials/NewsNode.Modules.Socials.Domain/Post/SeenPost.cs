@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using NewsNode.Shared.Abstractions.Kernel.Primitives;
+﻿using NewsNode.Shared.Abstractions.Kernel.Primitives;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 
 namespace NewsNode.Modules.Socials.Domain.Post;

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Concurrent;
+using NewsNode.Shared.Abstractions.Services;
 
-namespace NewsNode.Shared.Abstractions.Hubs;
+namespace NewsNode.Shared.Infrastructure.Services;
 
-public sealed class HubConnectionManager
+public sealed class HubConnectionService : IHubConnectionService
 {
     private static readonly ConcurrentDictionary<string, string> Connections = [];
 
