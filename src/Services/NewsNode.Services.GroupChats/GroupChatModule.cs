@@ -8,7 +8,7 @@ public class GroupChatModule : IModule
 {
     public const string BasePath = "groupchat-module";
 
-    public string Name => "GroupChat";
+    public string Name => "groupchats";
     public string Path => BasePath;
 
     public void Register(IServiceCollection services)

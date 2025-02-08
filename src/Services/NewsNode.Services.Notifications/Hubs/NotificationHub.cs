@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using NewsNode.Shared.Abstractions.Services;
-using NewsNode.Shared.Infrastructure.Services;
 
 namespace NewsNode.Services.Notifications.Hubs;
 
