@@ -31,9 +31,7 @@ public class GroupChat : Entity<Guid>
     public void AddParticipant(UserId userId)
     {
         if (_participants.Contains(userId))
-        {
             throw new InvalidOperationException("User is already a participant");
-        }
 
         _participants.Add(userId);
     }

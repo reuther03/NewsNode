@@ -9,7 +9,7 @@ public class GroupChatConfiguration : IEntityTypeConfiguration<GroupChat>
 {
     public void Configure(EntityTypeBuilder<GroupChat> builder)
     {
-        builder.ToTable("group_chats");
+        builder.ToTable("GroupChats");
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
