@@ -43,5 +43,7 @@ public class GroupChatConfiguration : IEntityTypeConfiguration<GroupChat>
                 .FindNavigation(nameof(GroupChat.Participants))!
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
         });
+
+        builder.HasIndex(x => x.Name).IsUnique();
     }
 }

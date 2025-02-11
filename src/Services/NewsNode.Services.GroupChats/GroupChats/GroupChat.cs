@@ -18,7 +18,7 @@ public class GroupChat : Entity<Guid>
     {
     }
 
-    private GroupChat(Name name, string description, IList<Hashtag> hashtags)
+    private GroupChat(Guid id, Name name, string description, IList<Hashtag> hashtags) : base(id)
     {
         Name = name;
         Description = description;
@@ -26,7 +26,7 @@ public class GroupChat : Entity<Guid>
     }
 
     public static GroupChat Create(Name name, string description, IList<Hashtag> hashtags)
-        => new(name, description, hashtags);
+        => new(Guid.NewGuid(), name, description, hashtags);
 
     public void AddParticipant(UserId userId)
     {
