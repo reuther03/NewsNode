@@ -3,17 +3,17 @@ using NewsNode.Services.GroupChats.GroupChats;
 
 namespace NewsNode.Services.GroupChats.Database;
 
-internal class GroupChatDbContext : DbContext
+internal class GroupChatsDbContext : DbContext
 {
     public DbSet<GroupChat> GroupChats => Set<GroupChat>();
 
-    public GroupChatDbContext(DbContextOptions<GroupChatDbContext> options) : base(options)
+    public GroupChatsDbContext(DbContextOptions<GroupChatsDbContext> options) : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("Group_Chats");
+        modelBuilder.HasDefaultSchema("group_chats");
         modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
     }
 }
