@@ -6,6 +6,7 @@ namespace NewsNode.Services.GroupChats.Database;
 public class GroupChatsDbContext : DbContext
 {
     public DbSet<GroupChat> GroupChats => Set<GroupChat>();
+    public DbSet<GroupUser> GroupUsers => Set<GroupUser>();
 
     public GroupChatsDbContext(DbContextOptions<GroupChatsDbContext> options) : base(options)
     {

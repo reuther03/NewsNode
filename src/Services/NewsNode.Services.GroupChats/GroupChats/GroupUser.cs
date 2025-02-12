@@ -8,14 +8,14 @@ public class GroupUser : Entity<Guid>
 {
     public UserId UserId { get; private set; }
     public Name UserName { get; private set; }
-    public string Role { get; private set; }
+    public GroupUserRole Role { get; private set; }
     public Guid GroupChatId { get; private set; }
 
     private GroupUser()
     {
     }
 
-    private GroupUser(Guid id, UserId userId, Name userName, string role, Guid groupChatId) : base(id)
+    private GroupUser(Guid id, UserId userId, Name userName, GroupUserRole role, Guid groupChatId) : base(id)
     {
         UserId = userId;
         UserName = userName;
@@ -23,6 +23,6 @@ public class GroupUser : Entity<Guid>
         GroupChatId = groupChatId;
     }
 
-    public static GroupUser Create(Guid id, UserId userId, Name userName, string role, Guid groupChatId) =>
+    public static GroupUser Create(Guid id, UserId userId, Name userName, GroupUserRole role, Guid groupChatId) =>
         new(id, userId, userName, role, groupChatId);
 }
