@@ -3,7 +3,7 @@ using NewsNode.Services.GroupChats.GroupChats;
 
 namespace NewsNode.Services.GroupChats.Database;
 
-internal class GroupChatsDbContext : DbContext
+public class GroupChatsDbContext : DbContext
 {
     public DbSet<GroupChat> GroupChats => Set<GroupChat>();
 

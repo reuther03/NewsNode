@@ -38,7 +38,7 @@ internal class GroupChatController : BaseController
 
         return Ok(Result.Ok(groupChat.Id));
     }
-    
+
     [HttpPost("{groupChatId:guid}/join")]
     public async Task<ActionResult> JoinGroupChat([FromRoute] Guid groupChatId)
     {

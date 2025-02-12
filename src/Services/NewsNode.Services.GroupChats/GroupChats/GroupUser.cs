@@ -15,7 +15,7 @@ public class GroupUser : Entity<Guid>
     {
     }
 
-    private GroupUser(Guid Id, UserId userId, Name userName, string role, Guid groupChatId) : base(Id)
+    private GroupUser(Guid id, UserId userId, Name userName, string role, Guid groupChatId) : base(id)
     {
         UserId = userId;
         UserName = userName;
