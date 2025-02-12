@@ -32,7 +32,6 @@ internal class GroupChatController : BaseController
 
         var groupChat = GroupChat.Create(new Name(request.Name), request.Description, request.Hashtags);
         var user = GroupUser.Create(_userService.UserId, _userService.UserName, GroupUserRole.Admin, groupChat.Id);
-        groupChat.AddParticipant(_userService.UserId);
 
         await _context.GroupUsers.AddAsync(user);
         await _context.GroupChats.AddAsync(groupChat);
@@ -51,7 +50,9 @@ internal class GroupChatController : BaseController
         if (groupChat == null)
             throw new BadHttpRequestException("Group chat not found");
 
-        groupChat.AddParticipant(_userService.UserId);
+        var user = GroupUser.Create(_userService.UserId, _userService.UserName, GroupUserRole.Member, groupChat.Id);
+
+        await _context.GroupUsers.AddAsync(user);
         await _context.SaveChangesAsync();
 
         return Ok(Result.Ok());

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Services.GroupChats.Database.Migrations
 {
     [DbContext(typeof(GroupChatsDbContext))]
-    [Migration("20250211010855_ChangeName")]
-    partial class ChangeName
+    [Migration("20250212231736_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,7 +42,37 @@ namespace NewsNode.Services.GroupChats.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("GroupChats", "group_chats");
+                });
+
+            modelBuilder.Entity("NewsNode.Services.GroupChats.GroupChats.GroupUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("GroupChatId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "GroupChatId")
+                        .IsUnique();
+
+                    b.ToTable("GroupUsers", "group_chats");
                 });
 
             modelBuilder.Entity("NewsNode.Services.GroupChats.GroupChats.GroupChat", b =>
@@ -71,34 +101,7 @@ namespace NewsNode.Services.GroupChats.Database.Migrations
                                 .HasForeignKey("GroupChatId");
                         });
 
-                    b.OwnsMany("NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids.UserId", "Participants", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<Guid>("GroupId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uuid")
-                                .HasColumnName("UserId");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("GroupId");
-
-                            b1.ToTable("GroupChatParticipants", "group_chats");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GroupId");
-                        });
-
                     b.Navigation("Hashtags");
-
-                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }

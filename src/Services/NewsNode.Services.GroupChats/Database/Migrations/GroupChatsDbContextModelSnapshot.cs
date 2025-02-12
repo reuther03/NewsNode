@@ -98,34 +98,7 @@ namespace NewsNode.Services.GroupChats.Database.Migrations
                                 .HasForeignKey("GroupChatId");
                         });
 
-                    b.OwnsMany("NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids.UserId", "Participants", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<Guid>("GroupId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uuid")
-                                .HasColumnName("UserId");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("GroupId");
-
-                            b1.ToTable("GroupChatParticipants", "group_chats");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GroupId");
-                        });
-
                     b.Navigation("Hashtags");
-
-                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }

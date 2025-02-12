@@ -1,5 +1,7 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using NewsNode.Services.GroupChats.Database;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using NewsNode.Shared.Abstractions.Services;
@@ -46,7 +48,7 @@ public class GroupChatHub : Hub
         if (groupChat is null)
             throw new KeyNotFoundException("Group chat not found");
 
-        if (!groupChat.Participants.Contains(userId))
+        if (!await _context.GroupUsers.AnyAsync(x => x.UserId == userId && x.GroupChatId == groupChatId))
             throw new UnauthorizedAccessException("User is not a participant of this group chat");
 
         await Groups.AddToGroupAsync(Context.ConnectionId, groupChatId.ToString());
@@ -59,13 +61,17 @@ public class GroupChatHub : Hub
         if (userId is null)
             throw new UnauthorizedAccessException();
 
+        var user = await _context.GroupUsers.FirstOrDefaultAsync(x => x.UserId == userId && x.GroupChatId == groupChatId);
+        if (user is null)
+            throw new UnauthorizedAccessException("User is not a participant of this group chat");
+
         var groupChat = await _context.GroupChats.FindAsync(groupChatId);
         if (groupChat is null)
             throw new KeyNotFoundException("Group chat not found");
 
-        if (!groupChat.Participants.Contains(userId))
+        if (!await _context.GroupUsers.AnyAsync(x => x.UserId == userId && x.GroupChatId == groupChatId))
             throw new UnauthorizedAccessException("User is not a participant of this group chat");
 
-        await Clients.Group(groupChatId.ToString()).SendAsync("OnMessageReceived", userId.ToString(), message);
+        await Clients.Group(groupChatId.ToString()).SendAsync("OnMessageReceived", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture), user.UserName.ToString(), message);
     }
 }

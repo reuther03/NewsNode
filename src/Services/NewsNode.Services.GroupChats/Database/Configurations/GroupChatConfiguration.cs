@@ -29,21 +29,6 @@ public class GroupChatConfiguration : IEntityTypeConfiguration<GroupChat>
             .HasColumnName("Hashtag")
             .IsRequired();
 
-        builder.OwnsMany(x => x.Participants, ownedBuilder =>
-        {
-            ownedBuilder.WithOwner().HasForeignKey("GroupId");
-            ownedBuilder.ToTable("GroupChatParticipants");
-            ownedBuilder.HasKey("Id");
-
-            ownedBuilder.Property(x => x.Value)
-                .ValueGeneratedNever()
-                .HasColumnName("UserId");
-
-            builder.Metadata
-                .FindNavigation(nameof(GroupChat.Participants))!
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
-        });
-
         builder.HasIndex(x => x.Name).IsUnique();
     }
 }
