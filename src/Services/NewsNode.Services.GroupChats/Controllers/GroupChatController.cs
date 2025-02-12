@@ -31,8 +31,10 @@ internal class GroupChatController : BaseController
             throw new UnauthorizedAccessException();
 
         var groupChat = GroupChat.Create(new Name(request.Name), request.Description, request.Hashtags);
+        var user = GroupUser.Create(_userService.UserId, _userService.UserName, GroupUserRole.Admin, groupChat.Id);
         groupChat.AddParticipant(_userService.UserId);
 
+        await _context.GroupUsers.AddAsync(user);
         await _context.GroupChats.AddAsync(groupChat);
         await _context.SaveChangesAsync();
 

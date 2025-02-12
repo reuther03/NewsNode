@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.JsonWebTokens;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
 using NewsNode.Shared.Abstractions.Services;
 using UserId = NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids.UserId;
@@ -43,7 +44,7 @@ public class UserService : IUserService
         if (claims is null)
             return null;
 
-        var userName = claims.FindFirst(ClaimTypes.Name)?.Value;
+        var userName = claims.FindFirst(JwtRegisteredClaimNames.Name)?.Value;
         return userName is null ? null : new Name(userName);
     }
 }

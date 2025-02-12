@@ -54,11 +54,3 @@ public class JwtProvider : IJwtProvider
         return tokenValue;
     }
 }
-
-// jak uzywalem tego to nie dzialalo, ale nie wiem czemu
-public static class ClaimConsts
-{
-    public const string UserId = "userId";
-    public const string Email = "email";
-    public const string Role = "role";
-}

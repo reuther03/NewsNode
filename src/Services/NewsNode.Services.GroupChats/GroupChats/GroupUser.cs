@@ -23,6 +23,6 @@ public class GroupUser : Entity<Guid>
         GroupChatId = groupChatId;
     }
 
-    public static GroupUser Create(Guid id, UserId userId, Name userName, GroupUserRole role, Guid groupChatId) =>
-        new(id, userId, userName, role, groupChatId);
+    public static GroupUser Create(UserId userId, Name userName, GroupUserRole role, Guid groupChatId) =>
+        new(Guid.NewGuid(), userId, userName, role, groupChatId);
 }
