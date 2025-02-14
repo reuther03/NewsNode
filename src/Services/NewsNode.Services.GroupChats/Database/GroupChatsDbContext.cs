@@ -7,6 +7,7 @@ public class GroupChatsDbContext : DbContext
 {
     public DbSet<GroupChat> GroupChats => Set<GroupChat>();
     public DbSet<GroupUser> GroupUsers => Set<GroupUser>();
+    public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
 
     public GroupChatsDbContext(DbContextOptions<GroupChatsDbContext> options) : base(options)
     {

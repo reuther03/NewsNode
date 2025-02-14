@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using NewsNode.Services.GroupChats.Database;
+using NewsNode.Services.GroupChats.GroupChats;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects.Ids;
 using NewsNode.Shared.Abstractions.Services;
 
@@ -74,5 +75,9 @@ public class GroupChatHub : Hub
 
         await Clients.Group(groupChatId.ToString())
             .SendAsync("OnMessageReceived", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture), user.UserName.ToString(), message);
+
+        var chatMessage = ChatMessage.Create(userId, message, groupChatId);
+        await _context.ChatMessages.AddAsync(chatMessage);
+        await _context.SaveChangesAsync();
     }
 }
