@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NewsNode.Services.GroupChats.Database;
+using NewsNode.Services.GroupChats.Dtos;
 using NewsNode.Services.GroupChats.GroupChats;
 using NewsNode.Services.GroupChats.Requests;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
@@ -16,12 +18,34 @@ internal class GroupChatController : BaseController
 {
     private readonly GroupChatsDbContext _context;
     private readonly IUserService _userService;
+    private readonly IRedisCacheService _redisCacheService;
 
 
-    public GroupChatController(GroupChatsDbContext context, IUserService userService)
+    public GroupChatController(GroupChatsDbContext context, IUserService userService, IRedisCacheService redisCacheService)
     {
         _context = context;
         _userService = userService;
+        _redisCacheService = redisCacheService;
+    }
+
+    [HttpGet("{groupChatId:guid}")]
+    public async Task<ActionResult> GetGroupChat([FromRoute] Guid groupChatId)
+    {
+        var groupChat = await _context.GroupChats.FindAsync(groupChatId);
+        if (groupChat == null)
+            throw new BadHttpRequestException("Group chat not found");
+
+        var chatMessages = await _context.ChatMessages
+            .Where(x => x.GroupChatId == groupChatId)
+            .OrderByDescending(x => x.SentAt)
+            .Take(50)
+            .Select(x => ChatMessageDto.AsDto(
+                x,
+                _context.GroupUsers.Where(y => y.UserId == x.SenderId).Select(z => z.UserName).FirstOrDefault()!)
+            )
+            .ToListAsync();
+
+        return Ok(Result.Ok(chatMessages));
     }
 
     [HttpPost]
