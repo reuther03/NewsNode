@@ -72,6 +72,7 @@ public class GroupChatHub : Hub
         if (!await _context.GroupUsers.AnyAsync(x => x.UserId == userId && x.GroupChatId == groupChatId))
             throw new UnauthorizedAccessException("User is not a participant of this group chat");
 
-        await Clients.Group(groupChatId.ToString()).SendAsync("OnMessageReceived", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture), user.UserName.ToString(), message);
+        await Clients.Group(groupChatId.ToString())
+            .SendAsync("OnMessageReceived", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture), user.UserName.ToString(), message);
     }
 }
