@@ -5,7 +5,7 @@
 namespace NewsNode.Services.GroupChats.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class MinorChanges : Migration
+    public partial class AddedSenderID : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

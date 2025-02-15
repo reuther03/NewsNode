@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Services.GroupChats.Database.Migrations
 {
     [DbContext(typeof(GroupChatsDbContext))]
-    [Migration("20250212231736_Init")]
+    [Migration("20250215014205_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -25,6 +25,34 @@ namespace NewsNode.Services.GroupChats.Database.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("NewsNode.Services.GroupChats.GroupChats.ChatMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("GroupChatId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
+
+                    b.HasIndex("GroupChatId", "SentAt");
+
+                    b.ToTable("ChatMessages", "group_chats");
+                });
 
             modelBuilder.Entity("NewsNode.Services.GroupChats.GroupChats.GroupChat", b =>
                 {
@@ -73,6 +101,17 @@ namespace NewsNode.Services.GroupChats.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("GroupUsers", "group_chats");
+                });
+
+            modelBuilder.Entity("NewsNode.Services.GroupChats.GroupChats.ChatMessage", b =>
+                {
+                    b.HasOne("NewsNode.Services.GroupChats.GroupChats.GroupUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("NewsNode.Services.GroupChats.GroupChats.GroupChat", b =>

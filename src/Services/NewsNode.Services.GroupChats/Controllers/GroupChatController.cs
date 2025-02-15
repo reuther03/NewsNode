@@ -31,29 +31,31 @@ internal class GroupChatController : BaseController
     }
 
     [HttpGet("{groupChatId:guid}")]
-    public async Task<ActionResult> GetGroupChat([FromRoute] Guid groupChatId, [FromQuery] int page = 1)
+    public async Task<ActionResult> GetGroupChat([FromRoute] Guid groupChatId, [FromQuery] DateTime? lastPostDateTime, [FromQuery] int page = 1)
     {
         var groupChat = await _context.GroupChats.FindAsync(groupChatId);
         if (groupChat == null)
             throw new BadHttpRequestException("Group chat not found");
 
-        var chatMessages = await _context.ChatMessages
-            .Where(x => x.GroupChatId == groupChatId)
-            .OrderByDescending(x => x.SentAt)
-            .Skip((page - 1) * 2)
-            .Take(2)
-            .Select(x => ChatMessageDto.AsDto(
-                x,
-                _context.GroupUsers.Where(y => y.UserId == x.SenderId)
-                    .Select(z => z.UserName)
-                    .FirstOrDefault()!))
-            .ToListAsync();
+        // var chatMessages = await _context.ChatMessages
+        //     .Where(x => x.GroupChatId == groupChatId)
+        //     .OrderByDescending(x => x.SentAt)
+        //     .WhereIf(lastPostDateTime.HasValue, x => x.SentAt < lastPostDateTime)
+        //     .Skip((page - 1) * 2)
+        //     .Take(2)
+            // .Select(x => ChatMessageDto.AsDto(
+            //     x,
+            //     _context.GroupUsers.Where(y => y.UserId == x.SenderId)
+            //         .Select(z => z.UserName)
+            //         .FirstOrDefault()!))
+            // .ToListAsync();
 
         var chatMessagesCount = await _context.ChatMessages
             .Where(x => x.GroupChatId == groupChatId)
             .CountAsync();
 
-        return Ok(PaginatedList<ChatMessageDto>.Create(page, 2, chatMessagesCount, chatMessages));
+        // return Ok(PaginatedList<ChatMessageDto>.Create(page, 2, chatMessagesCount, chatMessages.OrderBy(x => x.SentAt).ToList()));
+        return Ok(Result.Ok());
     }
 
     [HttpPost]

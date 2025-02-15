@@ -16,10 +16,6 @@ public class ChatMessageConfiguration : IEntityTypeConfiguration<ChatMessage>
             .IsRequired()
             .ValueGeneratedNever();
 
-        builder.Property(x => x.SenderId)
-            .HasConversion(x => x.Value, x => new UserId(x))
-            .IsRequired();
-
         builder.Property(x => x.Message)
             .HasMaxLength(100)
             .IsRequired();
@@ -30,6 +26,11 @@ public class ChatMessageConfiguration : IEntityTypeConfiguration<ChatMessage>
         builder.Property(x => x.GroupChatId)
             .IsRequired();
 
-        builder.HasIndex(x => new {x.GroupChatId, x.SentAt});
+        builder.HasOne(x => x.Sender)
+            .WithMany()
+            .HasForeignKey("SenderId")
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(x => new { x.GroupChatId, x.SentAt });
     }
 }

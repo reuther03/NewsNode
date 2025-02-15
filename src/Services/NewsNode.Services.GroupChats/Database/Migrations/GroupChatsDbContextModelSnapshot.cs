@@ -44,6 +44,8 @@ namespace NewsNode.Services.GroupChats.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SenderId");
+
                     b.HasIndex("GroupChatId", "SentAt");
 
                     b.ToTable("ChatMessages", "group_chats");
@@ -96,6 +98,17 @@ namespace NewsNode.Services.GroupChats.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("GroupUsers", "group_chats");
+                });
+
+            modelBuilder.Entity("NewsNode.Services.GroupChats.GroupChats.ChatMessage", b =>
+                {
+                    b.HasOne("NewsNode.Services.GroupChats.GroupChats.GroupUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("NewsNode.Services.GroupChats.GroupChats.GroupChat", b =>

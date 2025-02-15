@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Services.GroupChats.Database.Migrations
 {
     [DbContext(typeof(GroupChatsDbContext))]
-    [Migration("20250214005809_MinorChanges")]
-    partial class MinorChanges
+    [Migration("20250215020112_RefactoredRelationship")]
+    partial class RefactoredRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,6 +46,8 @@ namespace NewsNode.Services.GroupChats.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
 
                     b.HasIndex("GroupChatId", "SentAt");
 
@@ -99,6 +101,17 @@ namespace NewsNode.Services.GroupChats.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("GroupUsers", "group_chats");
+                });
+
+            modelBuilder.Entity("NewsNode.Services.GroupChats.GroupChats.ChatMessage", b =>
+                {
+                    b.HasOne("NewsNode.Services.GroupChats.GroupChats.GroupUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("NewsNode.Services.GroupChats.GroupChats.GroupChat", b =>

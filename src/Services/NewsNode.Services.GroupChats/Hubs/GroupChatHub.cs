@@ -76,7 +76,7 @@ public class GroupChatHub : Hub
         await Clients.Group(groupChatId.ToString())
             .SendAsync("OnMessageReceived", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture), user.UserName.ToString(), message);
 
-        var chatMessage = ChatMessage.Create(userId, message, groupChatId);
+        var chatMessage = ChatMessage.Create(message, groupChatId, user);
         await _context.ChatMessages.AddAsync(chatMessage);
         await _context.SaveChangesAsync();
     }

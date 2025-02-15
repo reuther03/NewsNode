@@ -5,24 +5,24 @@ namespace NewsNode.Services.GroupChats.GroupChats;
 
 public class ChatMessage : Entity<Guid>
 {
-    public UserId SenderId { get; private set; }
     public string Message { get; private set; }
     public DateTime SentAt { get; private set; }
     public Guid GroupChatId { get; private set; }
+    public GroupUser Sender { get; private set; }
 
     private ChatMessage()
     {
     }
 
 
-    private ChatMessage(Guid id, UserId senderId, string message, DateTime sentAt, Guid groupChatId) : base(id)
+    private ChatMessage(Guid id, string message, DateTime sentAt, Guid groupChatId, GroupUser sender) : base(id)
     {
-        SenderId = senderId;
         Message = message;
         SentAt = sentAt;
         GroupChatId = groupChatId;
+        Sender = sender;
     }
 
-    public static ChatMessage Create(UserId senderId, string message, Guid groupChatId)
-        => new(Guid.NewGuid(), senderId, message, DateTime.UtcNow, groupChatId);
+    public static ChatMessage Create(string message, Guid groupChatId, GroupUser sender)
+        => new(Guid.NewGuid(), message, DateTime.UtcNow, groupChatId, sender);
 }
