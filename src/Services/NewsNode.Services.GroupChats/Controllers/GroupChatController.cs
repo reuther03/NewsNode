@@ -7,8 +7,10 @@ using NewsNode.Services.GroupChats.Database;
 using NewsNode.Services.GroupChats.Dtos;
 using NewsNode.Services.GroupChats.GroupChats;
 using NewsNode.Services.GroupChats.Requests;
+using NewsNode.Shared.Abstractions.Kernel.Pagination;
 using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
+using NewsNode.Shared.Abstractions.QueriesAndCommands.Extensions;
 using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Services.GroupChats.Controllers;
@@ -29,7 +31,7 @@ internal class GroupChatController : BaseController
     }
 
     [HttpGet("{groupChatId:guid}")]
-    public async Task<ActionResult> GetGroupChat([FromRoute] Guid groupChatId)
+    public async Task<ActionResult> GetGroupChat([FromRoute] Guid groupChatId, [FromQuery] int page = 1)
     {
         var groupChat = await _context.GroupChats.FindAsync(groupChatId);
         if (groupChat == null)
@@ -38,14 +40,20 @@ internal class GroupChatController : BaseController
         var chatMessages = await _context.ChatMessages
             .Where(x => x.GroupChatId == groupChatId)
             .OrderByDescending(x => x.SentAt)
-            .Take(50)
+            .Skip((page - 1) * 2)
+            .Take(2)
             .Select(x => ChatMessageDto.AsDto(
                 x,
-                _context.GroupUsers.Where(y => y.UserId == x.SenderId).Select(z => z.UserName).FirstOrDefault()!)
-            )
+                _context.GroupUsers.Where(y => y.UserId == x.SenderId)
+                    .Select(z => z.UserName)
+                    .FirstOrDefault()!))
             .ToListAsync();
 
-        return Ok(Result.Ok(chatMessages));
+        var chatMessagesCount = await _context.ChatMessages
+            .Where(x => x.GroupChatId == groupChatId)
+            .CountAsync();
+
+        return Ok(PaginatedList<ChatMessageDto>.Create(page, 2, chatMessagesCount, chatMessages));
     }
 
     [HttpPost]

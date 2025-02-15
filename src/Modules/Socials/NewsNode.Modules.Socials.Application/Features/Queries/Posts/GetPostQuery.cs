@@ -40,13 +40,11 @@ public record GetPostQuery(
                 .Include(x => x.Comments)
                 .FirstOrDefaultAsync(x => x.Id == PostId.From(request.CurrentPostId), cancellationToken);
 
-
             NullValidator.ValidateNotNull(post);
 
             if (await _dbContext.UserProfileStatuses.AnyAsync(x => x.TargetUserId == post.CreatedBy &&
                     x.Status == UserProfileRelationStatus.Blocked, cancellationToken))
                 return Result<PostDetailsDto>.BadRequest("User is blocked");
-
 
             var postActions = await _dbContext.PostActions
                 .Where(x => x.PostId == post.Id)

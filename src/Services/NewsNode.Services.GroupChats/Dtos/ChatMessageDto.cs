@@ -5,8 +5,8 @@ namespace NewsNode.Services.GroupChats.Dtos;
 public class ChatMessageDto
 {
     public Guid Id { get; set; }
-    public string Name { get; set; }
-    public string Message { get; set; }
+    public string Name { get; set; } = null!;
+    public string Message { get; set; } = null!;
     public DateTime SentAt { get; set; }
 
     public static ChatMessageDto AsDto(ChatMessage chatMessage, string name)
