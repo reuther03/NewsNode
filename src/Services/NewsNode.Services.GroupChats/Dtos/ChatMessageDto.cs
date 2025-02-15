@@ -4,16 +4,16 @@ namespace NewsNode.Services.GroupChats.Dtos;
 
 public class ChatMessageDto
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; } = null!;
-    public string Message { get; set; } = null!;
-    public DateTime SentAt { get; set; }
+    public Guid Id { get; init; }
+    public string SenderName { get; init; } = null!;
+    public string Message { get; init; } = null!;
+    public DateTime SentAt { get; init; }
 
-    public static ChatMessageDto AsDto(ChatMessage chatMessage, string name)
+    public static ChatMessageDto AsDto(ChatMessage chatMessage, string senderName)
         => new()
         {
             Id = chatMessage.Id,
-            Name = name,
+            SenderName = senderName,
             Message = chatMessage.Message,
             SentAt = chatMessage.SentAt
         };

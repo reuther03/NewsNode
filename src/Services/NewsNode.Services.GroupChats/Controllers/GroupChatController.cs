@@ -37,25 +37,21 @@ internal class GroupChatController : BaseController
         if (groupChat == null)
             throw new BadHttpRequestException("Group chat not found");
 
-        // var chatMessages = await _context.ChatMessages
-        //     .Where(x => x.GroupChatId == groupChatId)
-        //     .OrderByDescending(x => x.SentAt)
-        //     .WhereIf(lastPostDateTime.HasValue, x => x.SentAt < lastPostDateTime)
-        //     .Skip((page - 1) * 2)
-        //     .Take(2)
-            // .Select(x => ChatMessageDto.AsDto(
-            //     x,
-            //     _context.GroupUsers.Where(y => y.UserId == x.SenderId)
-            //         .Select(z => z.UserName)
-            //         .FirstOrDefault()!))
-            // .ToListAsync();
+        var chatMessages = await _context.ChatMessages
+            .Include(x => x.Sender)
+            .Where(x => x.GroupChatId == groupChatId)
+            .OrderByDescending(x => x.SentAt)
+            .WhereIf(lastPostDateTime.HasValue, x => x.SentAt < lastPostDateTime)
+            .Skip((page - 1) * 25)
+            .Take(25)
+            .Select(x => ChatMessageDto.AsDto(x, x.Sender.UserName))
+            .ToListAsync();
 
         var chatMessagesCount = await _context.ChatMessages
             .Where(x => x.GroupChatId == groupChatId)
             .CountAsync();
 
-        // return Ok(PaginatedList<ChatMessageDto>.Create(page, 2, chatMessagesCount, chatMessages.OrderBy(x => x.SentAt).ToList()));
-        return Ok(Result.Ok());
+        return Ok(PaginatedList<ChatMessageDto>.Create(page, 25, chatMessagesCount, chatMessages.OrderBy(x => x.SentAt).ToList()));
     }
 
     [HttpPost]
