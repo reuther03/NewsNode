@@ -16,6 +16,8 @@ public class NotificationHub : Hub
 
     public override async Task OnConnectedAsync()
     {
+
+
         _connections.Connect(Context.ConnectionId, Context.User!.Identity!.Name!);
 
         await Clients.Client(Context.ConnectionId).SendAsync("OnConnected", "Connected");

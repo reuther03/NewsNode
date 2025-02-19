@@ -37,6 +37,11 @@ internal class GroupChatController : BaseController
         if (groupChat == null)
             throw new BadHttpRequestException("Group chat not found");
 
+        var cachedChatMessages = await _redisCacheService.GetDataAsync<List<ChatMessageDto>>($"ChatMessages_{groupChatId}_page{page}");
+        if (cachedChatMessages != null)
+            return Ok(PaginatedList<ChatMessageDto>
+                .Create(page, 25, cachedChatMessages.Count, cachedChatMessages.OrderBy(x => x.SentAt).ToList()));
+
         var chatMessages = await _context.ChatMessages
             .Include(x => x.Sender)
             .Where(x => x.GroupChatId == groupChatId)
@@ -51,7 +56,11 @@ internal class GroupChatController : BaseController
             .Where(x => x.GroupChatId == groupChatId)
             .CountAsync();
 
-        return Ok(PaginatedList<ChatMessageDto>.Create(page, 25, chatMessagesCount, chatMessages.OrderBy(x => x.SentAt).ToList()));
+        await _redisCacheService.SetDataAsync($"ChatMessages_{groupChatId}_page{page}", chatMessages, TimeSpan.FromMinutes(2));
+
+
+        return Ok(PaginatedList<ChatMessageDto>
+            .Create(page, 25, chatMessagesCount, chatMessages.OrderBy(x => x.SentAt).ToList()));
     }
 
     [HttpPost]
