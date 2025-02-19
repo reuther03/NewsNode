@@ -63,6 +63,24 @@ internal class GroupChatController : BaseController
             .Create(page, 25, chatMessagesCount, chatMessages.OrderBy(x => x.SentAt).ToList()));
     }
 
+    [HttpGet("{groupChatId:guid}/find")]
+    public async Task<ActionResult> FindGroupChatMessage([FromRoute] Guid groupChatId, [FromQuery] string query, [FromQuery] int page = 1)
+    {
+        var groupChat = await _context.GroupChats.FindAsync(groupChatId);
+        if (groupChat == null)
+            throw new BadHttpRequestException("Group chat not found");
+
+        var chatMessages = await _context.ChatMessages
+            .Where(x => x.GroupChatId == groupChat.Id && x.Message.Contains(query))
+            .OrderByDescending(x => x.SentAt)
+            .Skip((page - 1) * 25)
+            .Take(25)
+            .Select(x => ChatMessageDto.AsDto(x, x.Sender.UserName))
+            .ToListAsync();
+
+        return Ok(Result.Ok(chatMessages));
+    }
+
     [HttpPost]
     public async Task<ActionResult> CreateGroupChat([FromBody] CreateGroupChatRequest request)
     {
