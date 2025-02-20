@@ -30,6 +30,4 @@ foreach (var module in modules)
     module.Use(app);
 }
 
-await LlmModes.RunLlama3Async(app);
-
 await app.RunAsync();

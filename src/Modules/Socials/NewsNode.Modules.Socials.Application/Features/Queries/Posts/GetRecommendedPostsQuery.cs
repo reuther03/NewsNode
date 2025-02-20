@@ -20,15 +20,17 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
         private readonly IUserService _userService;
         private readonly ISeenPostService _seenPostService;
         private readonly IRedisCacheService _redisCacheService;
+        private readonly IAIChatService _aiChatService;
 
         public Handler(IRecommendationsService recommendations, IUserService userService, ISocialsDbContext dbContext, ISeenPostService seenPostService,
-            IRedisCacheService redisCacheService)
+            IRedisCacheService redisCacheService, IAIChatService aiChatService)
         {
             _recommendations = recommendations;
             _userService = userService;
             _dbContext = dbContext;
             _seenPostService = seenPostService;
             _redisCacheService = redisCacheService;
+            _aiChatService = aiChatService;
         }
 
         public async Task<Result<PaginatedList<PostDto>>> Handle(GetRecommendedPostsQuery request, CancellationToken cancellationToken)
