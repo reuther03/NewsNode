@@ -13,5 +13,4 @@ public enum RecommendationWeight
     MediumHigh = 4,
     High = 5,
     VeryHigh = 6
-
 }

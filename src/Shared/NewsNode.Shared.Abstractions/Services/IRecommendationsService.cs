@@ -13,4 +13,6 @@ public interface IRecommendationsService
 
     Task CreateCountryRecommendation(string country, List<Hashtag> hashtags, CancellationToken cancellationToken = default);
     Task IncrementCountryRecommendation(string country, List<Hashtag> hashtags, PostActionType postActionType, CancellationToken cancellationToken = default);
+
+    Task<Dictionary<Hashtag, RecommendationWeight>> GetRecommendedHashtagsByUserId(UserId userId, CancellationToken cancellationToken = default);
 }

@@ -136,4 +136,15 @@ public class RecommendationsService : IRecommendationsService
 
         await context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<Dictionary<Hashtag, RecommendationWeight>> GetRecommendedHashtagsByUserId(UserId userId, CancellationToken cancellationToken = default)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
+
+        var userRecommendedHashtags = await context.ActionRecommendations.Where(x => x.UserId == userId)
+            .ToDictionaryAsync(x => x.Hashtag, x => x.Weight, cancellationToken);
+
+        return userRecommendedHashtags;
+    }
 }
