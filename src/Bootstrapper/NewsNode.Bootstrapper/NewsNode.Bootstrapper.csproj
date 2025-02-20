@@ -21,6 +21,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Modules\Socials\NewsNode.Modules.Socials.Api\NewsNode.Modules.Socials.Api.csproj" />
         <ProjectReference Include="..\..\Modules\Users\NewsNode.Modules.Users.Api\NewsNode.Modules.Users.Api.csproj"/>
+        <ProjectReference Include="..\..\Services\NewsNode.Services.AIChat\NewsNode.Services.AIChat.csproj" />
         <ProjectReference Include="..\..\Services\NewsNode.Services.GroupChats\NewsNode.Services.GroupChats.csproj" />
         <ProjectReference Include="..\..\Services\NewsNode.Services.Notifications\NewsNode.Services.Notifications.csproj" />
         <ProjectReference Include="..\..\Services\NewsNode.Services.Recommendations\NewsNode.Services.Recommendations.csproj" />

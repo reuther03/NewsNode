@@ -1,4 +1,5 @@
 using NewsNode.Bootstrapper;
+using NewsNode.Services.AIChat.Llms;
 using NewsNode.Shared.Infrastructure;
 using NewsNode.Shared.Infrastructure.Modules;
 
@@ -28,5 +29,7 @@ foreach (var module in modules)
 {
     module.Use(app);
 }
+
+await LlmModes.RunLlama3Async(app);
 
 await app.RunAsync();
