@@ -43,6 +43,9 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
 
             NullValidator.ValidateNotNull(user);
 
+            // var xd = await _aiChatService.GetRecommendedHashtags(await _recommendations.GetRecommendedHashtagsByUserId(user.Id, cancellationToken),
+            //     cancellationToken);
+
             var recommendedHashtags = await _recommendations.GetRecommendedHashtags(user.Id, cancellationToken);
             var lessInterestedHashtags = await _recommendations.GetLessInterestedHashtags(user.Id, cancellationToken);
             var recommendedProfiles = await _recommendations.GetRecommendedProfiles(user.Id, cancellationToken);
@@ -74,13 +77,15 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
                     .Select(p => PostDto.AsDto(p, true, RecommendationWeight.None))
                     .ToListAsync(cancellationToken);
 
-                await _redisCacheService.SetDataAsync(trendingCacheKey, cachedTrendingPosts, TimeSpan.FromMinutes(5));
+                await _redisCacheService.SetDataAsync(trendingCacheKey, cachedTrendingPosts, TimeSpan.FromSeconds(5));
             }
 
-            var filteredTrendingPostsDto = cachedTrendingPosts
+            // it is here because the cache above is global, and we need to filter based on current user
+            cachedTrendingPosts = cachedTrendingPosts
                 .Where(p => p.CreatedBy != user.Id.Value &&
                     !_dbContext.UserProfileStatuses
                         .Any(y => y.TargetUserId == UserId.From(p.CreatedBy)))
+                .Where(x => posts.All(p => p.Id != PostId.From(x.Id)))
                 .ToList();
 
             var postsWithWeights = posts.Select(x => new
@@ -95,8 +100,7 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
 
             var allPostsDto = unseenPostsDto
                 .Union(seenPostsDto)
-                .Union(filteredTrendingPostsDto)
-                .Distinct()
+                .Union(cachedTrendingPosts)
                 .OrderBy(x => x.Seen)
                 .ThenByDescending(x => x.Weight)
                 .Skip((request.Page - 1) * 10)

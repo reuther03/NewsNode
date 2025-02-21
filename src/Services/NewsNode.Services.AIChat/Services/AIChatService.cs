@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.AI;
+﻿using System.Text.Json;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Services.AIChat.Llms;
 using NewsNode.Shared.Abstractions.Kernel.ValueObjects;
@@ -21,32 +22,26 @@ public class AIChatService : IAIChatService
     {
         var client = _provider.GetRequiredKeyedService<IChatClient>("llama3");
 
-        var request = string.Join(", ", recommendationWeights.Select(x => x.Key.Value + " " + x.Value));
-        var chatMessage = $"""
-                            Pick from this dictionary those names where RecommendationWeight is the biggest, you should return 5 names
+        var xd = recommendationWeights.Select(x => x.Key.Value + " " + x.Value);
 
-                            Here i provice RecommendationWeight enum:
+        var data = recommendationWeights
+            .ToDictionary(kvp => kvp.Key.Value, kvp => kvp.Value); // HashTag -> int
 
-                            LowNegative = -1,
-                            MediumNegative = -2,
-                            HighNegative = -3,
-                            VeryHighNegative = -4,
-                            None = 0,
-                            Low = 1,
-                            MediumLow = 2,
-                            Medium = 3,
-                            MediumHigh = 4,
-                            High = 5,
-                            VeryHigh = 6
+        // Turn it into JSON so the model can parse it more easily:
+        var jsonData = JsonSerializer.Serialize(data);
 
-                            important think pick from this list 5 objects with biggest number where number of RecommendationWeight is equal to 0 or bigger
+        // Construct a more explicit prompt:
+        var prompt = $"""
+                          Below is a JSON dictionary of hashtags and their integer “RecommendationWeight”:
+                          {jsonData}
+                      
+                          Please find the 5 hashtags with the biggest RecommendationWeight (only those >= 0), 
+                          and return them as a comma-separated list with no extra text.
+                          !!! important only the hashtags, no extra text, no spaces, no newlines, no brackets, no quotes, just the hashtags separated by commas.
+                          !!! do not write anything else, just the hashtags separated by commas.
+                      """;
 
-                            return those names in string format
-                            :{request}
-                            """;
-
-        var chatCompletion = await client.CompleteAsync(chatMessage, cancellationToken: cancellationToken);
-
+        var chatCompletion = await client.CompleteAsync(prompt, cancellationToken: cancellationToken);
         return chatCompletion.ToString();
     }
 }
