@@ -66,8 +66,21 @@ public class AiChatService : IAiChatService
                            about politics try to find what is the main topic, is it about "elections", "president", "parliament"
                            and include country or like european union and try include if its about certain party or politician etc.
                           !!! do not write anything else, just the hashtags.
+                          !!! If the text is very short (under 10 words), return at most 2 hashtags. 
+                          !!! If you’re unsure, return only the most relevant single hashtag. 
+                          !!! Do not introduce new topics that are not present in the text.
+                          
+                         
                           !!!! MOST IMPORTANT KEEP THEM IN SAME LANGUAGE AS INPUT TEXT !!!!
                           !!!! MOST IMPORTANT KEEP THEM IN SAME LANGUAGE AS INPUT TEXT !!!!
+                          !!!! like this CONTENT: "Powiedzcie co myślicie o rządzie i sejmie w Polsce"
+                                         HASHTAGS: "#sejm #rząd #polityka #Polska"
+                                         
+                                        CONTENT: "Tell me what you think about the government and the parliament in Poland"
+                                        HASHTAGS: "#parliament #government #politics #Poland"
+                                        
+                                        CONTENT: "Sagt mir, was ihr über die Regierung und das Parlament in Polen denkt"
+                                        HASHTAGS: "#Parlament #Regierung #Politik #Polen"
                       """;
 
         var chatCompletion = await client.CompleteAsync(prompt, cancellationToken: cancellationToken);
