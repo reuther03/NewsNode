@@ -20,10 +20,10 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
         private readonly IUserService _userService;
         private readonly ISeenPostService _seenPostService;
         private readonly IRedisCacheService _redisCacheService;
-        private readonly IAIChatService _aiChatService;
+        private readonly IAiChatService _aiChatService;
 
         public Handler(IRecommendationsService recommendations, IUserService userService, ISocialsDbContext dbContext, ISeenPostService seenPostService,
-            IRedisCacheService redisCacheService, IAIChatService aiChatService)
+            IRedisCacheService redisCacheService, IAiChatService aiChatService)
         {
             _recommendations = recommendations;
             _userService = userService;
@@ -42,9 +42,6 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
                 .FirstOrDefaultAsync(x => x.Id == _userService.UserId, cancellationToken);
 
             NullValidator.ValidateNotNull(user);
-
-            // var xd = await _aiChatService.GetRecommendedHashtags(await _recommendations.GetRecommendedHashtagsByUserId(user.Id, cancellationToken),
-            //     cancellationToken);
 
             var recommendedHashtags = await _recommendations.GetRecommendedHashtags(user.Id, cancellationToken);
             var lessInterestedHashtags = await _recommendations.GetLessInterestedHashtags(user.Id, cancellationToken);

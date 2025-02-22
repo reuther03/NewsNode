@@ -2,7 +2,7 @@
 
 namespace NewsNode.Shared.Abstractions.Services;
 
-public interface IAIChatService
+public interface IAiChatService
 {
-    Task<string> GetRecommendedHashtags(Dictionary<Hashtag, RecommendationWeight> recommendationWeights, CancellationToken cancellationToken = default);
+    Task<string> GenerateHashtags(string postContent, CancellationToken cancellationToken = default);
 }

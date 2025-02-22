@@ -11,7 +11,7 @@ public static class Extensions
     public static IServiceCollection AddAIChat(this IServiceCollection services)
     {
         services.AddKeyedChatClient("llama3", new OllamaChatClient(new Uri("http://localhost:11434"), "llama3"));
-        services.AddSingleton<IAIChatService, AIChatService>();
+        services.AddSingleton<IAiChatService, AiChatService>();
         return services;
     }
 }

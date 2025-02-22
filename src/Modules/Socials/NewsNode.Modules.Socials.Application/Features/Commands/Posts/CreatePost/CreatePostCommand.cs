@@ -9,7 +9,7 @@ using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Modules.Socials.Application.Features.Commands.Posts.CreatePost;
 
-public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : ICommand<Guid>
+public record CreatePostCommand(string Content, List<Hashtag?> Hashtags) : ICommand<Guid>
 {
     internal sealed class Handler : ICommandHandler<CreatePostCommand, Guid>
     {
@@ -20,6 +20,7 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
         private readonly INotificationService _notificationService;
         private readonly IRecommendationsService _recommendationsService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAiChatService _aiChatService;
 
         public Handler
         (
@@ -29,7 +30,7 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
             IUserService userService,
             INotificationService notificationService,
             IRecommendationsService recommendationsService,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork, IAiChatService aiChatService)
         {
             _postRepository = postRepository;
             _userProfileRepository = userProfileRepository;
@@ -38,6 +39,7 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
             _notificationService = notificationService;
             _recommendationsService = recommendationsService;
             _unitOfWork = unitOfWork;
+            _aiChatService = aiChatService;
         }
 
         public async Task<Result<Guid>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
@@ -45,7 +47,19 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
             var userProfile = await _userProfileRepository.GetByIdAsync(_userService.UserId, cancellationToken);
             NullValidator.ValidateNotNull(userProfile);
 
-            var post = Post.Create(request.Content, request.Hashtags, userProfile.Id);
+            List<Hashtag> hashtags;
+            if (request.Hashtags.Count == 0)
+            {
+                var response = await _aiChatService.GenerateHashtags(request.Content, cancellationToken);
+                var tokens = response.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                hashtags = tokens.Where(x => x.StartsWith('#')).Select(x => new Hashtag(x)).ToList();
+            }
+            else
+            {
+                hashtags = request.Hashtags!;
+            }
+
+            var post = Post.Create(request.Content, hashtags, userProfile.Id);
 
             await _postRepository.AddAsync(post, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
@@ -55,7 +69,8 @@ public record CreatePostCommand(string Content, List<Hashtag> Hashtags) : IComma
             await _recommendationsService.CreateActionRecommendation(userProfile.Id, post.Hashtags.ToList(), cancellationToken);
             await _recommendationsService.CreateCountryRecommendation(userProfile.Location.Country, post.Hashtags.ToList(), cancellationToken);
             await _recommendationsService.IncrementActionRecommendation(userProfile.Id, post.Hashtags.ToList(), PostActionType.Created, cancellationToken);
-            await _recommendationsService.IncrementCountryRecommendation(userProfile.Location.Country, post.Hashtags.ToList(), PostActionType.Created, cancellationToken);
+            await _recommendationsService.IncrementCountryRecommendation(userProfile.Location.Country, post.Hashtags.ToList(), PostActionType.Created,
+                cancellationToken);
 
             return Result<Guid>.Ok(post.Id);
         }
