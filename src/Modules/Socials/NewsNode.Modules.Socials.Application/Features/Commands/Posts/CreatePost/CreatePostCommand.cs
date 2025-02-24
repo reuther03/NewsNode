@@ -1,4 +1,5 @@
-﻿using NewsNode.Modules.Socials.Application.Abstractions;
+﻿using Microsoft.AspNetCore.Http;
+using NewsNode.Modules.Socials.Application.Abstractions;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Domain.Post;
 using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
@@ -9,7 +10,7 @@ using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Modules.Socials.Application.Features.Commands.Posts.CreatePost;
 
-public record CreatePostCommand(string Content, List<Hashtag?> Hashtags) : ICommand<Guid>
+public record CreatePostCommand(string Content, List<Hashtag?> Hashtags, IFormFile Img) : ICommand<Guid>
 {
     internal sealed class Handler : ICommandHandler<CreatePostCommand, Guid>
     {
@@ -44,7 +45,7 @@ public record CreatePostCommand(string Content, List<Hashtag?> Hashtags) : IComm
 
         public async Task<Result<Guid>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
-            var userProfile = await _userProfileRepository.GetByIdAsync(_userService.UserId, cancellationToken);
+            var userProfile = await _userProfileRepository.GetByIdAsync(_userService.UserId!, cancellationToken);
             NullValidator.ValidateNotNull(userProfile);
 
             List<Hashtag> hashtags;

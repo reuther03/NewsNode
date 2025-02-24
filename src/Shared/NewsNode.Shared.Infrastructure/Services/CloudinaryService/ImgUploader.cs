@@ -17,6 +17,8 @@ public class ImgUploader : IImgUploader
             options.Value.api_key,
             options.Value.api_secret
         );
+
+        _cloudinary = new Cloudinary(account);
     }
 
     public async Task<string> UploadImg(IFormFile file)
