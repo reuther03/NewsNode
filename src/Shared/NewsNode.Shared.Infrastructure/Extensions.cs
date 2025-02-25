@@ -55,7 +55,7 @@ internal static class Extensions
         services.AddAuth(configuration);
         services.AddDecorators();
         services.AddHostedService<AppInitializer>();
-        services.AddServices();
+        services.AddServices(configuration);
         services.AddPostgres();
         services.AddRedis();
         services.AddMediatrWithFilters(assemblies);

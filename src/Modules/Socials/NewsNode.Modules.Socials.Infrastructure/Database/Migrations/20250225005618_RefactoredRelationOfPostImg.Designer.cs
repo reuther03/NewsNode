@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsNode.Modules.Socials.Infrastructure.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(SocialsDbContext))]
-    partial class SocialsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250225005618_RefactoredRelationOfPostImg")]
+    partial class RefactoredRelationOfPostImg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,30 +88,6 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Posts", "socials");
-                });
-
-            modelBuilder.Entity("NewsNode.Modules.Socials.Domain.Post.PostImg", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FileUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId")
-                        .IsUnique();
-
-                    b.ToTable("PostImg", "socials");
                 });
 
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.Post.SeenPost", b =>
@@ -225,6 +204,29 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
 
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.Post.Post", b =>
                 {
+                    b.OwnsOne("NewsNode.Modules.Socials.Domain.Post.PostImg", "PostImg", b1 =>
+                        {
+                            b1.Property<Guid>("PostId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("FileName")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("FileName");
+
+                            b1.Property<string>("FileUrl")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("FileUrl");
+
+                            b1.HasKey("PostId");
+
+                            b1.ToTable("Posts", "socials");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PostId");
+                        });
+
                     b.OwnsMany("NewsNode.Shared.Abstractions.Kernel.ValueObjects.Hashtag", "Hashtags", b1 =>
                         {
                             b1.Property<Guid>("PostId")
@@ -250,14 +252,9 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
                         });
 
                     b.Navigation("Hashtags");
-                });
 
-            modelBuilder.Entity("NewsNode.Modules.Socials.Domain.Post.PostImg", b =>
-                {
-                    b.HasOne("NewsNode.Modules.Socials.Domain.Post.Post", null)
-                        .WithOne("PostImg")
-                        .HasForeignKey("NewsNode.Modules.Socials.Domain.Post.PostImg", "PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.Navigation("PostImg")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.Post.SeenPost", b =>
@@ -328,9 +325,6 @@ namespace NewsNode.Modules.Socials.Infrastructure.Database.Migrations
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.Post.Post", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("PostImg")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("NewsNode.Modules.Socials.Domain.UserProfile.UserProfile", b =>

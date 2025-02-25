@@ -22,6 +22,7 @@ public record CreatePostCommand(string Content, List<Hashtag?> Hashtags, IFormFi
         private readonly IRecommendationsService _recommendationsService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAiChatService _aiChatService;
+        private readonly IImgUploader _imgUploader;
 
         public Handler
         (
@@ -31,7 +32,7 @@ public record CreatePostCommand(string Content, List<Hashtag?> Hashtags, IFormFi
             IUserService userService,
             INotificationService notificationService,
             IRecommendationsService recommendationsService,
-            IUnitOfWork unitOfWork, IAiChatService aiChatService)
+            IUnitOfWork unitOfWork, IAiChatService aiChatService, IImgUploader imgUploader)
         {
             _postRepository = postRepository;
             _userProfileRepository = userProfileRepository;
@@ -41,6 +42,7 @@ public record CreatePostCommand(string Content, List<Hashtag?> Hashtags, IFormFi
             _recommendationsService = recommendationsService;
             _unitOfWork = unitOfWork;
             _aiChatService = aiChatService;
+            _imgUploader = imgUploader;
         }
 
         public async Task<Result<Guid>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
@@ -60,7 +62,10 @@ public record CreatePostCommand(string Content, List<Hashtag?> Hashtags, IFormFi
                 hashtags = request.Hashtags!;
             }
 
-            var post = Post.Create(request.Content, hashtags, userProfile.Id);
+            var imgUrl = await _imgUploader.UploadImg(request.Img);
+            var postImg = PostImg.Create(imgUrl, request.Img.FileName);
+
+            var post = Post.Create(request.Content, hashtags, userProfile.Id, postImg);
 
             await _postRepository.AddAsync(post, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);

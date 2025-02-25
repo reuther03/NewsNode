@@ -9,7 +9,6 @@ public class Post : AggregateRoot<PostId>
     private readonly List<Hashtag> _hashtags = [];
 
     private readonly List<Comment> _comments = [];
-    private readonly List<PostImg> _postimgs = [];
 
     public string Content { get; private set; }
     public DateTime PostedAt { get; private set; }
@@ -17,16 +16,16 @@ public class Post : AggregateRoot<PostId>
     public int Likes { get; private set; }
     public int Bookmarks { get; private set; }
     public int Reposts { get; private set; }
+    public PostImg PostImg { get; private set; }
     public IReadOnlyList<Hashtag> Hashtags => _hashtags.AsReadOnly();
     public IReadOnlyList<Comment> Comments => _comments.AsReadOnly();
 
-    public IReadOnlyList<PostImg> PostImgs => _postimgs.AsReadOnly();
 
     public Post()
     {
     }
 
-    public Post(PostId id, string content, List<Hashtag> hashtags, UserId createdBy) : base(id)
+    private Post(PostId id, string content, List<Hashtag> hashtags, UserId createdBy, PostImg postImg) : base(id)
     {
         Content = content;
         PostedAt = DateTime.UtcNow;
@@ -35,10 +34,11 @@ public class Post : AggregateRoot<PostId>
         Bookmarks = 0;
         Reposts = 0;
         _hashtags.AddRange(hashtags);
+        PostImg = postImg;
     }
 
-    public static Post Create(string content, List<Hashtag> hashtags, UserId createdBy)
-        => new(PostId.New(), content, hashtags, createdBy);
+    public static Post Create(string content, List<Hashtag> hashtags, UserId createdBy, PostImg postImg)
+        => new(PostId.New(), content, hashtags, createdBy, postImg);
 
     public void AddComment(Comment comment)
         => _comments.Add(comment);
@@ -63,7 +63,4 @@ public class Post : AggregateRoot<PostId>
                 throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
         }
     }
-
-    public void AddPostImg(PostImg postImg)
-        => _postimgs.Add(postImg);
 }
