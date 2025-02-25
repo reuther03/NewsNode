@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NewsNode.Modules.Socials.Application.Features.Commands.Posts.AddPostAction;
 using NewsNode.Modules.Socials.Application.Features.Commands.Posts.CreatePost;
@@ -57,7 +58,7 @@ internal class PostController : BaseController
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> CreatePost([FromBody] CreatePostCommand command)
+    public async Task<IActionResult> CreatePost([FromForm] CreatePostCommand command)
     {
         var result = await _sender.Send(command);
         return Ok(result);

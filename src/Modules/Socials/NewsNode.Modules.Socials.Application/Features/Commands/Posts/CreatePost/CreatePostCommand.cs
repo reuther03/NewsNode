@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 using NewsNode.Modules.Socials.Application.Abstractions;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Domain.Post;
@@ -10,7 +11,10 @@ using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Modules.Socials.Application.Features.Commands.Posts.CreatePost;
 
-public record CreatePostCommand(string Content, List<Hashtag?> Hashtags, IFormFile Img) : ICommand<Guid>
+public record CreatePostCommand(
+    string Content,
+    List<Hashtag?> Hashtags,
+    IFormFile Img) : ICommand<Guid>
 {
     internal sealed class Handler : ICommandHandler<CreatePostCommand, Guid>
     {
@@ -32,7 +36,8 @@ public record CreatePostCommand(string Content, List<Hashtag?> Hashtags, IFormFi
             IUserService userService,
             INotificationService notificationService,
             IRecommendationsService recommendationsService,
-            IUnitOfWork unitOfWork, IAiChatService aiChatService, IImgUploader imgUploader)
+            IUnitOfWork unitOfWork, IAiChatService aiChatService,
+            IImgUploader imgUploader)
         {
             _postRepository = postRepository;
             _userProfileRepository = userProfileRepository;
