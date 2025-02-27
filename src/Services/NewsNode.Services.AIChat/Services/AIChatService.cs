@@ -10,39 +10,12 @@ namespace NewsNode.Services.AIChat.Services;
 public class AiChatService : IAiChatService
 {
     private readonly IServiceProvider _provider;
+    private readonly IImgUploader _imgUploader;
 
-    public AiChatService(IServiceProvider provider)
+    public AiChatService(IServiceProvider provider, IImgUploader imgUploader)
     {
         _provider = provider;
-    }
-
-
-    public async Task<string> GenerateHashtags(Dictionary<Hashtag, RecommendationWeight> recommendationWeights,
-        CancellationToken cancellationToken = default)
-    {
-        var client = _provider.GetRequiredKeyedService<IChatClient>("llama3");
-
-        var xd = recommendationWeights.Select(x => x.Key.Value + " " + x.Value);
-
-        var data = recommendationWeights
-            .ToDictionary(kvp => kvp.Key.Value, kvp => kvp.Value); // HashTag -> int
-
-        // Turn it into JSON so the model can parse it more easily:
-        var jsonData = JsonSerializer.Serialize(data);
-
-        // Construct a more explicit prompt:
-        var prompt = $"""
-                          Below is a JSON dictionary of hashtags and their integer “RecommendationWeight”:
-                          {jsonData}
-                      
-                          Please find the 5 hashtags with the biggest RecommendationWeight (only those >= 0), 
-                          and return them as a comma-separated list with no extra text.
-                          !!! important only the hashtags, no extra text, no spaces, no newlines, no brackets, no quotes, just the hashtags separated by commas.
-                          !!! do not write anything else, just the hashtags separated by commas.
-                      """;
-
-        var chatCompletion = await client.CompleteAsync(prompt, cancellationToken: cancellationToken);
-        return chatCompletion.ToString();
+        _imgUploader = imgUploader;
     }
 
     public async Task<string> GenerateHashtags(string postContent, CancellationToken cancellationToken = default)
@@ -84,6 +57,26 @@ public class AiChatService : IAiChatService
                       """;
 
         var chatCompletion = await client.CompleteAsync(prompt, cancellationToken: cancellationToken);
+        return chatCompletion.ToString();
+    }
+
+    public async Task<string> GenerateHashtagsByImage(string fileUrl, CancellationToken cancellationToken = default)
+    {
+        var chatClient = _provider.GetRequiredKeyedService<IChatClient>("llama3.2-vision");
+
+        var img = await _imgUploader.DownloadImgAsync(fileUrl);
+        var imageContent = new ImageContent(img);
+
+        var prompt = new TextContent("""
+                                     Describe the image and generate hashtags
+                                     For example if the image is of a dog, you should return hashtags like #animals, #dogs.
+                                     If you see a car in the image, you should return hashtags like #vehicles, #cars.
+                                     """);
+
+        var message = new ChatMessage(ChatRole.User, [prompt, imageContent]);
+
+        var chatCompletion = await chatClient.CompleteAsync([message], cancellationToken: cancellationToken);
+
         return chatCompletion.ToString();
     }
 }

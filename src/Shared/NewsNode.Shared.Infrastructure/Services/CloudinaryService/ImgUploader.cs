@@ -9,8 +9,9 @@ namespace NewsNode.Shared.Infrastructure.Services.CloudinaryService;
 public class ImgUploader : IImgUploader
 {
     private readonly Cloudinary _cloudinary;
+    private readonly HttpClient _client;
 
-    public ImgUploader(IOptions<CloudinaryOptions> options)
+    public ImgUploader(IOptions<CloudinaryOptions> options, IHttpClientFactory httpClientFactory)
     {
         var account = new Account(
             options.Value.cloud_name,
@@ -19,6 +20,7 @@ public class ImgUploader : IImgUploader
         );
 
         _cloudinary = new Cloudinary(account);
+        _client = httpClientFactory.CreateClient();
     }
 
     public async Task<string> UploadImg(IFormFile file)
@@ -51,5 +53,12 @@ public class ImgUploader : IImgUploader
         };
 
         _cloudinary.DeleteResources(deleteParams);
+    }
+
+    public async Task<byte[]> DownloadImgAsync(string imgUrl)
+    {
+        var response = await _client.GetAsync(imgUrl);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsByteArrayAsync();
     }
 }
