@@ -62,7 +62,7 @@ public record CreatePostCommand(
                 // var tokens = response.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 // hashtags = tokens.Where(x => x.StartsWith('#')).Select(x => new Hashtag(x)).ToList();
 
-                var response = await _aiChatService.GenerateHashtagsByImage(request.Img, cancellationToken);
+                var response = await _aiChatService.GenerateHashtagsByImage(request.Img, userProfile.Location.Country ,cancellationToken);
                 var tokens = response.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 hashtags = tokens.Where(x => x.StartsWith('#')).Select(x => new Hashtag(x)).ToList();
             }

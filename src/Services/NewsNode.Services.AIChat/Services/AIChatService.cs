@@ -59,7 +59,7 @@ public class AiChatService : IAiChatService
         return chatCompletion.ToString();
     }
 
-    public async Task<string> GenerateHashtagsByImage(IFormFile img, CancellationToken cancellationToken = default)
+    public async Task<string> GenerateHashtagsByImage(IFormFile img, string responseLanguage, CancellationToken cancellationToken = default)
     {
         var chatClient = _provider.GetRequiredKeyedService<IChatClient>("llama3.2-vision");
 
@@ -70,11 +70,37 @@ public class AiChatService : IAiChatService
 
         var imageContent = new ImageContent(imgBytes);
 
-        var prompt = new TextContent("""
-                                     Describe the image and generate hashtags
-                                     For example if the image is of a dog, you should return hashtags like #animals, #dogs.
-                                     If you see a car in the image, you should return hashtags like #vehicles, #cars.
-                                     """);
+        var prompt = new TextContent($"""
+                                      Please based on the post image, generate up to 5 hashtags and keep in mind that the hashtags should be relevant to the image.
+                                      Keep the hashtags in the same language as requested language.
+                                      Language: {responseLanguage}
+                                      !!! important only the hashtags, no extra text, no spaces, no newlines, no brackets, no quotes, just the hashtags.
+                                      !!! return only hashtags without any extra text and your response, just plain hashtags.
+                                      !!! keep the hashtags in generalized topics, so if you get image:
+                                      of a dog you should return "#animals", "dogs" and try find breed etc.
+                                      of cars you should return "#cars", "motorization", "vehicles" and try find what brand is the car etc. 
+                                      because it can be important etc.
+                                      !!! do not write anything else, just the hashtags.
+                                      !!! if the image is very simple, return at most 2 hashtags.
+                                      !!! If you’re unsure, return only the most relevant single hashtag. 
+                                      !!! Do not introduce new topics that are not present in the text.
+                                                 
+                                      !!!! MOST IMPORTANT KEEP THEM IN SAME LANGUAGE AS REQUESTED ONE {responseLanguage} !!!!
+                                      !!!! MOST IMPORTANT KEEP THEM IN SAME LANGUAGE AS REQUESTED ONE {responseLanguage} !!!!
+                                      !!!! like this CONTENT:
+                                          "Some Img of a dog" responseLanguage: "Poland"
+                                          HASHTAGS: "#zwierze #psy #polska"
+                                                                 
+                                         CONTENT: "Some Img of a car" responseLanguage: "England"
+                                         HASHTAGS: "#cars #vehicles #england"
+                                                                
+                                         CONTENT: "Some Img of a cat" responseLanguage: "Germany"
+                                         HASHTAGS: "#katze #tiere #deutschland"
+                                         
+                                      !!!! MAX 5 HASHTAGS THE MOST RELEVENT !!!!
+                                      
+
+                                      """);
 
         var message = new ChatMessage(ChatRole.User, [prompt, imageContent]);
 
