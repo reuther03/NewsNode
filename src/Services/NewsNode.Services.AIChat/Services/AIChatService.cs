@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using NewsNode.Services.AIChat.Llms;
@@ -10,12 +11,10 @@ namespace NewsNode.Services.AIChat.Services;
 public class AiChatService : IAiChatService
 {
     private readonly IServiceProvider _provider;
-    private readonly IImgUploader _imgUploader;
 
-    public AiChatService(IServiceProvider provider, IImgUploader imgUploader)
+    public AiChatService(IServiceProvider provider)
     {
         _provider = provider;
-        _imgUploader = imgUploader;
     }
 
     public async Task<string> GenerateHashtags(string postContent, CancellationToken cancellationToken = default)
@@ -60,12 +59,16 @@ public class AiChatService : IAiChatService
         return chatCompletion.ToString();
     }
 
-    public async Task<string> GenerateHashtagsByImage(string fileUrl, CancellationToken cancellationToken = default)
+    public async Task<string> GenerateHashtagsByImage(IFormFile img, CancellationToken cancellationToken = default)
     {
         var chatClient = _provider.GetRequiredKeyedService<IChatClient>("llama3.2-vision");
 
-        var img = await _imgUploader.DownloadImgAsync(fileUrl);
-        var imageContent = new ImageContent(img);
+        using var memoryStream = new MemoryStream();
+        await img.CopyToAsync(memoryStream, cancellationToken);
+
+        var imgBytes = memoryStream.ToArray();
+
+        var imageContent = new ImageContent(imgBytes);
 
         var prompt = new TextContent("""
                                      Describe the image and generate hashtags

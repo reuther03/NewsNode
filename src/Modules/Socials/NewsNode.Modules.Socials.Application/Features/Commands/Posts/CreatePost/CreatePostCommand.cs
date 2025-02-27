@@ -61,7 +61,8 @@ public record CreatePostCommand(
                 // var response = await _aiChatService.GenerateHashtags(request.Content, cancellationToken);
                 // var tokens = response.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 // hashtags = tokens.Where(x => x.StartsWith('#')).Select(x => new Hashtag(x)).ToList();
-                var response = await _aiChatService.GenerateHashtagsByImage("http://res.cloudinary.com/dmyiirfmm/image/upload/v1740448663/pobrane.jpg.jpg", cancellationToken);
+
+                var response = await _aiChatService.GenerateHashtagsByImage(request.Img, cancellationToken);
                 var tokens = response.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 hashtags = tokens.Where(x => x.StartsWith('#')).Select(x => new Hashtag(x)).ToList();
             }

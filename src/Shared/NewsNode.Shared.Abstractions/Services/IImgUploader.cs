@@ -6,5 +6,5 @@ public interface IImgUploader
 {
     Task<string> UploadImg(IFormFile file);
     void DeleteImg(string publicId);
-    Task<byte[]> DownloadImgAsync(string imgUrl);
+    // Task<byte[]> DownloadImgAsync(string imgUrl);
 }
