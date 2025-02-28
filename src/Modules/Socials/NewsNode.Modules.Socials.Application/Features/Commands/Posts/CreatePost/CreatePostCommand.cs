@@ -72,7 +72,7 @@ public record CreatePostCommand(
             }
 
             var imgUrl = await _imgUploader.UploadImg(request.Img);
-            var postImg = PostImg.Create(imgUrl, request.Img.FileName);
+            var postImg = ContentImg.Create(imgUrl, request.Img.FileName);
 
             var post = Post.Create(request.Content, hashtags, userProfile.Id, postImg);
 

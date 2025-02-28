@@ -16,7 +16,7 @@ public class Post : AggregateRoot<PostId>
     public int Likes { get; private set; }
     public int Bookmarks { get; private set; }
     public int Reposts { get; private set; }
-    public PostImg PostImg { get; private set; }
+    public ContentImg ContentImg { get; private set; }
     public IReadOnlyList<Hashtag> Hashtags => _hashtags.AsReadOnly();
     public IReadOnlyList<Comment> Comments => _comments.AsReadOnly();
 
@@ -25,7 +25,7 @@ public class Post : AggregateRoot<PostId>
     {
     }
 
-    private Post(PostId id, string content, List<Hashtag> hashtags, UserId createdBy, PostImg postImg) : base(id)
+    private Post(PostId id, string content, List<Hashtag> hashtags, UserId createdBy, ContentImg contentImg) : base(id)
     {
         Content = content;
         PostedAt = DateTime.UtcNow;
@@ -34,11 +34,11 @@ public class Post : AggregateRoot<PostId>
         Bookmarks = 0;
         Reposts = 0;
         _hashtags.AddRange(hashtags);
-        PostImg = postImg;
+        ContentImg = contentImg;
     }
 
-    public static Post Create(string content, List<Hashtag> hashtags, UserId createdBy, PostImg postImg)
-        => new(PostId.New(), content, hashtags, createdBy, postImg);
+    public static Post Create(string content, List<Hashtag> hashtags, UserId createdBy, ContentImg contentImg)
+        => new(PostId.New(), content, hashtags, createdBy, contentImg);
 
     public void AddComment(Comment comment)
         => _comments.Add(comment);
