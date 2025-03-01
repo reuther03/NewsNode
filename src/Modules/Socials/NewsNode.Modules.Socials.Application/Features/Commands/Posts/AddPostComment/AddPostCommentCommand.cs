@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 using NewsNode.Modules.Socials.Application.Abstractions;
 using NewsNode.Modules.Socials.Application.Abstractions.Database;
 using NewsNode.Modules.Socials.Domain.Post;
@@ -9,7 +10,11 @@ using NewsNode.Shared.Abstractions.Services;
 
 namespace NewsNode.Modules.Socials.Application.Features.Commands.Posts.AddPostComment;
 
-public record AddPostCommentCommand(Guid PostId, string Content, IFormFile Img) : ICommand<Guid>
+public record AddPostCommentCommand(
+    [property: JsonIgnore]
+    Guid PostId,
+    string Content,
+    IFormFile Img) : ICommand<Guid>
 {
     internal sealed class Handler : ICommandHandler<AddPostCommentCommand, Guid>
     {

@@ -26,6 +26,11 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
             .ValueGeneratedNever()
             .IsRequired();
 
+        builder.HasOne(x => x.ContentImg)
+            .WithOne()
+            .HasForeignKey<Comment>(x => x.Id)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.Property(x => x.Likes);
         builder.Property(x => x.Bookmarks);
         builder.Property(x => x.Reposts);
