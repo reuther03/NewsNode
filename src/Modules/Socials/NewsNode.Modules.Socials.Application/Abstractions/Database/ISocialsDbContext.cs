@@ -12,4 +12,5 @@ public interface ISocialsDbContext
     DbSet<PostAction> PostActions { get; }
     DbSet<Post> Posts { get; }
     DbSet<SeenPost> SeenPosts { get; }
+    DbSet<Comment> Comments { get; }
 }

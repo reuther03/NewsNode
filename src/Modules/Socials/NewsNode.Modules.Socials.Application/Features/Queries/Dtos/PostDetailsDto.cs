@@ -10,5 +10,4 @@ public class PostDetailsDto
     public List<Guid> RepostIds { get; init; } = [];
     public List<string> Hashtags { get; init; } = [];
     public List<CommentDto> Comments { get; init; } = [];
-
 }

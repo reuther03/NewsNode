@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NewsNode.Modules.Socials.Application.Features.Commands.Posts.AddPostAction;
-using NewsNode.Modules.Socials.Application.Features.Commands.Posts.AddPostComment;
 using NewsNode.Modules.Socials.Application.Features.Commands.Posts.CreatePost;
 using NewsNode.Modules.Socials.Application.Features.Queries.Posts;
 
@@ -73,11 +72,11 @@ internal class PostController : BaseController
         return Ok(result);
     }
 
-    [HttpPost("{postId:guid}/comments")]
-    [Authorize]
-    public async Task<IActionResult> AddComment([FromRoute] Guid postId, [FromForm] AddPostCommentCommand command)
-    {
-        var result = await _sender.Send(command with { PostId = postId });
-        return Ok(result);
-    }
+    // [HttpPost("{postId:guid}/comments")]
+    // [Authorize]
+    // public async Task<IActionResult> AddComment([FromRoute] Guid postId, [FromForm] AddPostCommentCommand command)
+    // {
+    //     var result = await _sender.Send(command with { PostId = postId });
+    //     return Ok(result);
+    // }
 }

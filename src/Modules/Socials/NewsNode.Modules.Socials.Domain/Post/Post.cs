@@ -8,8 +8,6 @@ public class Post : AggregateRoot<PostId>
 {
     private readonly List<Hashtag> _hashtags = [];
 
-    private readonly List<Comment> _comments = [];
-
     public string Content { get; private set; }
     public DateTime PostedAt { get; private set; }
     public UserId CreatedBy { get; private set; }
@@ -18,7 +16,6 @@ public class Post : AggregateRoot<PostId>
     public int Reposts { get; private set; }
     public ContentImg ContentImg { get; private set; }
     public IReadOnlyList<Hashtag> Hashtags => _hashtags.AsReadOnly();
-    public IReadOnlyList<Comment> Comments => _comments.AsReadOnly();
 
 
     public Post()
@@ -39,9 +36,6 @@ public class Post : AggregateRoot<PostId>
 
     public static Post Create(string content, List<Hashtag> hashtags, UserId createdBy, ContentImg contentImg)
         => new(PostId.New(), content, hashtags, createdBy, contentImg);
-
-    public void AddComment(Comment comment)
-        => _comments.Add(comment);
 
     public void PerformAction(PostActionType actionType)
     {

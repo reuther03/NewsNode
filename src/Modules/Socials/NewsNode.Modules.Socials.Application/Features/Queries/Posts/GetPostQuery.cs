@@ -37,7 +37,6 @@ public record GetPostQuery(
 
             var post = await _dbContext.Posts
                 .Include(x => x.Hashtags)
-                .Include(x => x.Comments)
                 .FirstOrDefaultAsync(x => x.Id == PostId.From(request.CurrentPostId), cancellationToken);
 
             NullValidator.ValidateNotNull(post);
@@ -60,7 +59,7 @@ public record GetPostQuery(
                 LikeIds = postActions.Where(x => x.ActionType == PostActionType.Liked).Select(x => x.UserProfileId.Value).ToList(),
                 RepostIds = postActions.Where(x => x.ActionType == PostActionType.Reposted).Select(x => x.UserProfileId.Value).ToList(),
                 Hashtags = post.Hashtags.Select(x => x.Value).ToList(),
-                Comments = post.Comments.Select(CommentDto.AsDto).ToList()
+                Comments = await _dbContext.Comments.Where(x => x.PostId == post.Id).Select(x => CommentDto.AsDto(x)).ToListAsync(cancellationToken)
             };
 
             return Result.Ok(postDetails);

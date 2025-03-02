@@ -37,11 +37,6 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
         builder.Property(x => x.Bookmarks);
         builder.Property(x => x.Reposts);
 
-        builder.HasMany(x => x.Comments)
-            .WithOne()
-            .HasForeignKey("PostId")
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasOne(x => x.ContentImg)
             .WithOne()
             .HasForeignKey<ContentImg>("PostId")
