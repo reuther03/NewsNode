@@ -18,6 +18,7 @@ public static class Extensions
             .AddScoped<IPostRepository, PostRepository>()
             .AddScoped<ISeenPostRepository, SeenPostRepository>()
             .AddScoped<IFollowerRepository, FollowerRepository>()
+            .AddScoped<ICommentRepository, CommentRepository>()
             .AddUnitOfWork<IUnitOfWork, UnitOfWork>();
 
         return services;
