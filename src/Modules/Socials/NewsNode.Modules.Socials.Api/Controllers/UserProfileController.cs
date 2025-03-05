@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.AddUserProfileRelationStatus;
+using NewsNode.Modules.Socials.Application.Features.Commands.UserProfiles.FollowUserProfile;
 using NewsNode.Modules.Socials.Application.Features.Queries.UserProfiles;
 
 namespace NewsNode.Modules.Socials.Api.Controllers;
@@ -23,14 +24,14 @@ internal class UserProfileController : BaseController
         return Ok(result);
     }
 
-    // [HttpPost("{userProfileId:guid}/follow")]
-    // [Authorize]
-    // public async Task<IActionResult> FollowUserProfile([FromRoute] Guid userProfileId)
-    //
-    // {
-    //     var result = await _sender.Send(new FollowUserProfileCommand(userProfileId));
-    //     return Ok(result);
-    // }
+    [HttpPost("{userProfileId:guid}/follow")]
+    [Authorize]
+    public async Task<IActionResult> FollowUserProfile([FromRoute] Guid userProfileId)
+
+    {
+        var result = await _sender.Send(new FollowUserProfileCommand(userProfileId));
+        return Ok(result);
+    }
 
     [HttpPatch("{userProfileId:guid}/relation-status")]
     [Authorize]
