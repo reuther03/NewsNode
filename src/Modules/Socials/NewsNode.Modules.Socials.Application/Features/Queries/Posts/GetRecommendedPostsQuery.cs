@@ -71,7 +71,7 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
                     .Where(p => p.PostedAt > DateTime.UtcNow.AddDays(-7))
                     .OrderByDescending(p => p.Likes + p.Bookmarks + p.Reposts)
                     .Take(25)
-                    .Select(p => PostDto.AsDto(p, true, RecommendationWeight.None))
+                    .Select(p => PostDto.AsDto(p, true, RecommendationWeight.None, 0))
                     .ToListAsync(cancellationToken);
 
                 await _redisCacheService.SetDataAsync(trendingCacheKey, cachedTrendingPosts, TimeSpan.FromSeconds(5));
@@ -92,8 +92,15 @@ public record GetRecommendedPostsQuery(int Page = 1) : IQuery<PaginatedList<Post
                 Weight = recommendedHashtags.FirstOrDefault(h => x.Hashtags.Contains(h.Key)).Value
             }).ToList();
 
-            var unseenPostsDto = postsWithWeights.Where(p => !p.Seen).Select(p => PostDto.AsDto(p.Post, false, p.Weight)).ToList();
-            var seenPostsDto = postsWithWeights.Where(p => p.Seen).Select(p => PostDto.AsDto(p.Post, true, p.Weight)).ToList();
+            var commentsCount = await _dbContext.Comments
+                .GroupBy(x => x.PostId)
+                .Select(x => new { PostId = x.Key, Count = x.Count() })
+                .ToDictionaryAsync(x => x.PostId, x => x.Count, cancellationToken);
+
+            var unseenPostsDto = postsWithWeights.Where(p => !p.Seen)
+                .Select(p => PostDto.AsDto(p.Post, false, p.Weight, commentsCount.FirstOrDefault(x => p.Post.Id == x.Key).Value)).ToList();
+            var seenPostsDto = postsWithWeights.Where(p => p.Seen)
+                .Select(p => PostDto.AsDto(p.Post, true, p.Weight, commentsCount.FirstOrDefault(x => x.Key == p.Post.Id).Value)).ToList();
 
             var allPostsDto = unseenPostsDto
                 .Union(seenPostsDto)

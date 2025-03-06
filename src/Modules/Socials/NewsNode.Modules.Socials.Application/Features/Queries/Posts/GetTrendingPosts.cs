@@ -55,7 +55,12 @@ public record GetTrendingPosts(int Days = 14) : IQuery<PaginatedList<PostDto>>
                     .ToListAsync(cancellationToken);
             }
 
-            var postsDto = posts.Select(x => PostDto.AsDto(x, null, null)).ToList();
+            var commentsCount = await _dbContext.Comments
+                .GroupBy(x => x.PostId)
+                .Select(x => new { PostId = x.Key, Count = x.Count() })
+                .ToDictionaryAsync(x => x.PostId, x => x.Count, cancellationToken);
+
+            var postsDto = posts.Select(x => PostDto.AsDto(x, null, null, commentsCount.FirstOrDefault(z => z.Key == x.Id).Value)).ToList();
 
             return PaginatedList<PostDto>.Create(1, postsDto.Count, postsDto.Count, postsDto);
         }

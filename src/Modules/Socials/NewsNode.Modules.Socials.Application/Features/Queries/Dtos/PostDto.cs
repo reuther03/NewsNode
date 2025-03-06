@@ -18,7 +18,7 @@ public class PostDto
     public RecommendationWeight? Weight { get; init; }
 
 
-    public static PostDto AsDto(Post post, bool? seen,RecommendationWeight? recommendationWeight)
+    public static PostDto AsDto(Post post, bool? seen,RecommendationWeight? recommendationWeight, int commentsCount)
     {
         return new PostDto
         {
@@ -30,7 +30,7 @@ public class PostDto
             Bookmarks = post.Bookmarks,
             Reposts = post.Reposts,
             Hashtags = post.Hashtags.Select(x => x.Value).ToList(),
-            // Comments = commentsCount,
+            Comments = commentsCount,
             Seen = seen,
             Weight = recommendationWeight
         };
