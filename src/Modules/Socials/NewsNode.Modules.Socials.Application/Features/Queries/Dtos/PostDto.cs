@@ -18,7 +18,7 @@ public class PostDto
     public RecommendationWeight? Weight { get; init; }
 
 
-    public static PostDto AsDto(Post post, bool? seen,RecommendationWeight? recommendationWeight, int commentsCount)
+    public static PostDto AsDto(Post post, bool? seen, RecommendationWeight? recommendationWeight, int commentsCount)
     {
         return new PostDto
         {

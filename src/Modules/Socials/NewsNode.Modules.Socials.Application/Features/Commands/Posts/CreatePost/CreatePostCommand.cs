@@ -12,9 +12,9 @@ using NewsNode.Shared.Abstractions.Services;
 namespace NewsNode.Modules.Socials.Application.Features.Commands.Posts.CreatePost;
 
 public record CreatePostCommand(
-    string Content,
+    string? Content,
     List<Hashtag?> Hashtags,
-    IFormFile Img) : ICommand<Guid>
+    IFormFile? Img) : ICommand<Guid>
 {
     internal sealed class Handler : ICommandHandler<CreatePostCommand, Guid>
     {
@@ -55,27 +55,42 @@ public record CreatePostCommand(
             var userProfile = await _userProfileRepository.GetByIdAsync(_userService.UserId!, cancellationToken);
             NullValidator.ValidateNotNull(userProfile);
 
-            List<Hashtag> hashtags;
+            if (request.Content is null && request.Img is null)
+            {
+                throw new ArgumentException("Content or Img must be provided");
+            }
+
+            List<Hashtag> hashtags = null!;
             if (request.Hashtags.Count == 0)
             {
-                var response = await _aiChatService.GenerateHashtags(request.Content, cancellationToken);
-                var tokens = response.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                hashtags = tokens.Where(x => x.StartsWith('#')).Select(x => new Hashtag(x)).ToList();
+                if (request.Content is not null)
+                {
+                    var response = await _aiChatService.GenerateHashtags(request.Content, cancellationToken);
+                    var tokens = response.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    hashtags = tokens.Where(x => x.StartsWith('#')).Select(x => new Hashtag(x)).ToList();
+                }
 
-                // img based hashtags generation
-                // var response = await _aiChatService.GenerateHashtagsByImage(request.Img, userProfile.Location.Country ,cancellationToken);
-                // var tokens = response.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                // hashtags = tokens.Where(x => x.StartsWith('#')).Select(x => new Hashtag(x)).ToList();
+                //img based hashtags generation. It is working but response tooks a lot of time and it needs to be optimized
+                if (request.Img is not null)
+                {
+                    var response = await _aiChatService.GenerateHashtagsByImage(request.Img, userProfile.Location.Country, cancellationToken);
+                    var tokens = response.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    hashtags = tokens.Where(x => x.StartsWith('#')).Select(x => new Hashtag(x)).ToList();
+                }
             }
             else
             {
                 hashtags = request.Hashtags!;
             }
 
-            var imgUrl = await _imgUploader.UploadImg(request.Img);
-            var postImg = ContentImg.Create(imgUrl, request.Img.FileName);
+            ContentImg postImg = null;
+            if (request.Img is not null)
+            {
+                var imgUrl = await _imgUploader.UploadImg(request.Img);
+                postImg = ContentImg.Create(imgUrl, request.Img.FileName);
+            }
 
-            var post = Post.Create(request.Content, hashtags, userProfile.Id, postImg);
+            var post = Post.Create(request.Content ?? null, hashtags, userProfile.Id, postImg ?? null);
 
             await _postRepository.AddAsync(post, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
