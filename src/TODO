@@ -1,17 +1,7 @@
 ﻿advanced search
 recomendations
 
-cos typu wybierz swoje ulubione kategorie, zeby potem dostawac spersonalizowane rekomendacje na start
-dislike ktory odejmuje score z recommendation
-
-cos to bedzie monitorowac jakie posty z jakimi hashtagami dodaje user ktorego followujesz
-
-przerobic rekomendacje np na czas ze rekomendacje sa z 30 dni (like repost itp)
-
-account recommendations
-
-pomyslec na ujemnymi rekomendacjami czyli jak daje not intrested czy dislike to recommendation score moze byc ujemny
 
 acction recommendation zeby nie polacalo calego profilu tylko hashtag z ktorego zrobila sie rekomendacja z tego profilu
 
-post i comment zeby img i content byl nullable ale zeby choc jeden byl wypelniony
+dodawac seen posts podczas pobierania postow

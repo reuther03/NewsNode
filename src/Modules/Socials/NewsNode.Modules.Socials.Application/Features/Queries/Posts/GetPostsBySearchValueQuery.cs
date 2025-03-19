@@ -1,0 +1,46 @@
+﻿using Microsoft.EntityFrameworkCore;
+using NewsNode.Modules.Socials.Application.Abstractions;
+using NewsNode.Modules.Socials.Application.Abstractions.Database;
+using NewsNode.Modules.Socials.Application.Features.Queries.Dtos;
+using NewsNode.Modules.Socials.Domain.Post;
+using NewsNode.Modules.Socials.Domain.UserProfile;
+using NewsNode.Shared.Abstractions.Kernel.CommandValidators;
+using NewsNode.Shared.Abstractions.Kernel.Pagination;
+using NewsNode.Shared.Abstractions.Kernel.Primitives.Result;
+using NewsNode.Shared.Abstractions.QueriesAndCommands.Extensions;
+using NewsNode.Shared.Abstractions.QueriesAndCommands.Queries;
+using NewsNode.Shared.Abstractions.Services;
+
+namespace NewsNode.Modules.Socials.Application.Features.Queries.Posts;
+
+public record GetPostsBySearchValueQuery(string SearchValue, int Page = 1) : IQuery<PaginatedList<PostDto>>
+{
+    internal sealed class Handler : IQueryHandler<GetPostsBySearchValueQuery, PaginatedList<PostDto>>
+    {
+        private readonly ISocialsDbContext _dbContext;
+        private readonly IUserService _userService;
+
+        public Handler(ISocialsDbContext dbContext, IUserService userService)
+        {
+            _dbContext = dbContext;
+            _userService = userService;
+        }
+
+        public async Task<Result<PaginatedList<PostDto>>> Handle(GetPostsBySearchValueQuery request, CancellationToken cancellationToken)
+        {
+            var user = await _dbContext.UserProfiles
+                .Include(x => x.ProfileStatuses)
+                .FirstOrDefaultAsync(x => x.Id == _userService.UserId, cancellationToken);
+
+            NullValidator.ValidateNotNull(user);
+
+            var posts = await _dbContext.Posts.Where(x => EF.Functions.Like(x.Content, $"%{request.SearchValue}%") ||
+                    x.Hashtags.Any(z => z.Value == request.SearchValue) &&
+                    x.CreatedBy != user.Id)
+                .Where(x => !_dbContext.UserProfileStatuses.Any(y => y.TargetUserId == x.CreatedBy && y.Status != UserProfileRelationStatus.Blocked))
+                .ToPagedListAsync<Post, PostDto>(request.Page, 10, x => PostDto.AsDto(x), cancellationToken);
+
+            return Result.Ok(posts);
+        }
+    }
+}

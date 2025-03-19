@@ -23,7 +23,7 @@ public class PostDto
         return new PostDto
         {
             Id = post.Id,
-            Content = post.Content,
+            Content = post.Content ?? "",
             PostedAt = post.PostedAt,
             CreatedBy = post.CreatedBy,
             Likes = post.Likes,
@@ -41,7 +41,7 @@ public class PostDto
         return new PostDto
         {
             Id = post.Id,
-            Content = post.Content,
+            Content = post.Content ?? "",
             PostedAt = post.PostedAt,
             CreatedBy = post.CreatedBy,
             Likes = post.Likes,

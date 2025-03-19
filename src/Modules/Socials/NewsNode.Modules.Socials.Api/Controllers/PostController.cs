@@ -26,6 +26,7 @@ internal class PostController : BaseController
         return Ok(result);
     }
 
+
     [HttpGet("trending")]
     public async Task<IActionResult> GetTrendingPosts([FromQuery] GetTrendingPosts query)
     {
@@ -44,6 +45,14 @@ internal class PostController : BaseController
     [HttpGet("recommended")]
     [Authorize]
     public async Task<IActionResult> GetRecommendedPosts([FromQuery] GetRecommendedPostsQuery query)
+    {
+        var result = await _sender.Send(query);
+        return Ok(result);
+    }
+
+    [HttpPost("GetPostsBySearchValue")]
+    [Authorize]
+    public async Task<IActionResult> GetPostsBySearchValue([FromQuery] GetPostsBySearchValueQuery query)
     {
         var result = await _sender.Send(query);
         return Ok(result);
